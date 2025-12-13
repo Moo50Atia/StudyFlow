@@ -1,0 +1,48 @@
+<?php
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LoveController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TeacherPermissionController;
+use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\LectureController;
+use App\Http\Controllers\SectionController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ExamQuestionController;
+
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
+
+// Main dashboard route - redirects based on role
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Love toggle route
+    Route::post('/love/toggle', [LoveController::class, 'toggle'])->name('love.toggle');
+});
+
+require __DIR__ . '/auth.php';
+
+// Admin-only routes
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('/users', UserController::class);
+    Route::resource('/teacher_permissions', TeacherPermissionController::class);
+});
+
+// Admin and Teacher routes (with teacher access check)
+Route::middleware(['auth', 'teacher.access'])->group(function () {
+    Route::resource('/subjects', SubjectController::class);
+    Route::resource('/lectures', LectureController::class);
+    Route::resource('/sections', SectionController::class);
+    Route::resource('/questions', QuestionController::class);
+    Route::resource('/exam_questions', ExamQuestionController::class);
+});
