@@ -23,7 +23,7 @@
                             <select name="lecture_id" id="lecture_id" required class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200">
                                 <option value="">-- Select Lecture --</option>
                                 @foreach($lectures as $lecture)
-                                <option value="{{ $lecture->id }}" {{ old('lecture_id') == $lecture->id ? 'selected' : '' }}>{{ $lecture->title }}</option>
+                                <option value="{{ $lecture->id }}" {{ old('lecture_id', request('lecture_id')) == $lecture->id ? 'selected' : '' }}>{{ $lecture->title }}</option>
                                 @endforeach
                             </select>
                             @error('lecture_id')<p class="mt-2 text-sm text-red-500">{{ $message }}</p>@enderror

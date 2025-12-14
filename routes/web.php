@@ -11,6 +11,7 @@ use App\Http\Controllers\LectureController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ExamQuestionController;
+use App\Http\Controllers\StudyFlowController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,6 +37,15 @@ require __DIR__ . '/auth.php';
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('/users', UserController::class);
     Route::resource('/teacher_permissions', TeacherPermissionController::class);
+
+    // Study Flow routes (Admin only)
+    Route::prefix('study-flow')->group(function () {
+        Route::get('/start', [StudyFlowController::class, 'start'])->name('study-flow.start');
+        Route::post('/subjects/{subject}/lectures', [StudyFlowController::class, 'storeBulkLectures'])->name('study-flow.bulk-lectures');
+        Route::post('/lectures/{lecture}/sections', [StudyFlowController::class, 'storeBulkSections'])->name('study-flow.bulk-sections');
+        Route::post('/sections/{section}/content', [StudyFlowController::class, 'storeBulkContent'])->name('study-flow.bulk-content');
+        Route::get('/exit', [StudyFlowController::class, 'exit'])->name('study-flow.exit');
+    });
 });
 
 // Admin and Teacher routes (with teacher access check)

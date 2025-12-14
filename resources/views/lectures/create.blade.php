@@ -23,7 +23,7 @@
                             <select name="subject_id" id="subject_id" required class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200">
                                 <option value="">-- Select a subject --</option>
                                 @foreach($subjects as $subject)
-                                <option value="{{ $subject->id }}" {{ old('subject_id') == $subject->id ? 'selected' : '' }}>{{ $subject->name }}</option>
+                                <option value="{{ $subject->id }}" {{ old('subject_id', request('subject_id')) == $subject->id ? 'selected' : '' }}>{{ $subject->name }}</option>
                                 @endforeach
                             </select>
                             @error('subject_id')<p class="mt-2 text-sm text-red-500">{{ $message }}</p>@enderror
