@@ -31,18 +31,20 @@
 
                         <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.2s">
                             <label for="question_image" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Question Image</label>
-                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-indigo-500 transition-colors duration-200">
+                            <div id="question-drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-indigo-500 transition-colors duration-200 cursor-pointer">
                                 <div class="space-y-1 text-center">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <svg id="question-icon" class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                         <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                    <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                    <div class="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
                                         <label for="question_image" class="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500">
-                                            <span>Upload a file</span>
+                                            <span>Upload image</span>
                                             <input id="question_image" name="question_image" type="file" accept="image/*" class="sr-only">
                                         </label>
                                         <p class="pl-1">or drag and drop</p>
                                     </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG up to 5MB</p>
+                                    <p id="question-file-name" class="text-sm font-medium text-green-600 dark:text-green-400 hidden"></p>
                                 </div>
                             </div>
                             @error('question_image')<p class="mt-2 text-sm text-red-500">{{ $message }}</p>@enderror
@@ -56,17 +58,20 @@
 
                         <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.4s">
                             <label for="solution_image" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Solution Image</label>
-                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-green-500 transition-colors duration-200">
+                            <div id="solution-drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-green-500 transition-colors duration-200 cursor-pointer">
                                 <div class="space-y-1 text-center">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <svg id="solution-icon" class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                         <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                    <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                    <div class="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
                                         <label for="solution_image" class="relative cursor-pointer rounded-md font-medium text-green-600 hover:text-green-500">
                                             <span>Upload solution</span>
                                             <input id="solution_image" name="solution_image" type="file" accept="image/*" class="sr-only">
                                         </label>
+                                        <p class="pl-1">or drag and drop</p>
                                     </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG up to 5MB</p>
+                                    <p id="solution-file-name" class="text-sm font-medium text-green-600 dark:text-green-400 hidden"></p>
                                 </div>
                             </div>
                             @error('solution_image')<p class="mt-2 text-sm text-red-500">{{ $message }}</p>@enderror
@@ -129,5 +134,80 @@
             animation: fadeInUp 0.5s ease-out forwards;
             opacity: 0;
         }
+
+        .drag-over {
+            border-color: #6366f1 !important;
+            background-color: rgba(99, 102, 241, 0.1);
+        }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setupDragDrop('question-drop-zone', 'question_image', 'question-file-name', 'question-icon', 'image');
+            setupDragDrop('solution-drop-zone', 'solution_image', 'solution-file-name', 'solution-icon', 'image');
+
+            function setupDragDrop(dropZoneId, inputId, fileNameId, iconId, fileType) {
+                const dropZone = document.getElementById(dropZoneId);
+                const fileInput = document.getElementById(inputId);
+                const fileName = document.getElementById(fileNameId);
+                const icon = document.getElementById(iconId);
+
+                if (!dropZone || !fileInput) return;
+
+                dropZone.addEventListener('click', function(e) {
+                    if (e.target !== fileInput) {
+                        fileInput.click();
+                    }
+                });
+
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, preventDefaults, false);
+                });
+
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-over'), false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-over'), false);
+                });
+
+                dropZone.addEventListener('drop', function(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    if (files.length > 0) {
+                        const file = files[0];
+                        if (fileType === 'image' && file.type.startsWith('image/')) {
+                            fileInput.files = files;
+                            updateFileName(file.name);
+                        } else {
+                            alert('Please upload an image file.');
+                        }
+                    }
+                });
+
+                fileInput.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        updateFileName(this.files[0].name);
+                    }
+                });
+
+                function updateFileName(name) {
+                    if (fileName) {
+                        fileName.textContent = '✓ ' + name;
+                        fileName.classList.remove('hidden');
+                    }
+                    if (icon) {
+                        icon.classList.add('text-green-500');
+                        icon.classList.remove('text-gray-400');
+                    }
+                }
+            }
+        });
+    </script>
 </x-app-layout>

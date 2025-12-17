@@ -56,3 +56,16 @@ Route::middleware(['auth', 'teacher.access'])->group(function () {
     Route::resource('/questions', QuestionController::class);
     Route::resource('/exam_questions', ExamQuestionController::class);
 });
+
+// API routes for dynamic filtering
+use App\Models\Lecture;
+use App\Models\Section;
+
+Route::middleware('auth')->prefix('api')->group(function () {
+    Route::get('/subjects/{subject}/lectures', function ($subjectId) {
+        return Lecture::where('subject_id', $subjectId)->orderBy('title')->get(['id', 'title']);
+    });
+    Route::get('/lectures/{lecture}/sections', function ($lectureId) {
+        return Section::where('lecture_id', $lectureId)->orderBy('title')->get(['id', 'title']);
+    });
+});

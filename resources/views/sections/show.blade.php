@@ -47,10 +47,19 @@
                     <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
                         <p class="text-gray-600 dark:text-gray-400">{{ $section->quick_summary }}</p>
                     </div>
+                    <!--
+                    <div class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl">
+                        <p class="text-amber-600 dark:text-amber-400 text-sm flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            Quick Summary doesn't exist yet - we will add it soon!
+                        </p>
+                    </div> -->
                     @endif
 
                     <!-- Links -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         @if($section->notebook_link)
                         <a href="{{ $section->notebook_link }}" target="_blank" class="flex items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-100 dark:from-gray-700 dark:to-gray-600 rounded-xl hover:shadow-lg transition-all duration-200">
                             <div class="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center text-white mr-4">📓</div>
@@ -59,6 +68,14 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Open in new tab</p>
                             </div>
                         </a>
+                        @else
+                        <div class="flex items-center p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl">
+                            <div class="w-12 h-12 rounded-lg bg-amber-400 flex items-center justify-center text-white mr-4">📓</div>
+                            <div>
+                                <p class="font-semibold text-amber-700 dark:text-amber-400">Google NotebookLM</p>
+                                <p class="text-sm text-amber-600 dark:text-amber-500">Link doesn't exist yet - we will add it soon!</p>
+                            </div>
+                        </div>
                         @endif
                         @if($section->dynamic_view_link)
                         <a href="{{ $section->dynamic_view_link }}" target="_blank" class="flex items-center p-4 bg-gradient-to-r from-green-50 to-emerald-100 dark:from-gray-700 dark:to-gray-600 rounded-xl hover:shadow-lg transition-all duration-200">
@@ -68,8 +85,96 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Open in new tab</p>
                             </div>
                         </a>
+                        @else
+                        <div class="flex items-center p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl">
+                            <div class="w-12 h-12 rounded-lg bg-amber-400 flex items-center justify-center text-white mr-4">🔗</div>
+                            <div>
+                                <p class="font-semibold text-amber-700 dark:text-amber-400">Google Dynamic View</p>
+                                <p class="text-sm text-amber-600 dark:text-amber-500">Link doesn't exist yet - we will add it soon!</p>
+                            </div>
+                        </div>
                         @endif
                     </div>
+
+                    <!-- Quick Navigation - Questions & Exam Questions -->
+                    <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <a href="{{ route('questions.index', ['subject_id' => $section->lecture->subject_id ?? '', 'lecture_id' => $section->lecture_id ?? '']) }}" class="group flex items-center p-5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+                            <div class="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white text-2xl mr-4 group-hover:scale-110 transition-transform duration-200">
+                                ❓
+                            </div>
+                            <div class="text-white">
+                                <p class="font-bold text-lg">Practice Questions</p>
+                                <p class="text-sm text-white/80">View questions for this lecture</p>
+                            </div>
+                            <svg class="w-6 h-6 text-white ml-auto opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                        <a href="{{ route('exam_questions.index', ['subject_id' => $section->lecture->subject_id ?? '', 'lecture_id' => $section->lecture_id ?? '']) }}" class="group flex items-center p-5 bg-gradient-to-r from-rose-500 to-orange-500 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+                            <div class="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white text-2xl mr-4 group-hover:scale-110 transition-transform duration-200">
+                                📝
+                            </div>
+                            <div class="text-white">
+                                <p class="font-bold text-lg">Exam Questions</p>
+                                <p class="text-sm text-white/80">View exam questions for this lecture</p>
+                            </div>
+                            <svg class="w-6 h-6 text-white ml-auto opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div> -->
+
+                    <!-- Questions List -->
+                    @if($section->lecture && $section->lecture->questions && $section->lecture->questions->count() > 0)
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                            <span class="w-8 h-8 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mr-3">❓</span>
+                            Questions ({{ $section->lecture->questions->count() }})
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            @foreach($section->lecture->questions as $question)
+                            <a href="{{ route('questions.show', $question) }}" class="flex items-center p-3 bg-purple-50 dark:bg-gray-700 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                                <div class="w-10 h-10 rounded-lg bg-purple-500 flex items-center justify-center text-white mr-3 text-sm font-bold">Q</div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-medium text-gray-900 dark:text-gray-100 truncate">{{ Str::limit($question->idea ?? 'Question', 40) }}</p>
+                                    @if($question->dynamic_view_link)
+                                    <p class="text-xs text-purple-600 dark:text-purple-400">🔗 Has dynamic view</p>
+                                    @endif
+                                </div>
+                                <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Exam Questions List -->
+                    @if($section->lecture && $section->lecture->examQuestions && $section->lecture->examQuestions->count() > 0)
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                            <span class="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center mr-3">📝</span>
+                            Exam Questions ({{ $section->lecture->examQuestions->count() }})
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            @foreach($section->lecture->examQuestions as $examQuestion)
+                            <a href="{{ route('exam_questions.show', $examQuestion) }}" class="flex items-center p-3 bg-red-50 dark:bg-gray-700 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                                <div class="w-10 h-10 rounded-lg bg-red-500 flex items-center justify-center text-white mr-3 text-sm font-bold">E</div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-medium text-gray-900 dark:text-gray-100 truncate">{{ Str::limit($examQuestion->idea ?? 'Exam Question', 40) }}</p>
+                                    @if($examQuestion->dynamic_view_link)
+                                    <p class="text-xs text-red-600 dark:text-red-400">🔗 Has dynamic view</p>
+                                    @endif
+                                </div>
+                                <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
 

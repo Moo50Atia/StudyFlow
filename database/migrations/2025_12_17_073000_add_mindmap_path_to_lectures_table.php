@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_loves', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('lectures', function (Blueprint $table) {
+            $table->string('mindmap_path')->nullable()->after('pdf_path');
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_loves');
+        Schema::table('lectures', function (Blueprint $table) {
+            $table->dropColumn('mindmap_path');
+        });
     }
 };

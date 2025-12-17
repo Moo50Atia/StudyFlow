@@ -66,9 +66,54 @@
                 </div>
             </div>
 
+            <!-- Mind Map Viewer (Konva.js Canvas) -->
+            @if($lecture->mindmap_path)
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl rounded-2xl mb-8 animate-fade-in-up" style="animation-delay: 0.1s">
+                <div class="px-6 py-4 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-gray-700 dark:to-gray-800 border-b dark:border-gray-700">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                            </svg>
+                            Mind Map
+                        </h4>
+                        <!-- Controls -->
+                        <div class="flex items-center gap-2">
+                            <button id="zoom-in-btn" class="p-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors" title="Zoom In">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                </svg>
+                            </button>
+                            <button id="zoom-out-btn" class="p-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors" title="Zoom Out">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
+                                </svg>
+                            </button>
+                            <button id="reset-btn" class="p-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" title="Reset View">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            </button>
+                            <span id="zoom-level" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-mono">100%</span>
+                            <a href="{{ Storage::url($lecture->mindmap_path) }}" target="_blank" class="p-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors" title="Open Full Size">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">🖱️ Scroll to zoom • Drag to pan • Works on mobile with pinch & drag</p>
+                </div>
+                <div class="p-4">
+                    <!-- Konva Canvas Container -->
+                    <div id="mindmap-canvas" class="w-full rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700" style="height: 70vh;"></div>
+                </div>
+            </div>
+            @endif
+
             <!-- Study Flow: Bulk Section Creation -->
             @if(session('study_flow') && Auth::check() && Auth::user()->role === 'admin')
-            <div class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl shadow-xl p-6 mb-8 animate-fade-in-up" style="animation-delay: 0.1s">
+            <div class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl shadow-xl p-6 mb-8 animate-fade-in-up" style="animation-delay: 0.15s">
                 <div class="flex items-center justify-between mb-6">
                     <div>
                         <h4 class="text-xl font-bold text-gray-900 dark:text-gray-100">📑 Bulk Create Sections</h4>
@@ -84,9 +129,7 @@
                 </div>
                 <form action="{{ route('study-flow.bulk-sections', $lecture) }}" method="POST" id="bulk-sections-form">
                     @csrf
-                    <div id="section-forms-container" class="space-y-4">
-                        <!-- Dynamic section forms will be inserted here -->
-                    </div>
+                    <div id="section-forms-container" class="space-y-4"></div>
                     <div class="mt-6 flex justify-end">
                         <button type="submit" id="submit-sections-btn" class="hidden inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,9 +246,17 @@
         .animate-fade-in-down {
             animation: fadeInDown 0.5s ease-out forwards;
         }
+
+        #mindmap-canvas {
+            touch-action: none;
+        }
     </style>
 
+    <!-- Konva.js Library -->
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+
     <script>
+        // Study Flow bulk section forms
         function generateSectionForms() {
             const count = parseInt(document.getElementById('section-count').value) || 1;
             const container = document.getElementById('section-forms-container');
@@ -246,5 +297,271 @@
             submitBtn.classList.remove('hidden');
             submitBtn.classList.add('inline-flex');
         }
+
+        // Konva.js Mind Map Viewer
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('mindmap-canvas');
+            if (!container) return;
+
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+
+            // Create Konva Stage
+            const stage = new Konva.Stage({
+                container: 'mindmap-canvas',
+                width: containerWidth,
+                height: containerHeight,
+                draggable: true
+            });
+
+            const layer = new Konva.Layer();
+            stage.add(layer);
+
+            // Zoom configuration
+            const minScale = 0.1;
+            const maxScale = 20;
+            const scaleBy = 1.15;
+            let currentScale = 1;
+
+            // Load image at full resolution
+            const imageUrl = "{{ Storage::url($lecture->mindmap_path ?? '') }}";
+            const imageObj = new Image();
+            imageObj.crossOrigin = 'anonymous';
+
+            imageObj.onload = function() {
+                const konvaImage = new Konva.Image({
+                    x: 0,
+                    y: 0,
+                    image: imageObj,
+                    width: imageObj.width,
+                    height: imageObj.height
+                });
+
+                layer.add(konvaImage);
+
+                // Fit image to container initially
+                const scaleX = containerWidth / imageObj.width;
+                const scaleY = containerHeight / imageObj.height;
+                const initialScale = Math.min(scaleX, scaleY) * 0.95;
+
+                currentScale = initialScale;
+                stage.scale({
+                    x: initialScale,
+                    y: initialScale
+                });
+
+                // Center the image
+                const newWidth = imageObj.width * initialScale;
+                const newHeight = imageObj.height * initialScale;
+                stage.position({
+                    x: (containerWidth - newWidth) / 2,
+                    y: (containerHeight - newHeight) / 2
+                });
+
+                layer.batchDraw();
+                updateZoomDisplay();
+            };
+
+            imageObj.src = imageUrl;
+
+            // Mouse wheel zoom (centered on cursor)
+            container.addEventListener('wheel', function(e) {
+                e.preventDefault();
+
+                const oldScale = stage.scaleX();
+                const pointer = stage.getPointerPosition();
+
+                const mousePointTo = {
+                    x: (pointer.x - stage.x()) / oldScale,
+                    y: (pointer.y - stage.y()) / oldScale
+                };
+
+                const direction = e.deltaY > 0 ? -1 : 1;
+                let newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+
+                // Clamp scale
+                newScale = Math.max(minScale, Math.min(maxScale, newScale));
+                currentScale = newScale;
+
+                stage.scale({
+                    x: newScale,
+                    y: newScale
+                });
+
+                const newPos = {
+                    x: pointer.x - mousePointTo.x * newScale,
+                    y: pointer.y - mousePointTo.y * newScale
+                };
+
+                stage.position(newPos);
+                layer.batchDraw();
+                updateZoomDisplay();
+            });
+
+            // Touch pinch zoom
+            let lastCenter = null;
+            let lastDist = 0;
+
+            stage.on('touchmove', function(e) {
+                const touch1 = e.evt.touches[0];
+                const touch2 = e.evt.touches[1];
+
+                if (touch1 && touch2) {
+                    e.evt.preventDefault();
+
+                    // Calculate distance between touches
+                    const dist = Math.sqrt(
+                        Math.pow(touch2.clientX - touch1.clientX, 2) +
+                        Math.pow(touch2.clientY - touch1.clientY, 2)
+                    );
+
+                    // Calculate center point
+                    const center = {
+                        x: (touch1.clientX + touch2.clientX) / 2,
+                        y: (touch1.clientY + touch2.clientY) / 2
+                    };
+
+                    if (!lastCenter) {
+                        lastCenter = center;
+                        lastDist = dist;
+                        return;
+                    }
+
+                    const oldScale = stage.scaleX();
+                    const pointTo = {
+                        x: (center.x - stage.x()) / oldScale,
+                        y: (center.y - stage.y()) / oldScale
+                    };
+
+                    let newScale = oldScale * (dist / lastDist);
+                    newScale = Math.max(minScale, Math.min(maxScale, newScale));
+                    currentScale = newScale;
+
+                    stage.scale({
+                        x: newScale,
+                        y: newScale
+                    });
+
+                    const dx = center.x - lastCenter.x;
+                    const dy = center.y - lastCenter.y;
+
+                    const newPos = {
+                        x: center.x - pointTo.x * newScale + dx,
+                        y: center.y - pointTo.y * newScale + dy
+                    };
+
+                    stage.position(newPos);
+                    layer.batchDraw();
+                    updateZoomDisplay();
+
+                    lastDist = dist;
+                    lastCenter = center;
+                }
+            });
+
+            stage.on('touchend', function() {
+                lastCenter = null;
+                lastDist = 0;
+            });
+
+            // Control buttons
+            document.getElementById('zoom-in-btn').addEventListener('click', function() {
+                const oldScale = stage.scaleX();
+                let newScale = oldScale * scaleBy;
+                newScale = Math.min(maxScale, newScale);
+                currentScale = newScale;
+
+                const center = {
+                    x: containerWidth / 2,
+                    y: containerHeight / 2
+                };
+
+                const pointTo = {
+                    x: (center.x - stage.x()) / oldScale,
+                    y: (center.y - stage.y()) / oldScale
+                };
+
+                stage.scale({
+                    x: newScale,
+                    y: newScale
+                });
+                stage.position({
+                    x: center.x - pointTo.x * newScale,
+                    y: center.y - pointTo.y * newScale
+                });
+
+                layer.batchDraw();
+                updateZoomDisplay();
+            });
+
+            document.getElementById('zoom-out-btn').addEventListener('click', function() {
+                const oldScale = stage.scaleX();
+                let newScale = oldScale / scaleBy;
+                newScale = Math.max(minScale, newScale);
+                currentScale = newScale;
+
+                const center = {
+                    x: containerWidth / 2,
+                    y: containerHeight / 2
+                };
+
+                const pointTo = {
+                    x: (center.x - stage.x()) / oldScale,
+                    y: (center.y - stage.y()) / oldScale
+                };
+
+                stage.scale({
+                    x: newScale,
+                    y: newScale
+                });
+                stage.position({
+                    x: center.x - pointTo.x * newScale,
+                    y: center.y - pointTo.y * newScale
+                });
+
+                layer.batchDraw();
+                updateZoomDisplay();
+            });
+
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                if (!imageObj.width) return;
+
+                const scaleX = containerWidth / imageObj.width;
+                const scaleY = containerHeight / imageObj.height;
+                const initialScale = Math.min(scaleX, scaleY) * 0.95;
+
+                currentScale = initialScale;
+                stage.scale({
+                    x: initialScale,
+                    y: initialScale
+                });
+
+                const newWidth = imageObj.width * initialScale;
+                const newHeight = imageObj.height * initialScale;
+                stage.position({
+                    x: (containerWidth - newWidth) / 2,
+                    y: (containerHeight - newHeight) / 2
+                });
+
+                layer.batchDraw();
+                updateZoomDisplay();
+            });
+
+            function updateZoomDisplay() {
+                const zoomLevel = document.getElementById('zoom-level');
+                if (zoomLevel) {
+                    zoomLevel.textContent = Math.round(currentScale * 100) + '%';
+                }
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                const newWidth = container.offsetWidth;
+                const newHeight = container.offsetHeight;
+                stage.width(newWidth);
+                stage.height(newHeight);
+                layer.batchDraw();
+            });
+        });
     </script>
 </x-app-layout>

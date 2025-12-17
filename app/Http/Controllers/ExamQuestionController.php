@@ -6,14 +6,40 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ExamQuestionRequest;
 use App\Models\ExamQuestion;
 use App\Models\Lecture;
+use App\Models\Subject;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ExamQuestionController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View
+    public function index(Request $request): \Illuminate\Contracts\View\View
     {
-        $examQuestions = ExamQuestion::with('lecture.subject')->latest()->paginate(10);
-        return view('exam_questions.index', compact('examQuestions'));
+        $query = ExamQuestion::with('lecture.subject');
+
+        // Filter by subject (via lecture)
+        if ($request->filled('subject_id')) {
+            $query->whereHas('lecture', function ($q) use ($request) {
+                $q->where('subject_id', $request->subject_id);
+            });
+        }
+
+        // Filter by lecture
+        if ($request->filled('lecture_id')) {
+            $query->where('lecture_id', $request->lecture_id);
+        }
+
+        $examQuestions = $query->latest()->paginate(12)->withQueryString();
+
+        // Get data for filters
+        $subjects = Subject::orderBy('name')->get();
+        $lectures = collect();
+
+        // If subject is selected, get its lectures
+        if ($request->filled('subject_id')) {
+            $lectures = Lecture::where('subject_id', $request->subject_id)->orderBy('title')->get();
+        }
+
+        return view('exam_questions.index', compact('examQuestions', 'subjects', 'lectures'));
     }
 
     public function create(): \Illuminate\Contracts\View\View

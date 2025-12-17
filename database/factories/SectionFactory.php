@@ -31,9 +31,9 @@ class SectionFactory extends Factory
         return [
             'lecture_id' => Lecture::factory(),
             'title' => fake()->randomElement($sectionTitles),
-            'quick_summary' => fake()->sentence(10),
-            'notebook_link' => fake()->optional(0.7)->url(),
-            'dynamic_view_link' => fake()->optional(0.5)->url(),
+            'quick_summary' => fake()->paragraph(2),
+            'notebook_link' => 'https://notebooklm.google.com/notebook/' . fake()->uuid(),
+            'dynamic_view_link' => 'https://docs.google.com/document/d/' . fake()->uuid() . '/edit',
         ];
     }
 }

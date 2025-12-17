@@ -31,6 +31,11 @@ class LectureController extends Controller
             $data['pdf_path'] = $request->file('pdf_path')->store('lectures/pdfs', 'public');
         }
 
+        // Handle Mind Map upload
+        if ($request->hasFile('mindmap_path')) {
+            $data['mindmap_path'] = $request->file('mindmap_path')->store('lectures/mindmaps', 'public');
+        }
+
         Lecture::create($data);
         return redirect()->route('lectures.index')->with('success', 'Lecture created successfully!');
     }
@@ -53,11 +58,18 @@ class LectureController extends Controller
 
         // Handle PDF upload
         if ($request->hasFile('pdf_path')) {
-            // Delete old file if exists
             if ($lecture->pdf_path) {
                 Storage::disk('public')->delete($lecture->pdf_path);
             }
             $data['pdf_path'] = $request->file('pdf_path')->store('lectures/pdfs', 'public');
+        }
+
+        // Handle Mind Map upload
+        if ($request->hasFile('mindmap_path')) {
+            if ($lecture->mindmap_path) {
+                Storage::disk('public')->delete($lecture->mindmap_path);
+            }
+            $data['mindmap_path'] = $request->file('mindmap_path')->store('lectures/mindmaps', 'public');
         }
 
         $lecture->update($data);
@@ -69,6 +81,11 @@ class LectureController extends Controller
         // Delete PDF file if exists
         if ($lecture->pdf_path) {
             Storage::disk('public')->delete($lecture->pdf_path);
+        }
+
+        // Delete Mind Map file if exists
+        if ($lecture->mindmap_path) {
+            Storage::disk('public')->delete($lecture->mindmap_path);
         }
 
         $lecture->delete();

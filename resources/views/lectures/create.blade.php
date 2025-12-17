@@ -37,20 +37,44 @@
 
                         <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.3s">
                             <label for="pdf_path" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">PDF Document</label>
-                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-indigo-500 transition-colors duration-200">
+                            <div id="pdf-drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-indigo-500 transition-colors duration-200 cursor-pointer">
                                 <div class="space-y-1 text-center">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg id="pdf-icon" class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                     </svg>
-                                    <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                    <div class="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
                                         <label for="pdf_path" class="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500">
                                             <span>Upload PDF</span>
-                                            <input id="pdf_path" name="pdf_path" type="file" accept=".pdf" class="sr-only">
+                                            <input id="pdf_path" name="pdf_path" type="file" accept=".pdf,application/pdf" class="sr-only">
                                         </label>
+                                        <p class="pl-1">or drag and drop</p>
                                     </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF up to 10MB</p>
+                                    <p id="pdf-file-name" class="text-sm font-medium text-green-600 dark:text-green-400 hidden"></p>
                                 </div>
                             </div>
                             @error('pdf_path')<p class="mt-2 text-sm text-red-500">{{ $message }}</p>@enderror
+                        </div>
+
+                        <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.35s">
+                            <label for="mindmap_path" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Mind Map Image (PNG)</label>
+                            <div id="mindmap-drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-emerald-500 transition-colors duration-200 cursor-pointer">
+                                <div class="space-y-1 text-center">
+                                    <svg id="mindmap-icon" class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                                    </svg>
+                                    <div class="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
+                                        <label for="mindmap_path" class="relative cursor-pointer rounded-md font-medium text-emerald-600 hover:text-emerald-500">
+                                            <span>Upload Mind Map</span>
+                                            <input id="mindmap_path" name="mindmap_path" type="file" accept="image/png" class="sr-only">
+                                        </label>
+                                        <p class="pl-1">or drag and drop</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">PNG up to 15MB</p>
+                                    <p id="mindmap-file-name" class="text-sm font-medium text-green-600 dark:text-green-400 hidden"></p>
+                                </div>
+                            </div>
+                            @error('mindmap_path')<p class="mt-2 text-sm text-red-500">{{ $message }}</p>@enderror
                         </div>
 
                         <div class="mb-8 animate-fade-in-up" style="animation-delay: 0.4s">
@@ -104,5 +128,71 @@
             animation: fadeInUp 0.5s ease-out forwards;
             opacity: 0;
         }
+
+        .drag-over {
+            border-color: #6366f1 !important;
+            background-color: rgba(99, 102, 241, 0.1);
+        }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // PDF drop zone
+            setupDropZone('pdf-drop-zone', 'pdf_path', 'pdf-file-name', 'pdf-icon', ['application/pdf'], '.pdf');
+            // Mind Map drop zone
+            setupDropZone('mindmap-drop-zone', 'mindmap_path', 'mindmap-file-name', 'mindmap-icon', ['image/png'], '.png');
+
+            function setupDropZone(zoneId, inputId, fileNameId, iconId, validTypes, validExt) {
+                const dropZone = document.getElementById(zoneId);
+                const fileInput = document.getElementById(inputId);
+                const fileName = document.getElementById(fileNameId);
+                const icon = document.getElementById(iconId);
+
+                if (!dropZone || !fileInput) return;
+
+                dropZone.addEventListener('click', function(e) {
+                    if (e.target !== fileInput) fileInput.click();
+                });
+
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }, false);
+                });
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-over'), false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-over'), false);
+                });
+
+                dropZone.addEventListener('drop', function(e) {
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        const file = files[0];
+                        if (validTypes.includes(file.type) || file.name.toLowerCase().endsWith(validExt)) {
+                            fileInput.files = files;
+                            updateFileName(file.name);
+                        } else {
+                            alert('Please upload a valid ' + validExt.toUpperCase() + ' file.');
+                        }
+                    }
+                });
+
+                fileInput.addEventListener('change', function() {
+                    if (this.files.length > 0) updateFileName(this.files[0].name);
+                });
+
+                function updateFileName(name) {
+                    fileName.textContent = '✓ ' + name;
+                    fileName.classList.remove('hidden');
+                    icon.classList.add('text-green-500');
+                    icon.classList.remove('text-gray-400');
+                }
+            }
+        });
+    </script>
 </x-app-layout>

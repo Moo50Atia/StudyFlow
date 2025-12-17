@@ -36,6 +36,15 @@
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Question Image</h3>
                         <img src="{{ Storage::url($question->question_image) }}" alt="Question" class="max-w-lg rounded-lg shadow-lg">
                     </div>
+                    @else
+                    <div class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl animate-fade-in-up" style="animation-delay: 0.3s;">
+                        <p class="text-amber-600 dark:text-amber-400 text-sm flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Question Image doesn't exist yet - we will add it soon!
+                        </p>
+                    </div>
                     @endif
 
                     <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.4s;">
@@ -43,10 +52,43 @@
                         <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $question->idea_text ?? 'No hint available.' }}</p>
                     </div>
 
-                    @if($question->solution_image)
+                    @if($question->solution_image || ($question->solution_images && count($question->solution_images) > 0))
                     <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.5s;">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Solution Image</h3>
-                        <img src="{{ Storage::url($question->solution_image) }}" alt="Solution" class="max-w-lg rounded-lg shadow-lg">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Solution Images</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @if($question->solution_image)
+                            <div class="relative group">
+                                <img src="{{ Storage::url($question->solution_image) }}" alt="Solution" class="w-full rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200" onclick="openImageModal(this.src)">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-all duration-200 flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            @endif
+                            @if($question->solution_images)
+                            @foreach($question->solution_images as $index => $image)
+                            <div class="relative group">
+                                <img src="{{ Storage::url($image) }}" alt="Solution {{ $index + 1 }}" class="w-full rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200" onclick="openImageModal(this.src)">
+                                <div class="absolute top-2 left-2 bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded-full">{{ $index + 1 }}</div>
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-all duration-200 flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            @endforeach
+                            @endif
+                        </div>
+                    </div>
+                    @else
+                    <div class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl animate-fade-in-up" style="animation-delay: 0.5s;">
+                        <p class="text-amber-600 dark:text-amber-400 text-sm flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Solution Images don't exist yet - we will add them soon!
+                        </p>
                     </div>
                     @endif
 
@@ -54,6 +96,32 @@
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Solution Explanation</h3>
                         <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $question->solution_explanation ?? 'No explanation available.' }}</p>
                     </div>
+
+                    @if($question->dynamic_view_link)
+                    <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.65s;">
+                        <a href="{{ $question->dynamic_view_link }}" target="_blank" class="inline-flex items-center p-4 bg-gradient-to-r from-green-50 to-emerald-100 dark:from-gray-700 dark:to-gray-600 rounded-xl hover:shadow-lg transition-all duration-200 group">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-white mr-4 group-hover:scale-110 transition-transform duration-200">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900 dark:text-gray-100">Google Dynamic View</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Open interactive explanation in new tab</p>
+                            </div>
+                        </a>
+                    </div>
+                    @else
+                    <div class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl animate-fade-in-up" style="animation-delay: 0.65s;">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-lg bg-amber-400 flex items-center justify-center text-white mr-4">🔗</div>
+                            <div>
+                                <p class="font-semibold text-amber-700 dark:text-amber-400">Google Dynamic View</p>
+                                <p class="text-sm text-amber-600 dark:text-amber-500">Link doesn't exist yet - we will add it soon!</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
                     @if(Auth::check() && Auth::user()->role !== 'student')
                     <div class="mt-6 pt-6 border-t dark:border-gray-700 flex space-x-4 animate-fade-in-up" style="animation-delay: 0.7s;">
@@ -124,4 +192,33 @@
         }
     </script>
     @endauth
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-80" onclick="closeImageModal()">
+        <button class="absolute top-4 right-4 text-white text-4xl font-bold hover:text-gray-300" onclick="closeImageModal()">&times;</button>
+        <img id="modalImage" src="" alt="Full size" class="max-w-[90vw] max-h-[90vh] rounded-lg shadow-2xl" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modalImg.src = src;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeImageModal();
+        });
+    </script>
 </x-app-layout>

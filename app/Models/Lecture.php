@@ -14,6 +14,7 @@ class Lecture extends Model
         'subject_id',
         'title',
         'pdf_path',
+        'mindmap_path',
         'summary',
     ];
 

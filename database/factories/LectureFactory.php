@@ -33,7 +33,7 @@ class LectureFactory extends Factory
         return [
             'subject_id' => Subject::factory(),
             'title' => 'Lecture ' . fake()->numberBetween(1, 20) . ': ' . fake()->randomElement($lectureTitles),
-            'pdf_path' => null,
+            'pdf_path' => 'lectures/lecture_' . fake()->numberBetween(1, 20) . '.pdf',
             'summary' => fake()->paragraph(3),
         ];
     }

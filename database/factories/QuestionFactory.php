@@ -29,11 +29,11 @@ class QuestionFactory extends Factory
 
         return [
             'lecture_id' => Lecture::factory(),
-            'question_image' => null,
+            'question_image' => 'questions/placeholder_question_' . fake()->numberBetween(1, 10) . '.png',
             'idea_text' => fake()->randomElement($ideas),
-            'solution_image' => null,
+            'solution_image' => 'questions/placeholder_solution_' . fake()->numberBetween(1, 10) . '.png',
             'solution_explanation' => fake()->paragraph(2),
-            'dynamic_view_link' => fake()->optional(0.4)->url(),
+            'dynamic_view_link' => 'https://docs.google.com/document/d/' . fake()->uuid() . '/edit',
         ];
     }
 }

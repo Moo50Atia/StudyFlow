@@ -15,8 +15,13 @@ class Question extends Model
         'question_image',
         'idea_text',
         'solution_image',
+        'solution_images',
         'solution_explanation',
         'dynamic_view_link',
+    ];
+
+    protected $casts = [
+        'solution_images' => 'array',
     ];
 
     public function lecture()

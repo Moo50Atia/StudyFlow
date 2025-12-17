@@ -36,6 +36,15 @@
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Question Image</h3>
                         <img src="{{ Storage::url($examQuestion->question_image) }}" alt="Question" class="max-w-lg rounded-lg shadow-lg">
                     </div>
+                    @else
+                    <div class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl animate-fade-in-up" style="animation-delay: 0.3s;">
+                        <p class="text-amber-600 dark:text-amber-400 text-sm flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Question Image doesn't exist yet - we will add it soon!
+                        </p>
+                    </div>
                     @endif
 
                     <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.4s;">
@@ -48,12 +57,47 @@
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Solution Image</h3>
                         <img src="{{ Storage::url($examQuestion->solution_image) }}" alt="Solution" class="max-w-lg rounded-lg shadow-lg">
                     </div>
+                    @else
+                    <div class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl animate-fade-in-up" style="animation-delay: 0.5s;">
+                        <p class="text-amber-600 dark:text-amber-400 text-sm flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Solution Image doesn't exist yet - we will add it soon!
+                        </p>
+                    </div>
                     @endif
 
                     <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.6s;">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Explanation</h3>
                         <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $examQuestion->explanation ?? 'No explanation available.' }}</p>
                     </div>
+
+                    @if($examQuestion->dynamic_view_link)
+                    <div class="mb-6 animate-fade-in-up" style="animation-delay: 0.65s;">
+                        <a href="{{ $examQuestion->dynamic_view_link }}" target="_blank" class="inline-flex items-center p-4 bg-gradient-to-r from-green-50 to-emerald-100 dark:from-gray-700 dark:to-gray-600 rounded-xl hover:shadow-lg transition-all duration-200 group">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-white mr-4 group-hover:scale-110 transition-transform duration-200">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900 dark:text-gray-100">Google Dynamic View</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Open interactive explanation in new tab</p>
+                            </div>
+                        </a>
+                    </div>
+                    @else
+                    <div class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl animate-fade-in-up" style="animation-delay: 0.65s;">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-lg bg-amber-400 flex items-center justify-center text-white mr-4">🔗</div>
+                            <div>
+                                <p class="font-semibold text-amber-700 dark:text-amber-400">Google Dynamic View</p>
+                                <p class="text-sm text-amber-600 dark:text-amber-500">Link doesn't exist yet - we will add it soon!</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
                     @if(Auth::check() && Auth::user()->role !== 'student')
                     <div class="mt-6 pt-6 border-t dark:border-gray-700 flex space-x-4 animate-fade-in-up" style="animation-delay: 0.7s;">

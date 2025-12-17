@@ -17,6 +17,7 @@ class LectureRequest extends FormRequest
             'subject_id' => 'required|exists:subjects,id',
             'title' => 'required|string|max:255',
             'pdf_path' => 'nullable|file|mimes:pdf|max:10240',
+            'mindmap_path' => 'nullable|image|mimes:png|max:15360',
             'summary' => 'nullable|string',
         ];
     }
@@ -30,6 +31,9 @@ class LectureRequest extends FormRequest
             'title.max' => 'The lecture title must not exceed 255 characters.',
             'pdf_path.mimes' => 'The file must be a PDF document.',
             'pdf_path.max' => 'The PDF file must not exceed 10MB.',
+            'mindmap_path.image' => 'The mind map must be an image file.',
+            'mindmap_path.mimes' => 'The mind map must be a PNG image.',
+            'mindmap_path.max' => 'The mind map file must not exceed 15MB.',
         ];
     }
 }

@@ -6,14 +6,40 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\QuestionRequest;
 use App\Models\Question;
 use App\Models\Lecture;
+use App\Models\Subject;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class QuestionController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View
+    public function index(Request $request): \Illuminate\Contracts\View\View
     {
-        $questions = Question::with('lecture.subject')->latest()->paginate(10);
-        return view('questions.index', compact('questions'));
+        $query = Question::with('lecture.subject');
+
+        // Filter by subject (via lecture)
+        if ($request->filled('subject_id')) {
+            $query->whereHas('lecture', function ($q) use ($request) {
+                $q->where('subject_id', $request->subject_id);
+            });
+        }
+
+        // Filter by lecture
+        if ($request->filled('lecture_id')) {
+            $query->where('lecture_id', $request->lecture_id);
+        }
+
+        $questions = $query->latest()->paginate(12)->withQueryString();
+
+        // Get data for filters
+        $subjects = Subject::orderBy('name')->get();
+        $lectures = collect();
+
+        // If subject is selected, get its lectures
+        if ($request->filled('subject_id')) {
+            $lectures = Lecture::where('subject_id', $request->subject_id)->orderBy('title')->get();
+        }
+
+        return view('questions.index', compact('questions', 'subjects', 'lectures'));
     }
 
     public function create(): \Illuminate\Contracts\View\View
@@ -26,12 +52,23 @@ class QuestionController extends Controller
     {
         $data = $request->validated();
 
-        // Handle image uploads
+        // Handle question image upload
         if ($request->hasFile('question_image')) {
             $data['question_image'] = $request->file('question_image')->store('questions/images', 'public');
         }
+
+        // Handle single solution image (backward compatibility)
         if ($request->hasFile('solution_image')) {
             $data['solution_image'] = $request->file('solution_image')->store('questions/solutions', 'public');
+        }
+
+        // Handle multiple solution images
+        if ($request->hasFile('solution_images')) {
+            $solutionImages = [];
+            foreach ($request->file('solution_images') as $image) {
+                $solutionImages[] = $image->store('questions/solutions', 'public');
+            }
+            $data['solution_images'] = $solutionImages;
         }
 
         Question::create($data);
@@ -54,18 +91,35 @@ class QuestionController extends Controller
     {
         $data = $request->validated();
 
-        // Handle image uploads
+        // Handle question image upload
         if ($request->hasFile('question_image')) {
             if ($question->question_image) {
                 Storage::disk('public')->delete($question->question_image);
             }
             $data['question_image'] = $request->file('question_image')->store('questions/images', 'public');
         }
+
+        // Handle single solution image (backward compatibility)
         if ($request->hasFile('solution_image')) {
             if ($question->solution_image) {
                 Storage::disk('public')->delete($question->solution_image);
             }
             $data['solution_image'] = $request->file('solution_image')->store('questions/solutions', 'public');
+        }
+
+        // Handle multiple solution images
+        if ($request->hasFile('solution_images')) {
+            // Delete old images if replacing
+            if ($question->solution_images) {
+                foreach ($question->solution_images as $oldImage) {
+                    Storage::disk('public')->delete($oldImage);
+                }
+            }
+            $solutionImages = [];
+            foreach ($request->file('solution_images') as $image) {
+                $solutionImages[] = $image->store('questions/solutions', 'public');
+            }
+            $data['solution_images'] = $solutionImages;
         }
 
         $question->update($data);
@@ -80,6 +134,11 @@ class QuestionController extends Controller
         }
         if ($question->solution_image) {
             Storage::disk('public')->delete($question->solution_image);
+        }
+        if ($question->solution_images) {
+            foreach ($question->solution_images as $image) {
+                Storage::disk('public')->delete($image);
+            }
         }
 
         $question->delete();

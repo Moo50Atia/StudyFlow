@@ -28,11 +28,11 @@ class ExamQuestionFactory extends Factory
 
         return [
             'lecture_id' => Lecture::factory(),
-            'question_image' => null,
+            'question_image' => 'exam_questions/placeholder_exam_' . fake()->numberBetween(1, 10) . '.png',
             'idea' => fake()->randomElement($ideas),
-            'solution_image' => null,
+            'solution_image' => 'exam_questions/placeholder_solution_' . fake()->numberBetween(1, 10) . '.png',
             'explanation' => fake()->paragraph(3),
-            'dynamic_view_link' => fake()->optional(0.3)->url(),
+            'dynamic_view_link' => 'https://docs.google.com/document/d/' . fake()->uuid() . '/edit',
         ];
     }
 }
