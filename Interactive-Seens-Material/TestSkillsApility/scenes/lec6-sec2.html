@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Default Locked Variables — C++ OOP Simulator</title>
+  
+  <!-- CDNs: Three.js, OrbitControls, KaTeX, Inter Font -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS Design Tokens & Glassmorphism Styles -->
+  <style>
+    :root {
+      /* Typography */
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-size-body: 16px;
+      --font-size-caption: 14px;
+      --font-size-heading: 24px;
+      --font-size-title: 32px;
+      --line-height-body: 1.6;
+      --line-height-heading: 1.2;
+
+      /* Spacing Scale */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+
+      /* Border Radius */
+      --radius-button: 14px;
+      --radius-card: 20px;
+      --radius-dialog: 24px;
+      --radius-badge: 999px;
+
+      /* Glassmorphism Design System (VisionOS Style) */
+      --glass-bg: rgba(15, 18, 30, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-blur: 24px;
+      --glass-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+
+      /* Semantic Colors */
+      --color-learning: #3b82f6;     /* Blue */
+      --color-success: #22c55e;      /* Green */
+      --color-attention: #f59e0b;    /* Orange */
+      --color-creative: #a855f7;     /* Purple */
+      --color-danger: #ef4444;       /* Red */
+      --color-focus: #eab308;        /* Yellow */
+      --color-programming: #06b6d4;  /* Cyan */
+
+      /* Z-Index Layers */
+      --z-canvas: 0;
+      --z-interactive: 5;
+      --z-panel: 10;
+      --z-dialog: 20;
+      --z-alert: 30;
+      --z-tooltip: 40;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-body);
+      color: #f1f5f9;
+      background-color: #020617;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* WebGL Canvas */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: var(--z-canvas);
+    }
+
+    /* Glass Panels Layout */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--glass-shadow);
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Header Panel */
+    header.glass-panel {
+      position: fixed;
+      top: var(--space-md);
+      left: var(--space-md);
+      right: var(--space-md);
+      height: 70px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-lg);
+    }
+
+    .header-title-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-breadcrumb {
+      font-size: var(--font-size-caption);
+      color: #94a3b8;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 180ms ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
+
+    .nav-btn:focus-visible {
+      outline: 2px solid var(--color-programming);
+      outline-offset: 2px;
+    }
+
+    /* Tabs Navigation (Bottom Center) */
+    .tab-bar.glass-panel {
+      position: fixed;
+      bottom: var(--space-md);
+      left: 50%;
+      transform: translateX(-50%);
+      height: 60px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-xs);
+      border-radius: var(--radius-button);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: calc(var(--radius-button) - 4px);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 250ms ease;
+    }
+
+    .tab-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn:focus-visible {
+      outline: 2px solid var(--color-programming);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+      border-bottom: 2px solid var(--layer-color, var(--color-learning));
+    }
+
+    /* Details Panel (Right Side) */
+    .details-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      right: var(--space-md);
+      bottom: 90px;
+      width: 380px;
+      z-index: var(--z-panel);
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-lg);
+      overflow-y: auto;
+      max-width: calc(100vw - var(--space-lg) * 2);
+    }
+
+    .details-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .details-content {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .details-content p {
+      margin-bottom: var(--space-md);
+    }
+
+    .details-content code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+      color: var(--color-programming);
+    }
+
+    /* Controls Panel (Left Side) */
+    .controls-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      left: var(--space-md);
+      width: 320px;
+      z-index: var(--z-panel);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .controls-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: var(--space-xs);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .control-label {
+      font-size: 14px;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: var(--radius-badge);
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .control-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-programming);
+      border: 2px solid #ffffff;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .control-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    /* Drawer Panel (Index / Navigation Hub Overlay) */
+    #nav-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: var(--z-dialog);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 300ms ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #nav-drawer.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer-content.glass-panel {
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: var(--space-xl);
+      position: relative;
+    }
+
+    .drawer-close {
+      position: absolute;
+      top: var(--space-lg);
+      right: var(--space-lg);
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .drawer-close:hover {
+      color: #ffffff;
+    }
+
+    .drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .scene-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-button);
+      padding: var(--space-md);
+      text-decoration: none;
+      color: #cbd5e1;
+      transition: all 200ms ease;
+    }
+
+    .scene-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--color-programming);
+      transform: translateY(-2px);
+    }
+
+    /* Accessibility visible focus */
+    button:focus-visible, input:focus-visible, a:focus-visible {
+      outline: 2px solid var(--color-programming) !important;
+      outline-offset: 2px;
+    }
+
+    /* Responsiveness */
+    @media (max-width: 1024px) {
+      .details-panel.glass-panel {
+        width: 320px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      .details-panel.glass-panel, .controls-panel.glass-panel {
+        position: static;
+        width: 100%;
+        margin-top: var(--space-md);
+        bottom: auto;
+        height: auto;
+      }
+      .tab-bar.glass-panel {
+        position: static;
+        transform: none;
+        width: 100%;
+        margin-top: var(--space-md);
+        display: flex;
+        justify-content: space-around;
+        height: auto;
+        padding: var(--space-xs);
+      }
+      header.glass-panel {
+        position: static;
+        height: auto;
+        padding: var(--space-md);
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+      #mobile-layout-wrap {
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-md);
+        margin-top: 80px;
+        position: relative;
+        z-index: var(--z-panel);
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- WebGL Render Target -->
+  <div id="canvas-container"></div>
+  
+  <!-- Mobile Content Layout Wrapper (only takes layout space on mobile) -->
+  <div id="mobile-layout-wrap">
+    
+    <!-- Floating Header -->
+    <header class="glass-panel">
+      <div class="header-title-section">
+        <span class="header-breadcrumb">Lecture 6 · Section 2</span>
+        <h1 class="header-title" id="scene-title">Default Locked Variables</h1>
+      </div>
+      <div class="header-nav">
+        <a class="nav-btn" href="lec6-sec1.html" id="prev-btn">← Prev</a>
+        <button class="nav-btn" id="menu-btn" aria-label="Open Navigation Hub">☰ Index</button>
+        <a class="nav-btn" href="lec6-sec3.html" id="next-btn">Next →</a>
+      </div>
+    </header>
+
+    <!-- Controls Panel -->
+    <section class="controls-panel glass-panel" aria-label="Scene Controls">
+      <h2 class="controls-title">Interactive Panel</h2>
+      <div class="control-group">
+        <div class="control-label">
+          <span>Access Specifier Label</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+          <button class="nav-btn" id="btn-label-none" style="background: rgba(239, 68, 68, 0.12); border-color: var(--color-danger); text-align: left;">No Label (Default Private)</button>
+          <button class="nav-btn" id="btn-label-public" style="border-color: var(--color-success); text-align: left;">Insert "public:" Label</button>
+        </div>
+      </div>
+      
+      <div class="control-group">
+        <div class="control-label">
+          <span>Simulation Speed</span>
+          <span id="speed-val">1.0x</span>
+        </div>
+        <input type="range" class="control-slider" id="speed-slider" min="0.1" max="2.0" step="0.1" value="1.0" aria-label="Adjust speed multiplier">
+      </div>
+    </section>
+
+    <!-- Details Panel -->
+    <main class="details-panel glass-panel" aria-label="Explanation Panel">
+      <h2 class="details-title" id="panel-layer-name">THE SOFTWARE LAYER</h2>
+      <div class="details-content" id="panel-dynamic-content">
+        <!-- Render content here dynamically -->
+      </div>
+    </main>
+
+    <!-- Tab Bar -->
+    <nav class="tab-bar glass-panel" aria-label="Visual Layers Selection">
+      <button class="tab-btn active" data-tab="0" style="--layer-color: var(--color-learning)">Software</button>
+      <button class="tab-btn" data-tab="1" style="--layer-color: var(--color-creative)">RAM Map</button>
+      <button class="tab-btn" data-tab="2" style="--layer-color: var(--color-programming)">CPU / RIP</button>
+      <button class="tab-btn" data-tab="3" style="--layer-color: var(--color-success)">GPU FX</button>
+      <button class="tab-btn" data-tab="4" style="--layer-color: var(--color-danger)">Corrector</button>
+    </nav>
+    
+  </div>
+
+  <!-- Interactive Index Navigation Hub Drawer Overlay -->
+  <div id="nav-drawer" role="dialog" aria-modal="true" aria-label="Interactive Navigation Grid">
+    <div class="drawer-content glass-panel">
+      <button class="drawer-close" id="drawer-close-btn" aria-label="Close index hub">×</button>
+      <h2 class="header-title" style="margin-bottom: var(--space-md);">All Visual Scenes</h2>
+      <div class="drawer-grid" id="drawer-scenes-grid">
+        <!-- Grid dynamically loaded -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Manager Infrastructure -->
+  <script>
+    // ----------------------------------------------------
+    // BASE 3D CONTENT GENERATOR (ABSTRACT)
+    // ----------------------------------------------------
+    class BaseGenerator {
+      constructor(scene) {
+        this.scene = scene;
+        this.meshes = [];
+        this.materials = [];
+        this.geometries = [];
+        this.activeLayer = 0;
+      }
+
+      create() {}
+      update(delta, speed) {}
+      transitionLayer(tabIndex) {
+        this.activeLayer = tabIndex;
+      }
+      handleInteraction(controlId, value) {}
+
+      dispose() {
+        this.meshes.forEach(mesh => {
+          this.scene.remove(mesh);
+        });
+        this.geometries.forEach(geo => geo.dispose());
+        this.materials.forEach(mat => mat.dispose());
+        this.meshes = [];
+        this.geometries = [];
+        this.materials = [];
+      }
+
+      smoothTransitionColor(material, targetHex, duration = 600) {
+        const startColor = material.color.clone();
+        const targetColor = new THREE.Color(targetHex);
+        const startTime = performance.now();
+
+        const animate = () => {
+          const elapsed = performance.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = progress < 0.5 
+            ? 2 * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+          material.color.lerpColors(startColor, targetColor, ease);
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+        requestAnimationFrame(animate);
+      }
+    }
+
+    // ----------------------------------------------------
+    // CUSTOM SCENE GENERATOR SUBCLASS
+    // ----------------------------------------------------
+    class TemplateGenerator extends BaseGenerator {
+      constructor(scene) {
+        super(scene);
+        this.isPublic = false;
+        this.locks = [];
+        this.cards = [];
+        this.group = new THREE.Group();
+      }
+
+      create() {
+        this.scene.add(this.group);
+        this.meshes.push(this.group);
+
+        const cardNames = ['double radius', 'double area', 'getArea()'];
+        const cardOffsets = ['[RCX + 0]', '[RCX + 8]', '0x00401560'];
+        const bgHex = 'rgba(15, 18, 30, 0.8)';
+        
+        for (let i = 0; i < 3; i++) {
+          const cardGroup = new THREE.Group();
+          cardGroup.position.y = 0.8 - i * 0.8;
+          this.group.add(cardGroup);
+
+          // Card panel mesh
+          const cardGeo = new THREE.BoxGeometry(2.4, 0.6, 0.1);
+          const cardTex = this.createCanvasCard(cardNames[i], cardOffsets[i], bgHex, '#ef4444');
+          const cardMat = new THREE.MeshPhysicalMaterial({ map: cardTex, transparent: true, roughness: 0.2 });
+          const cardMesh = new THREE.Mesh(cardGeo, cardMat);
+          cardGroup.add(cardMesh);
+          this.cards.push(cardMesh);
+          this.geometries.push(cardGeo);
+          this.materials.push(cardMat);
+
+          // Attached 3D Padlock Group
+          const lockGroup = new THREE.Group();
+          lockGroup.position.set(1.4, 0, 0.1);
+          cardGroup.add(lockGroup);
+          this.locks.push(lockGroup);
+
+          // Padlock Body
+          const bodyGeo = new THREE.BoxGeometry(0.2, 0.2, 0.1);
+          const bodyMat = new THREE.MeshPhysicalMaterial({ color: 0xef4444, roughness: 0.2 });
+          const body = new THREE.Mesh(bodyGeo, bodyMat);
+          lockGroup.add(body);
+          this.geometries.push(bodyGeo);
+          this.materials.push(bodyMat);
+
+          // Padlock loop shackle
+          const shackleGeo = new THREE.TorusGeometry(0.08, 0.02, 6, 12, Math.PI);
+          const shackle = new THREE.Mesh(shackleGeo, bodyMat);
+          shackle.position.y = 0.1;
+          shackle.rotation.z = Math.PI;
+          lockGroup.add(shackle);
+          this.geometries.push(shackleGeo);
+          
+          lockGroup.userData = { shackle: shackle, body: body };
+        }
+
+        // Floating public: label (key model)
+        const keyLabelGeo = new THREE.PlaneGeometry(1.6, 0.35);
+        const keyLabelTex = this.createCanvasLabel('public:', '#22c55e');
+        this.keyLabelMat = new THREE.MeshBasicMaterial({ map: keyLabelTex, transparent: true, opacity: 0 });
+        this.keyLabelMesh = new THREE.Mesh(keyLabelGeo, this.keyLabelMat);
+        this.keyLabelMesh.position.set(-2.0, 0, 0.2);
+        this.group.add(this.keyLabelMesh);
+        this.geometries.push(keyLabelGeo);
+        this.materials.push(this.keyLabelMat);
+      }
+
+      createCanvasCard(name, offset, bg, borderHex) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 256;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, 256, 64);
+        ctx.strokeStyle = borderHex;
+        ctx.lineWidth = 4;
+        ctx.strokeRect(2, 2, 252, 60);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 20px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(name, 16, 36);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '14px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText(offset, 240, 36);
+
+        return new THREE.CanvasTexture(canvas);
+      }
+
+      createCanvasLabel(text, color) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 48;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.2)';
+        ctx.fillRect(0, 0, 128, 48);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 4;
+        ctx.strokeRect(2, 2, 124, 44);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 20px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, 64, 24);
+
+        return new THREE.CanvasTexture(canvas);
+      }
+
+      update(delta, speed) {
+        this.group.rotation.y = Math.sin(performance.now() * 0.0004) * 0.2;
+
+        // Key label transition
+        const targetOpacity = this.isPublic ? 1.0 : 0.0;
+        this.keyLabelMat.opacity += (targetOpacity - this.keyLabelMat.opacity) * 0.1;
+        
+        const targetKeyX = this.isPublic ? -1.6 : -2.4;
+        this.keyLabelMesh.position.x += (targetKeyX - this.keyLabelMesh.position.x) * 0.1;
+
+        // Animate padlock updates
+        this.locks.forEach((l) => {
+          const targetY = this.isPublic ? 0.25 : 0.1;
+          l.userData.shackle.position.y += (targetY - l.userData.shackle.position.y) * 0.1;
+          
+          const opacity = this.isPublic ? 0.15 : 1.0;
+          l.userData.body.material.opacity += (opacity - l.userData.body.material.opacity) * 0.1;
+          l.userData.shackle.material.opacity = l.userData.body.material.opacity;
+          
+          const matColor = this.isPublic ? 0x22c55e : 0xef4444; // Green vs Red
+          l.userData.body.material.color.lerp(new THREE.Color(matColor), 0.1);
+        });
+      }
+
+      transitionLayer(tabIndex) {
+        super.transitionLayer(tabIndex);
+        this.cards.forEach(c => {
+          c.material.wireframe = (tabIndex === 1 || tabIndex === 3);
+        });
+      }
+
+      handleInteraction(controlId, value) {
+        if (controlId === 'label') {
+          this.isPublic = value; // true = public, false = private
+        }
+      }
+    }
+
+    // ----------------------------------------------------
+    // THREE.JS SCENE MANAGEMENT LAYER
+    // ----------------------------------------------------
+    class SceneManager {
+      constructor(container) {
+        this.container = container;
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x020617);
+        this.scene.fog = new THREE.FogExp2(0x020617, 0.015);
+
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.container.appendChild(this.renderer.domElement);
+
+        this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 100);
+        this.camera.position.set(0, 0.2, 4.0);
+
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+
+        this.lights = new LightingManager(this.scene);
+        this.generator = new TemplateGenerator(this.scene);
+
+        this.clock = new THREE.Clock();
+        this.animationFrameId = null;
+
+        this.onResize = this.onResize.bind(this);
+        window.addEventListener('resize', this.onResize);
+      }
+
+      init() {
+        this.lights.createStandardRig();
+        this.generator.create();
+        this.animate();
+      }
+
+      onResize() {
+        this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+      }
+
+      animate() {
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+        const delta = this.clock.getDelta();
+        
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reducedMotion) {
+          this.generator.update(delta, window.app.speedMultiplier);
+        }
+        
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+      }
+
+      dispose() {
+        cancelAnimationFrame(this.animationFrameId);
+        window.removeEventListener('resize', this.onResize);
+        
+        this.generator.dispose();
+        this.lights.dispose();
+        this.controls.dispose();
+        this.renderer.dispose();
+        this.renderer.domElement.remove();
+      }
+    }
+
+    // ----------------------------------------------------
+    // LIGHTING CONFIGURATION MANAGER
+    // ----------------------------------------------------
+    class LightingManager {
+      constructor(scene) {
+        this.scene = scene;
+        this.lights = [];
+      }
+
+      createStandardRig() {
+        const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+        this.scene.add(ambient);
+        this.lights.push(ambient);
+
+        const key = new THREE.DirectionalLight(0xffffff, 0.8);
+        key.position.set(5, 8, 5);
+        this.scene.add(key);
+        this.lights.push(key);
+
+        const fill = new THREE.DirectionalLight(0x06b6d4, 0.2);
+        fill.position.set(-5, 4, -5);
+        this.scene.add(fill);
+        this.lights.push(fill);
+      }
+
+      dispose() {
+        this.lights.forEach(light => this.scene.remove(light));
+        this.lights = [];
+      }
+    }
+
+    // ----------------------------------------------------
+    // APPLICATION & INTERACTION CONTROLLER
+    // ----------------------------------------------------
+    class ApplicationManager {
+      constructor() {
+        this.speedMultiplier = 1.0;
+        this.sceneConfig = {
+          id: "lec6-sec2",
+          title: "Default Locked Variables",
+          layers: [
+            {
+              name: "THE SOFTWARE LAYER",
+              content: "<p>A 3D representation of class variables. When no access specifier is explicitly declared, a padlock icon attaches to variables, indicating they are locked. Inserting a 'public:' label rotates a key, unlocking the latch on the variable container box.</p>"
+            },
+            {
+              name: "THE MEMORY TOPOLOGY (RAM) LAYER",
+              content: "<p><strong>Compiler Symbol Table:</strong> Variables exist in consecutive RAM cells at specific offsets. The access label does not change the physical RAM layout or memory offsets. The compiler simply tags the access permission flags within its internal compile-time symbol lookup tables.</p>"
+            },
+            {
+              name: "THE CPU & REGISTERS LAYER",
+              content: "<p>Compiler semantic analyzer processes tokens. Access checking shifts the compiler state machine from PRIVATE (default) to PUBLIC upon reading the <code>public:</code> label token. No runtime CPU registers are mutated; code that attempts illegal access fails validation during translation.</p>"
+            },
+            {
+              name: "THE GPU / VRAM LAYER",
+              content: "<p>Class variables are rendered as 3D block cards with padlocks. Toggling the public label triggers a 3D key rotation and unlocks the meshes in VRAM, causing the padlocks to slide open and fade away.</p>"
+            },
+            {
+              name: "UNDER-THE-HOOD CORRECTOR",
+              content: "<p><strong>Misconception Shattered:</strong> C++ variables declared inside class brackets are not open by default. The compiler defaults to private access for security, meaning a <code>public:</code> section label must be explicitly declared to allow external modules to access them directly.</p>"
+            }
+          ]
+        };
+      }
+
+      init() {
+        const canvasContainer = document.getElementById('canvas-container');
+        this.sceneManager = new SceneManager(canvasContainer);
+        this.sceneManager.init();
+
+        this.initEventListeners();
+        this.populateScenesGrid();
+        this.switchTab(0);
+        
+        window.addEventListener('beforeunload', () => {
+          this.sceneManager.dispose();
+        });
+      }
+
+      initEventListeners() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.switchTab(parseInt(btn.dataset.tab));
+          });
+        });
+
+        // Toggle Buttons
+        const btnNone = document.getElementById('btn-label-none');
+        const btnPublic = document.getElementById('btn-label-public');
+        if (btnNone && btnPublic) {
+          btnNone.addEventListener('click', () => {
+            btnNone.style.background = 'rgba(239, 68, 68, 0.12)';
+            btnPublic.style.background = 'transparent';
+            this.sceneManager.generator.handleInteraction('label', false);
+          });
+          btnPublic.addEventListener('click', () => {
+            btnPublic.style.background = 'rgba(34, 197, 94, 0.12)';
+            btnNone.style.background = 'transparent';
+            this.sceneManager.generator.handleInteraction('label', true);
+          });
+        }
+
+        // Speed Slider
+        const speedSlider = document.getElementById('speed-slider');
+        const speedVal = document.getElementById('speed-val');
+        if (speedSlider) {
+          speedSlider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            this.speedMultiplier = val;
+            speedVal.innerText = val.toFixed(1) + 'x';
+          });
+        }
+
+        // Drawer
+        const menuBtn = document.getElementById('menu-btn');
+        const drawer = document.getElementById('nav-drawer');
+        const drawerClose = document.getElementById('drawer-close-btn');
+        if (menuBtn && drawer) {
+          menuBtn.addEventListener('click', () => drawer.classList.add('open'));
+        }
+        if (drawerClose && drawer) {
+          drawerClose.addEventListener('click', () => drawer.classList.remove('open'));
+        }
+
+        window.addEventListener('keydown', (e) => {
+          if (e.key >= '1' && e.key <= '5') {
+            const btn = document.querySelector(`.tab-btn[data-tab="${parseInt(e.key) - 1}"]`);
+            if (btn) btn.click();
+          }
+        });
+      }
+
+      switchTab(tabIdx) {
+        const layer = this.sceneConfig.layers[tabIdx];
+        document.getElementById('panel-layer-name').innerText = layer.name;
+        
+        const contentContainer = document.getElementById('panel-dynamic-content');
+        contentContainer.innerHTML = layer.content;
+
+        if (window.renderMathInElement) {
+          renderMathInElement(contentContainer, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false }
+            ]
+          });
+        }
+
+        this.sceneManager.generator.transitionLayer(tabIdx);
+      }
+
+      populateScenesGrid() {
+        const grid = document.getElementById('drawer-scenes-grid');
+        const scenes = [
+          { name: "Return to Main Dashboard", url: "index.html", fullWidth: true },
+          { name: "Lec 3 · Sec 3: Conveyor Belt Spawns", url: "lec3-sec3.html" },
+          { name: "Lec 4 · Sec 1: UML Tiers", url: "lec4-sec1.html" },
+          { name: "Lec 4 · Sec 2: Access & Statics", url: "lec4-sec2.html" },
+          { name: "Lec 5 · Sec 1: Terminating Semicolon", url: "lec5-sec1.html" },
+          { name: "Lec 5 · Sec 2: Default Privacy", url: "lec5-sec2.html" },
+          { name: "Lec 6 · Sec 1: Access Enforcement", url: "lec6-sec1.html" },
+          { name: "Lec 6 · Sec 2: Default Locked Vars", url: "lec6-sec2.html" },
+          { name: "Lec 6 · Sec 3: Exposure State Corruption", url: "lec6-sec3.html" },
+          { name: "Lec 7 · Sec 1: Inline Class Declarations", url: "lec7-sec1.html" },
+          { name: "Lec 7 · Sec 2: Scope Resolution Bridge", url: "lec7-sec2.html" },
+          { name: "Lec 7 · Sec 3: Inline Code Injections", url: "lec7-sec3.html" }
+        ];
+
+        scenes.forEach(s => {
+          const card = document.createElement('a');
+          card.className = 'scene-card';
+          card.href = s.url;
+          card.innerText = s.name;
+          if (s.fullWidth) {
+            card.style.gridColumn = '1 / -1';
+            card.style.textAlign = 'center';
+            card.style.fontWeight = 'bold';
+            card.style.borderColor = 'var(--color-programming)';
+          }
+          grid.appendChild(card);
+        });
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.app = new ApplicationManager();
+      window.app.init();
+    });
+  </script>
+</body>
+</html>

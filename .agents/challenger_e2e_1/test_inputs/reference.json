@@ -1,0 +1,14 @@
+{
+  "ContentForFunding": {
+    "Universities": {
+      "Why": "Partnerships",
+      "Priority": "Critical",
+      "Category_For_Company": ["Research Project"]
+    },
+    "Government": {
+      "Why": "Grants",
+      "Priority": "Critical",
+      "Structure": {}
+    }
+  }
+}

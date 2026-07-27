@@ -1,0 +1,13 @@
+{
+  "total_chunks": 12,
+  "average_chunk_size_chars": 4737.166666666667,
+  "minimum_size_chars": 4032,
+  "maximum_size_chars": 5000,
+  "average_overlap": 400,
+  "average_token_estimate": 1183.9166666666667,
+  "semantic_violations": 0,
+  "distribution_metrics": {
+    "p50_size": 4758,
+    "p90_size": 5000
+  }
+}

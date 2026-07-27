@@ -1,0 +1,77 @@
+import requests
+from bs4 import BeautifulSoup
+import time
+import urllib.parse
+
+def search_bing(query):
+    print(f"Scraping Bing for: {query}")
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    }
+    url = "https://www.bing.com/search?q=" + urllib.parse.quote(query)
+    try:
+        response = requests.get(url, headers=headers, timeout=15)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            results = []
+            # Bing search results: li.b_algo
+            for r in soup.find_all('li', class_='b_algo'):
+                h2 = r.find('h2')
+                if h2:
+                    a = h2.find('a')
+                    if a:
+                        title = a.text.strip()
+                        link = a.get('href')
+                        snippet = ""
+                        # Try to find snippet
+                        caption = r.find('div', class_='b_caption')
+                        if caption:
+                            p = caption.find('p')
+                            if p:
+                                snippet = p.text.strip()
+                        if not snippet:
+                            # fallback: find any p or span text
+                            p_all = r.find_all('p')
+                            if p_all:
+                                snippet = " | ".join([p.text.strip() for p in p_all if len(p.text.strip()) > 10])
+                        results.append(f"Title: {title}\nLink: {link}\nSnippet: {snippet}\n")
+            
+            if not results:
+                # General text fallback if no b_algo
+                text = soup.get_text(separator=' ')
+                text = ' '.join(text.split())
+                return text[:8000]
+                
+            return "\n".join(results)
+        else:
+            return f"Failed. HTTP Status: {response.status_code}"
+    except Exception as e:
+        return f"Error: {e}"
+
+def main():
+    queries = [
+        "Dakahlia STEM School contact phone email",
+        "Talkha STEM School principal headteacher coordinator LinkedIn",
+        "Mansoura STEM School address coordinates Google Maps",
+        "Dakhlia STEM School funding sponsorship projects USAID",
+        "Dakahlia STEM School Capstone exhibition"
+    ]
+    
+    results = {}
+    for q in queries:
+        res = search_bing(q)
+        results[q] = res
+        time.sleep(2)
+        
+    with open('bing_results.txt', 'w', encoding='utf-8') as f:
+        for q, text in results.items():
+            f.write(f"========================================\n")
+            f.write(f"QUERY: {q}\n")
+            f.write(f"========================================\n")
+            f.write(text)
+            f.write("\n\n")
+            
+    print("Scraping completed. Results saved to bing_results.txt")
+
+if __name__ == '__main__':
+    main()

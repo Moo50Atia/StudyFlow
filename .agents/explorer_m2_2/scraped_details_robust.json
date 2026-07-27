@@ -1,0 +1,2128 @@
+{
+  "netlify": {
+    "url": "https://stemdk.netlify.app/",
+    "text": "\n  \n    \n      \n        \n        \n          \n            This site can’t be reached\n          \n          \n            stemdk.netlify.app took too long to respond.\n          \n\n          \n            \n              Try:\n              \n                \n                  Checking the connection\n                \n                  Checking the proxy and the firewall\n                \n                  Running Windows Network Diagnostics\n                \n              \n            \n          \n\n          ERR_CONNECTION_TIMED_OUT\n\n          \n        \n      \n      \n        \n          \n            \n              Reload\n            \n          \n          \n        \n        \n          \n            Details\n          \n        \n      \n      \n        \n          \n            \n              Check your Internet connection\n              Check any cables and reboot any routers, modems, or other network\n    devices you may be using.\n            \n          \n            \n              Allow Chrome to access the network in your firewall or antivirus\n          settings.\n              If it is already listed as a program allowed to access the network, try\n      removing it from the list and adding it again.\n            \n          \n            \n              If you use a proxy server…\n              Go to\n          the Chrome menu >\n          Settings\n          >\n          System\n          >\n          Open your computer's proxy settings\n          >\n          Network & internet > Proxy\n          and deselect \"Automatically detect settings\".\n            \n          \n        \n      \n    \n    \n      \n        \n        \n        stemdk.netlify.app took too long to respond.\n      \n    \n  \n  \n    \n    \n    \n  \n\n\n",
+    "links": [
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Checking the proxy and the firewall"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "#buttons"
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  "google_sites": {
+    "url": "https://sites.google.com/stemmaster.moe.edu.eg/stem/home/schools/dakahlya-stem-school",
+    "text": "Search this siteEmbedded FilesSkip to main contentSkip to navigationSTEM WEB APPDakahlya STEM SchoolDatabase:be sure that the following database are updatedSchool LeadersTeachersStudentsInfrastructureLocal STEM UnitBoTImportant sites:BlueprintCurriculumCurriculum site (other copy)Assistance files:Offline GradingNames TranslatorCAPSTONE:Journal distributionJournal Evaluation follow upCheating ReportExamsExam AppUpload:Upload All GradesGrade 10Grade 11Grade 12School:AttendanceTime TableReport abuseReport abuse",
+    "links": [
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "STEM WEB APP"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Home"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "all links"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/all-links"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "STEM-UNIT"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/stem-unit"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Schools"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "6 October STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/6-october-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Maadi STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/maadi-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Alexandria STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/alexandria-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Dakahlya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/dakahlya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Assiut STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/assiut-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Luxor STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/luxor-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "RedSea STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/redsea-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Ismailia STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/ismailia-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "KafrElShiekh STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/kafrelshiekh-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Gharbya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/gharbya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Menofya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/menofya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Obour STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/obour-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Sharkya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/sharkya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Qena STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/qena-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "BeniSweif STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/benisweif-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "ElSatat STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elsatat-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Elmenya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elmenya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Sohag STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/sohag-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "ElFayoum STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elfayoum-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "October2 STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/october2-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "NewCairo STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/newcairo-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "ElArish STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elarish-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Behayra STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/behayra-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "STEM WEB APP"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Home"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "all links"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/all-links"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "STEM-UNIT"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/stem-unit"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Schools"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "6 October STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/6-october-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Maadi STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/maadi-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Alexandria STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/alexandria-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Dakahlya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/dakahlya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Assiut STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/assiut-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Luxor STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/luxor-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "RedSea STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/redsea-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Ismailia STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/ismailia-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "KafrElShiekh STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/kafrelshiekh-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Gharbya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/gharbya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Menofya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/menofya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Obour STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/obour-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Sharkya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/sharkya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Qena STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/qena-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "BeniSweif STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/benisweif-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "ElSatat STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elsatat-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Elmenya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elmenya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Sohag STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/sohag-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "ElFayoum STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elfayoum-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "October2 STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/october2-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "NewCairo STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/newcairo-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "ElArish STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elarish-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Behayra STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/behayra-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Home"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "all links"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/all-links"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "STEM-UNIT"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/stem-unit"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Schools"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "6 October STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/6-october-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Maadi STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/maadi-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Alexandria STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/alexandria-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Dakahlya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/dakahlya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Assiut STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/assiut-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Luxor STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/luxor-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "RedSea STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/redsea-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Ismailia STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/ismailia-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "KafrElShiekh STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/kafrelshiekh-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Gharbya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/gharbya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Menofya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/menofya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Obour STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/obour-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Sharkya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/sharkya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Qena STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/qena-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "BeniSweif STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/benisweif-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "ElSatat STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elsatat-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Elmenya STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elmenya-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Sohag STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/sohag-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "ElFayoum STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elfayoum-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "October2 STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/october2-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "NewCairo STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/newcairo-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "ElArish STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/elarish-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Behayra STEM School"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "/stemmaster.moe.edu.eg/stem/home/schools/behayra-stem-school"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": ""
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "#h.p_SmvXnRlOY_6E"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": ""
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "#h.p_2FUtme0lY_6E"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "School Leaders"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://drive.google.com/open?id=1JB8vN4wX6WCLc-fxARAnGny6wWAuPdsC1xl_uGAI5p8"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Teachers"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://drive.google.com/open?id=1qGguiPequ-uR8Mzo3kz0POah3NPjfjiKahN3SsTkmDc"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Students"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://drive.google.com/open?id=1LqarZ8so8ZmobjuaVTsVMid4vNQn9YiNrFjB4IjNwHc"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Infrastructure"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://docs.google.com/spreadsheets/d/1AJRx_F7M7ujeDFGEnsN1eBgi6ln-49JfSJ5MxiM_LfY/edit?usp=sharing"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": ""
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "#h.p_OuGjcEFGayNA"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Blueprint"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://sites.google.com/stemmaster.moe.edu.eg/blueprint"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Curriculum"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://script.google.com/macros/s/AKfycbwiWExdvSHqSAhvY739SmwQCLw-LE7gUIBsVR7MZVS7q76Y4EU/exec"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Curriculum site (other copy)"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://script.google.com/macros/s/AKfycbwhuGTY3NnNUuwQZtBydVHdE6W98oSbmh5LsYhRpjYv-fHiEX2p7r6TNfYt0EhuvkoG2w/exec"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": ""
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "#h.p_Og386DyceVFN"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Offline Grading"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://drive.google.com/open?id=1Jnnj65gh5-ZbDQTrCkjWj_4hH19lVTI2gw-CXLUlM8Y"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Names Translator"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://drive.google.com/open?id=1_aeitmebIQtEVtHffGIijUFsa4jzX5InYl5hQanUIuo"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": ""
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "#h.p_RWCf2BOmW52-"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Journal distribution"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://script.google.com/a/macros/stemmaster.moe.edu.eg/s/AKfycbyYtwgTpoovrCHUmXBHQXpND-imzg0YiPh2OicPjiZb5gQyFsBi/exec"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Journal Evaluation follow up"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://docs.google.com/spreadsheets/d/1p_gAsIXaYlaIfYtUoZHUfIfsBVZgCc3rI81l0CDi29Q/edit?usp=sharing"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Cheating Report"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://docs.google.com/forms/d/e/1FAIpQLSccBNM93D6Z7bgZ_qE_j9V-jZ3gDBIkYQzhL_J91eg-B4gTAQ/viewform?usp=sf_link"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": ""
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "#h.p_vc7UVk3pSbwP"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Exam App"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://script.google.com/macros/s/AKfycbw-lOmGb9LYsTrgZeKamdfqxzEeKClQWqOdZ3-KVVzkTsHvm8Tp/exec"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": ""
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "#h.p_TzIpg0t2zoIo"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Upload All Grades"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://drive.google.com/drive/folders/12jMERlohp9hxSAtiOe-wIztV2sgVyKXx?usp=sharing"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Grade 10"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://drive.google.com/drive/folders/1I3uiJ2fG1vSF9TP6nYzEl1viYEgDONj-?usp=sharing"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Grade 11"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://drive.google.com/drive/folders/1Mzudezd8Wr4U-Q7-g5HlZPqMX4FaNQOQ?usp=sharing"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Grade 12"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://drive.google.com/drive/folders/1CyIEYEz7TzkRowGQWdroqBb8LpcGNah2?usp=sharing"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": ""
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "#h.unt9s01o8f3s"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Attendance"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://docs.google.com/forms/d/e/1FAIpQLSf3jjXK31KfHKhGmq9lX_AabPBVeoPcSCgVJhOhzE9T8toa-g/viewform?usp=sf_link"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "object",
+        "value": [
+          [
+            "text",
+            {
+              "type": "string",
+              "value": "Time Table"
+            }
+          ],
+          [
+            "href",
+            {
+              "type": "string",
+              "value": "https://docs.google.com/spreadsheets/d/135ndsCMEBCqKVChVkSsqZ8SwoMfaWVJQHsCMlurhgAg/edit?userstoinvite=ahmed.elhady%40stemismailia.moe.edu.eg&actionButton=1#gid=2142978244&range=B1:C1"
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  "facebook": {
+    "url": "https://www.facebook.com/STEMDakahlia/",
+    "text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "links": []
+  }
+}

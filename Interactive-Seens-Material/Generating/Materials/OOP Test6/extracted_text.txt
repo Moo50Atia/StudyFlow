@@ -1,0 +1,2591 @@
+CIE 101
+Fundamentals of
+Computer Programing
+Dr Tamer Ashour Ali
+
+Unit 2
+Objects and Classes
+Fundamentals of Computer Programing
+© Dr Tamer Ali, SP 25
+
+Reference for these slides
+W. Savitch, Problem Solving with C++,
+Pearson
+Y. Liang, Introduction to Programming with
+C++. Pearson Education India, 2011.
+T. Gaddis, P. Sengupta, Starting out with
+C++: from control structures through
+objects. Pearson, 2012.
+M. Weisfeld, The Object-Oriented Thought
+Process. Pearson Education, 2009
+© Dr Tamer Ali, FL23
+
+Agenda
+© Dr Tamer Ali, SP 25
+
+Moving to Object
+Oriented Programing
+© Dr Tamer Ali, SP 25
+
+Procedural Programing
+// Bank account data void deposit(double amount)
+double balance = 0.0; {
+balance += amount;
+void withdraw(double amount) cout << "New Balance: $"
+{ << balance << endl;
+if (amount > balance) }
+cout << "Insufficient funds!"
+<< endl; int main()
+else {
+{ deposit(100);
+balance -= amount; withdraw(30);
+cout << "New Balance: $" withdraw(80);
+<< balance << endl; }
+}
+}
+© Dr Tamer Ali, SP 25
+
+Procedural Programing
+Global Global
+data data
+function1() function2() function3()
+© Dr Tamer Ali, SP 25
+
+Object Oriented Programing
+Data Data
+Functions Functions
+Data
+Functions
+© Dr Tamer Ali, SP 25
+
+Object Oriented Programing
+class BankAccount { void deposit(double amount) {
+private: double balance;
+balance += amount;
+public:
+cout << "New Balance: $"
+BankAccount(double val)
+<< balance << endl;
+{ balance = val; }
+}
+void withdraw(double amount) { };
+if (amount > balance)
+cout << "Insufficient funds!"
+int main() {
+<< endl;
+BankAccount myAccount(50);
+else {
+myAccount.deposit(100);
+balance -= amount;
+myAccount.withdraw(30);
+cout << "New Balance: $"
+myAccount.withdraw(80);
+<< balance << endl;
+}
+}
+}
+© Dr Tamer Ali, SP 25
+
+Procedural Programing and Object-Oriented
+Programing
+Procedural programming focuses on the process/actions
+that occur in a program.
+– Tells the computer what to do step by step
+Object-Oriented programming (OOP) is based on the data
+and the functions that operate on it. Objects are
+instances of ADTs that represent the data and its
+functions.
+– All computations are carried through OBJECTS
+– OBJECT: An element that knows how to act and how to interact
+with other elements
+© Dr Tamer Ali, SP 25
+
+Object-Oriented Programming
+• Everything is an object.
+• Objects can
+• act/interact
+• have their own memory
+• Every object is an instance of a class
+• The class holds the shared
+behavior for its instances.
+• Every object has a unique identity, state, and behavior.
+© Dr Tamer Ali, SP 25
+
+Object-Oriented Programming
+Data hiding:
+– restricting access to certain members of an
+object
+Public interface:
+– members that are accessible outside of the
+object
+Allows the object to
+– provide access to some data and functions
+Data Data
+without sharing its internal details and design
+– provide some protection from data corruption Func1 Func2
+© Dr Tamer Ali, SP 25
+
+Object-Oriented Programming Terminology
+Member Attributes / data fields / properties:
+– Member properties of a class
+Member Methods / behaviors / functions:
+– Member functions of a class
+© Dr Tamer Ali, SP 25
+
+UML – Class Diagram
+Circle Class name
+−radius: double Member Attributes
++getRadius(): double
++setRadius(r: double): void
++getArea(): double
+Member Methods
+© Dr Tamer Ali, SP 25
+
+UML – Class Diagram
+Circle
+Circle1: Circle
+−radius: double
++getRadius(): double
+radius = 2.4
+Three objects of
++setRadius(r: double): void
+the Circle class
++getArea(): double
+Circle2: Circle
+A class (a template / blueprint / …)
+radius = 3.0
+A construct that defines
+objects of the same type.
+Circle3: Circle
+Defines
+radius = 10.333
+the object
+State: A set of data fields (properties) with their current values.
+Defines
+what the
+Behavior: defined by a set of functions.
+object does
+© Dr Tamer Ali, SP 25
+
+How to Declare a
+Class?
+© Dr Tamer Ali, SP 25
+
+Class Example
+Circle
+class Circle Optional −radius: double
+default
+{ +getArea(): double
+value
+private:
+ddoouubbllee rraaddiiuuss; = 1;
+Member data field
+Default is
+public:
+private
+double getArea();
+Member function
+}; // Must place a semicolon here
+Access Specifiers / Modifiers
+private / public
+© Dr Tamer Ali, SP 25
+
+Class Example
+Like Global,
+but inside
+ccllaassss CCiirrccllee Circle
+the object
+{{
+−radius: double
+pprriivvaattee::
+ddoouubbllee rraaddiiuuss == 11;; +getArea(): double
+ppuubblliicc::
+ddddoooouuuubbbblllleeee ggggeeeettttAAAArrrreeeeaaaa(((())))
+Can access member data field
+{{{
+rrreeetttuuurrrnnn rrraaadddiiiuuusss *** rrraaadddiiiuuusss *** 333...111444111555999;;;
+}}} iinntt mmaaiinn(())
+}};; //// MMuusstt ppllaaccee aa sseemmiiccoolloonn hheerree
+{{
+CCiirrccllee cc11;;
+cc11..rraaddiiuuss == 55;;
+ccoouutt <<<< cc11..ggeettAArreeaa(());;
+}}
+© Dr Tamer Ali, SP 25
+
+Class Example
+Like Global,
+but inside
+class Circle Circle
+the object
+{
+−radius: double
+public:
+double radius = 1; +getArea(): double
+double getArea()
+Can access member data field
+{
+return radius * radius * 3.14159;
+} iinntt mmaaiinn(())
+}; // Must place a semicolon here
+{{
+CCiirrccllee cc11;;
+cc11..rraaddiiuuss == 55;;
+ccoouutt <<<< cc11..ggeettAArreeaa(());;
+}}
+© Dr Tamer Ali, SP 25
+
+Class Example
+Like Global,
+but inside
+class Circle Circle
+the object
+{
+−radius: double
+public:
+double radius = 1; +getArea(): double
+double getArea();
+Can access member data field
+}; // Must place a semicolon here
+int main()
+double Circle::getArea()
+{
+{
+Circle c1;
+return radius * radius * 3.14159;
+c1.radius = 5;
+}
+cout << c1.getArea();
+}
+© Dr Tamer Ali, SP 25
+
+class Circle
+int main() Class name Object name
+{
+public:
+{
+double radius = 1;
+Circle circle1;
+double getArea()
+{
+Circle circle2; circle2.radius = 25;
+return radius * radius * 3.14159;
+Circle circle3; circle3.radius = 125; }
+}; // Must place a semicolon here
+cout << "The area of the circle of radius " Object member access operator
+<< circle1..radius << " is " << circle1..getArea() << endl;
+cout << "The area of the circle of radius "
+<< circle2.radius << " is " << circle2.getArea() << endl;
+cout << "The area of the circle of radius "
+<< circle3.radius << " is " << circle3.getArea() << endl;
+// Modify circle radius
+Independent
+circle2.radius = 100;
+cout << "The area of the circle of radius "
+<< circle2.radius << " is " << circle2.getArea() << endl;
+}
+© Dr Tamer Ali, SP 25
+
+The Scope of Data fields
+Data fields and functions can be declared in any order in a class.
+class Circle class Circle
+{ {
+private: public:
+double radius; double getArea();
+public: private:
+double getArea(); double radius;
+}; };
+© Dr Tamer Ali, SP 25
+
+The Scope of Data fields
+Data fields and functions can be declared in any order in a class.
+class Circle class Circle class Circle
+{ { {
+private: public: public:
+double radius; double getArea(); double getArea();
+double memFun2();
+public: private: void memFun3(double);
+double getArea(); double radius;
+double memFun2(); private:
+public: double radius;
+public: double memFun2(); };
+void memFun3(double); void memFun3(double);
+}; };
+© Dr Tamer Ali, SP 25
+
+CCCiiirrrcccllleee
+The Scope of Data fields
+−−−rrraaadddiiiuuusss::: dddooouuubbbllleee
++++gggeeetttAAArrreeeaaa((()))::: dddooouuubbbllleee
+ccllaassss CCiirrccllee
+Data fields are accessible to
+++sseettRRaaddiiuuss((rr:: ddoouubbllee)):: vvooiidd
+{{
++getRadius(): double
+all member functions in the ppuubblliicc::
+ddoouubbllee ggeettAArreeaa(())
+class (like global variables {{
+rreettuurrnn rraaddiiuuss**rraaddiiuuss**33..1144;;
+but inside the class).
+}};;
+ddoouubbllee ggeettRRaaddiiuuss(())
+Getter
+{{
+rreettuurrnn rraaddiiuuss;;
+}};;
+int main()
+vvooiidd sseettRRaaddiiuuss((ddoouubbllee rr))
+{
+Sett er {{
+Circle c1;
+rraaddiiuuss == rr;;
+Encapsulation
+cout << c1.getArea() << endl;
+}};;
+c1.setRadius(10);
+cout << c1.getArea() << endl; pprriivvaattee::
+ddoouubbllee rraaddiiuuss;;
+cout << c1.getRadius() << endl;
+}};;
+}
+© Dr Tamer Ali, SP 25
+
+Circle
+The Scope of Local Variables
+−radius: double
++getArea(): double
+class Circle
+Local variables are declared and used
++setRadius(r: double): void
+{
++getRadius(): double
+inside a function locally. public:
+double getArea()
+{
+double a;
+a = radius * radius * 3.14;
+return a;
+};
+double getRadius()
+{
+return radius;
+};
+void setRadius(double r)
+{
+radius = r;
+};
+private:
+double radius;
+};
+© Dr Tamer Ali, SP 25
+
+Circle
+The Scope of Local Variables
+−radius: double
++getArea(): double
+ccllaassss CCiirrccllee
+Local variables are declared and used
++setRadius(r: double): void
+{{
++getRadius(): double
+inside a function locally.
+ppuubblliicc::
+ddoouubbllee ggeettAArreeaa(()) { ... }
+ddoouubbllee ggeettRRaaddiiuuss(()) { ... }
+vvooiidd sseettRRaaddiiuuss((ddoouubbllee rr))
+If a local variable has the same name
+{{
+as a data field, the local variable takes rdaoduibulse =rardi;us = r;
+}};;
+precedence and the data field with the
+pprriivvaattee::
+same name is hidden.
+ddoouubbllee rraaddiiuuss;;
+}};;
+© Dr Tamer Ali, SP 25
+
+The Scope of Local Variables
+int x; // Global variable int main()
+{
+class Test
+Test test;
+{
+test.print();
+public:
+int y = 10; // Data fields
+return 0;
+}
+void print()
+{
+cout << "x is " << x << endl;
+x is 0
+cout << "y is " << y << endl;
+y is 10
+}
+};
+© Dr Tamer Ali, SP 25
+
+The Scope of Local Variables
+int x; // Global variable int main()
+{
+class Test
+Test test;
+{
+test.print();
+public:
+int x = 10, y = 10; // Data fields
+return 0;
+}
+void print()
+{
+cout << "x is " << x << endl;
+x is 10
+cout << "y is " << y << endl;
+y is 10
+}
+};
+© Dr Tamer Ali, SP 25
+
+The Scope of Local Variables
+int x; // Global variable int main()
+{
+class Test
+Test test;
+{
+test.print();
+public:
+int x = 10, y = 10; // Data fields
+return 0;
+}
+void print()
+{
+int x = 20; // Local variable
+cout << "x is " << x << endl;
+x is 20
+cout << "y is " << y << endl;
+y is 10
+}
+};
+Can you access all three x's?
+© Dr Tamer Ali, SP 25
+
+The Scope of Local Variables
+int x; // Global variable int main()
+{
+class Test
+Test test;
+{
+test.print();
+public:
+int x = 10, y = 10; // Data fields
+return 0;
+}
+void print()
+{
+int x = 20; // Local variable
+cout << "Local x is " << x << endl; Local x is 20
+cout << "Member x is " << Test::x << endl;
+Member x is 10
+cout << "Global x is " << ::x << endl;
+Global x is 0
+cout << "Member y is " << y << endl;
+Member y is 10
+}
+};
+© Dr Tamer Ali, SP 25
+
+The Scope of Local Variables
+int x; // Global variable int main()
+{
+class Test
+Test test;
+{
+test.print();
+public:
+int x = 10, y = 10; // Data fields
+return 0;
+}
+void print()
+{
+int x = 20; // Local variable
+cout << "Local x is " << x << endl; Local x is 20
+cout << "Member x is " << this->x << endl;
+Member x is 10
+cout << "Global x is " << ::x << endl;
+Global x is 0
+cout << "Member y is " << y << endl;
+Member y is 10
+}
+};
+© Dr Tamer Ali, SP 25
+
+Naming Objects and Classes
+When you declare a custom class, CAPITALIZE the
+first letter of each word in a class name; for example,
+the class names Circle, Rectangle, and
+GeometricShape.
+The class names in the C++ library are named in
+lowercase: string, iostream
+The objects are named like variables.
+TV tv1;
+Car myCar;
+© Dr Tamer Ali, SP 25
+
+Memberwise Copy
+When use the assignment operator = , each data field of one object is
+copied to its counterpart in the other object.
+Circle
+int main()
+−radius: double
+{
++getArea(): double
+Circle c1, c2; ...
+c2 = c1; // Copies radius in c1 to c2
+}
+After the copy, c1 and c2 are still two different objects, but with the
+same radius value.
+However …
+bool b = (c1 =/ c2); // Will not work by default
+© Dr Tamer Ali, SP 25
+
+Abstraction and
+Encapsulation
+© Dr Tamer Ali, SP 25
+
+Class Abstraction and Encapsulation
+Class Abstraction
+to separate class implementation from
+the use of the class.
+only the essential details are displayed
+to the user
+Define the high-level features and
+functionalities without the details of how.
+Class Encapsulation
+to bundle the data and methods related
+to an object into a single unit.
+to allow using a protective shield to
+prevent accessing the data by the code
+outside this shield. Concepts of Encapsulation and Abstraction (C#) (completecsharptutorial.com)
+© Dr Tamer Ali, SP 25
+
+Data Field Encapsulation
+If the data fields are public, they can be modified directly
+circle1.radius = -5
+student5.gpa = 9.5
+client.accountBalance += 5e512
+Not a good practice:
+– Data may be tampered.
+– Makes the class difficult to maintain and vulnerable to bugs.
+Use Getter / Setter
+.
+© Dr Tamer Ali, SP 25
+
+Example – Getter (Accessor) and Setter (Mutator)
+class TV int TV::getChannel()
+{
+{
+return channel;
+private:
+}
+int channel = 1, volumeLevel = 1;
+bool on = false; void TV::setChannel(int newChannel)
+{
+channel = newChannel; Is that
+public:
+}
+// Getters (Accessors): it?
+// returnType getPropertyName()
+bool TV::isOn()
+int getChannel(); {
+bool isOn(); return on;
+… }
+void TV::TurnOn()
+// Setters (Mutators):
+{
+// void setPropertyName(dataType value) on = true;
+void setChannel(int newChannel); }
+void TurnOn();
+void TV::TurnOff()
+void TurnOff();
+{
+…
+on = false;
+}; }
+© Dr Tamer Ali, SP 25
+
+Example – Getter (Accessor) and Setter (Mutator)
+Private
+TV
+−channel: int The current channel (1 to 120) of this TV.
+−volumeLevel: int The current volume level (1 to 7) of this TV.
+−on: Boolean Indicates whether this TV is on/off.
++turnOn(): void Turns on this TV.
++turnOff(): void Turns off this TV.
++setChannel(newChannel: int): void Sets a new channel for this TV.
++setVolume(newVolume: int): void Sets a new volume level for this TV.
++channelUp(): void Increases the channel number by 1.
++channelDown(): void Decreases the channel number by 1.
++volumeUp(): void Increases the volume level by 1.
++volumeDown(): void Decreases the volume level by 1.
+Public
+© Dr Tamer Ali, SP 25
+
+Example – Getter (Accessor) and Setter (Mutator)
+TV
+class TV
+−channel: int
+{
+−volumeLevel: int
+−on: Boolean
+private:
++turnOn(): void
+int channel = 1, volumeLevel = 1;
++turnOff(): void
++setChannel(newChannel: int): void
+bool on = false;
++setVolume(newVolume: int): void
++channelUp(): void
++channelDown(): void
+public: +volumeUp(): void
++volumeDown(): void
+void TurnOn(); void TurnOff();
+void setChannel(int newChannel); The current channel (1 to 120) of this TV.
+The current volume level (1 to 7) of this TV.
+void setVolume (int newVolume);
+Indicates whether this TV is on/off.
+void channelUp(); void channelDown(); Turns on this TV.
+Turns off this TV.
+void volumeUp(); void volumeDown();
+Sets a new channel for this TV.
+Sets a new volume level for this TV.
+};
+Increases the channel number by 1.
+Decreases the channel number by 1.
+Increases the volume level by 1.
+Decreases the volume level by 1.
+© Dr Tamer Ali, SP 25
+
+Example – Getter (Accessor) and Setter (Mutator)
+class TV
+{
+private:
+int channel = 1, volumeLevel = 1;
+void TV::turnOn() bool on = false;
+{ public:
+void TurnOn(); void TurnOff();
+on = true; void setChannel(int newChannel);
+void setVolume (int newVolume);
+void channelUp(); void channelDown();
+}
+void volumeUp(); void volumeDown();
+};
+void TV::turnOff()
+The current channel (1 to 120) of this TV.
+The current volume level (1 to 7) of this TV.
+{
+Indicates whether this TV is on/off.
+on = false; Turns on this TV.
+Turns off this TV.
+} Sets a new channel for this TV.
+Sets a new volume level for this TV.
+Increases the channel number by 1.
+Decreases the channel number by 1.
+Increases the volume level by 1.
+Decreases the volume level by 1.
+© Dr Tamer Ali, SP 25
+
+Example – Getter (Accessor) and Setter (Mutator)
+void TV::setChannel(int newChannel)
+class TV
+{
+{
+private:
+int channel = 1, volumeLevel = 1;
+if (o n & & newChannel >= 1 bool on = false;
+&& newChannel <= 120) public:
+void TurnOn(); void TurnOff();
+channel = newChannel; void setChannel(int newChannel);
+void setVolume (int newVolume);
+void channelUp(); void channelDown();
+}
+void volumeUp(); void volumeDown();
+};
+void TV::setVolume(int newVolumeLevel)
+The current channel (1 to 120) of this TV.
+The current volume level (1 to 7) of this TV.
+{
+Indicates whether this TV is on/off.
+if (on && newVolumeLevel >= 1 Turns on this TV.
+Turns off this TV.
+&& newVolumeLevel <= 7) Sets a new channel for this TV.
+Sets a new volume level for this TV.
+volumeLevel = newVolumeLevel;
+Increases the channel number by 1.
+Decreases the channel number by 1.
+}
+Increases the volume level by 1.
+Decreases the volume level by 1.
+© Dr Tamer Ali, SP 25
+
+Example – Getter (Accessor) and Setter (Mutator)
+class TV
+{
+void TV::channelUp()
+private:
+int channel = 1, volumeLevel = 1;
+{ bool on = false;
+if (on && channel < 120) public:
+void TurnOn(); void TurnOff();
+channel++; void setChannel(int newChannel);
+void setVolume (int newVolume);
+void channelUp(); void channelDown();
+}
+void volumeUp(); void volumeDown();
+};
+void TV::channelDown()
+The current channel (1 to 120) of this TV.
+The current volume level (1 to 7) of this TV.
+{
+Indicates whether this TV is on/off.
+if (on && channel > 1) Turns on this TV.
+Turns off this TV.
+channel--; Sets a new channel for this TV.
+Sets a new volume level for this TV.
+}
+Increases the channel number by 1.
+Decreases the channel number by 1.
+Increases the volume level by 1.
+Decreases the volume level by 1.
+© Dr Tamer Ali, SP 25
+
+Example – Getter (Accessor) and Setter (Mutator)
+class TV
+{
+void TV::volumeUp()
+private:
+int channel = 1, volumeLevel = 1;
+{ bool on = false;
+if (on && volumeLevel < 7) public:
+void TurnOn(); void TurnOff();
+volumeLevel++; void setChannel(int newChannel);
+void setVolume (int newVolume);
+void channelUp(); void channelDown();
+}
+void volumeUp(); void volumeDown();
+};
+void TV::volumeDown()
+The current channel (1 to 120) of this TV.
+The current volume level (1 to 7) of this TV.
+{
+Indicates whether this TV is on/off.
+if (on && volumeLevel > 1) Turns on this TV.
+Turns off this TV.
+volumeLevel--; Sets a new channel for this TV.
+Sets a new volume level for this TV.
+}
+Increases the channel number by 1.
+Decreases the channel number by 1.
+Increases the volume level by 1.
+Decreases the volume level by 1.
+© Dr Tamer Ali, SP 25
+
+Example – Getter (Accessor) and Setter (Mutator)
+int main()
+class TV
+{
+{ private:
+int channel = 1, volumeLevel = 1;
+TV tv1; bool on = false;
+tv1.turnOn(); public:
+void TurnOn(); void TurnOff();
+tv1.setChannel(30); void setChannel(int newChannel);
+void setVolume (int newVolume);
+void channelUp(); void channelDown();
+tv1.setVolume(6);
+void volumeUp(); void volumeDown();
+};
+TV tv2; tv2.turnOn();
+tv2.channelUp(); tv2.channelUp();
+tv2.volumeUp(); tv2.volumeUp(); tv2.volumeUp();
+return 0;
+}
+© Dr Tamer Ali, SP 25
+
+Constant and Static
+Members
+© Dr Tamer Ali, SP 25
+
+Constant Members
+You can use const to specify class Circle
+{
+a constant parameter.
+public:
+double getArea() const;
+double getRadius() const;
+void setRadius(double);
+private:
+double radius;
+const double MAX_RADIUS = 5;
+};
+int main()
+{
+Circle c1;
+c1.setRadius(10);
+cout << c1.getArea();
+}
+© Dr Tamer Ali, SP 25
+
+Constant Members
+Typically,
+You can use const to specify class Circle
+Getters
+{
+a constant parameter. are const
+public:
+double getArea() const;
+double getRadius() const;
+void setRadius(double);
+You also can specify a
+constant member function
+private:
+double radius;
+The function should not
+const double MAX_RADIUS = 5;
+change the value of any };
+member data fields in the
+int main()
+{
+object
+Circle c1;
+c1.setRadius(10);
+cout << c1.getArea();
+}
+© Dr Tamer Ali, SP 25
+
+Constant Members
+int main() int main()
+{ {
+Circle regularCircle; Circle regularCircle;
+const Circle constCircle; const Circle constCircle;
+regularCircle.| regularCircle.setRadius(3.5);
+constCircle.|
+getArea
+Constant
+functions
+getArea
+getRadius
+Constant
+Non-Constant functions getRadius
+setRadius
+functions
+return 0;
+} return 0;
+}
+© Dr Tamer Ali, SP 25
+
+Constant Members
+class Circle
+double Circle::getArea()
+{
+public:
+{
+double getArea();
+return radius * radius * 3.14; double getRadius();
+void setRadius(double);
+}
+private:
+double radius;
+};
+This code will not compile if the getArea() function is not a const function.
+void printCircleArea(const Circle& c) // Global function
+{
+cout << "The area of the circle is " << c.getArea();
+}
+© Dr Tamer Ali, SP 25
+
+Constant Members
+class Circle
+double Circle::getArea() const
+{
+public:
+{
+double getArea() const;
+return radius * radius * 3.14; double getRadius() const;
+void setRadius(double);
+}
+private:
+double radius;
+};
+This code will compile if the getArea() function is a const function.
+void printCircleArea(const Circle& c) // Global function
+{
+cout << "The area of the circle is " << c.getArea();
+}
+If you have a const object
+• you can only use its const member functions
+• You can not use its non-const member functions
+© Dr Tamer Ali, SP 25
+
+Static Member Variables
+class Grade
+You can have Static Member
+{ Declaration
+Variables
+public:
+int static minGrade;
+All objects of the class share the
+int grade = 10;
+same instance of this variable. };
+Initialization
+Definition
+All get affected when changes
+int Grade::minGrade = 60;
+Must define outside the class
+int main()
+{
+Initialize only outside the class
+cout << Grade::minGrade;
+Defaults to zero (or chosen value)
+Grade g;
+with the first created object cout << g.grade;
+}
+© Dr Tamer Ali, SP 25
+
+Static Member Functions
+Can only access static member class Grade
+{
+variables and static functions
+private:
+int static minGrade;
+As any function, can have its
+int grade;
+own local variables
+public:
+Can be called without creating
+void setGrade(int v);
+an instance of the class.
+double getGrade() const;
+static void setMinGrade(int v);
+int main()
+static int getMinGrade();
+{
+};
+Grade::setMinGrade(20);
+int Grade::minGrade = 60;
+}
+© Dr Tamer Ali, SP 25
+
+Static Members
+Grade.cpp Grade.h
+#include "Grade.h" #pragma once
+?
+// Can access static & non-static members class Grade
+void Grade::setGrade(int v) { grade = v; }
+{
+double Grade::getGrade() const { return grade; }
+private:
+bool Grade::isPassing() const
+int static minGrade;
+{
+int grade;
+return grade >= minGrade;
+}
+public:
+string Grade::getPF() const
+void setGrade(int v);
+{
+double getGrade() const;
+if (isPassing()) return "P";
+return ( isPassing() ? "P" : "F" );
+bool isPassing() const;
+else return "F";
+string getPF() const;
+}
+static void setMinGrade(int v);
+// Can ONLY access static members static int getMinGrade();
+void Grade::setMinGrade(int v) { minGrade = v; } };
+int Grade::getMinGrade() { return minGrade; }
+int Grade::minGrade = 60;
+© Dr Tamer Ali, SP 25
+
+Static Members
+Grade.h
+int main() #pragma once
+{
+Grade s[10];
+class Grade
+for (int i = 0; i < 10; i++)
+{
+s[i].setGrade(10 * i + 1);
+private:
+int static minGrade;
+for (int i = 0; i < 10; i++)
+int grade;
+cout << s[i].getGrade() << ": "
+<< s[i].getPF() << endl;
+public:
+void setGrade(int v);
+cout << string(4, '-') << endl;
+double getGrade() const;
+bool isPassing() const;
+Grade::setMinGrade(20);
+string getPF() const;
+for (int i = 0; i < 10; i++)
+cout << s[i].getGrade() << ": " static void setMinGrade(int v);
+<< s[i].getPF() << endl; static int getMinGrade();
+};
+return 0;
+}
+int Grade::minGrade = 60;
+© Dr Tamer Ali, SP 25
+
+Static Members
+1: F Grade.h
+11: F
+int main() #pragma once
+21: F
+{
+31: F
+Grade s[10];
+class Grade
+41: F
+for (int i = 0; i < 10; i++)
+{ 51: F
+s[i].setGrade(10 * i + 1);
+privat6e1:: P
+i7n1t: sPtatic minGrade;
+for (int i = 0; i < 10; i++)
+i8n1t: gPrade;
+cout << s[i].getGrade() << ": "
+91: P
+<< s[i].getPF() << endl;
+----
+public:
+1: F
+void setGrade(int v);
+cout << string(4, '-') << endl;
+11: F
+double getGrade() const;
+s[3].setMinGrade(20);
+21: P
+bool isPassing() const;
+Grade::setMinGrade(20);
+31: P
+string getPF() const;
+for (int i = 0; i < 10; i++)
+41: P
+cout << s[i].getGrade() << ": " static void setMinGrade(int v);
+51: P
+<< s[i].getPF() << endl; static int getMinGrade();
+61: P
+};
+71: P
+return 0;
+81: P
+}
+int Grade::minGrade = 60;
+91: P
+© Dr Tamer Ali, SP 25
+
+Instance or Static Member Function?
+How to decide? class Grade
+Static
+{
+member
+A variable or function that is
+private:
+dependent on a specific int static minGrade;
+int grade;
+instance of the class should
+Instance
+member
+be an instance variable or public: Instance
+member
+void setGrade(int v);
+function.
+double getGrade() const;
+Static
+A variable or function that is bool isPassing() const; member
+string getPF() const;
+not dependent on a specific
+static void setMinGrade(int v);
+instance of the class should
+static int getMinGrade();
+};
+be a static variable or
+function.
+int Grade::minGrade = 60;
+© Dr Tamer Ali, SP 25
+
+Instance or Static Member Function?
+How to decide? class Grade
+Can have static const
+{
+member variable
+A variable or function that is
+private:
+dependent on a specific int static minGrade;
+int grade;
+instance of the class should
+Can not have static
+const member function
+be an instance variable or public:
+void setGrade(int v);
+function.
+double getGrade() const;
+A variable or function that is bool isPassing() const;
+string getPF() const;
+not dependent on a specific
+static void setMinGrade(int v);
+instance of the class should
+static int getMinGrade();
+};
+be a static variable or
+function.
+int Grade::minGrade = 60;
+© Dr Tamer Ali, SP 25
+
+Static Members
+class AppConfig
+{
+public:
+static const int verMajor;
+static const int verMinor;
+static const string themeColor;
+static const int MAX_USERS;
+// Static function to display application configuration
+static void displayConfig()
+{
+cout << "Application Version: " << verMajor << "." << verMinor << endl;
+cout << "Theme Color: " << themeColor << endl;
+cout << "Maximum Number of Users: " << MAX_USERS << endl;
+}
+};
+int main()
+// Initialize static members
+{
+const int AppConfig::verMajor = 1;
+const int AppConfig::verMinor = 0;
+// Accessing without
+const string AppConfig::themeColor = "DarkBlue";
+// instantiation
+const int AppConfig::MAX_USERS = 100;
+AppConfig::displayConfig();
+}
+© Dr Tamer Ali, SP 25
+
+Constructors
+and Destructors
+© Dr Tamer Ali, SP 25
+
+Constructors
+class Circle
+A special type of functions that are automatically
+{
+called when an object is created. public:
+double radius;
+– Normally is used to initialize the object.
+Circle()
+Has the same name as the defining class. 2
+{
+radius = 1;
+}
+Does not have a return type—not even void.
+};
+int main()
+{
+Circle c1;
+}
+© Dr Tamer Ali, SP 25
+
+Constructors
+class Circle
+A special type of functions that are automatically
+{
+called when an object is created. public:
+double radius;
+– Normally is used to initialize the object.
+Circle()
+Has the same name as the defining class. 2
+{
+Overload
+radius = 1;
+}
+Does not have a return type—not even void.
+Circle(double newRadius)
+Can be overloaded to construct objects with different
+2 {
+options. radius = newRadius;
+}
+};
+If you declare a class without constructors:
+– A default constructor with an empty body is
+int main()
+implicitly declared.
+{
+Circle c1;
+Circle c2(10.5);
+}
+© Dr Tamer Ali, SP 25
+
+Constructors
+class Circle
+A special type of functions that are automatically
+{
+called when an object is created. public:
+double radius;
+– Normally is used to initialize the object.
+Circle()
+Has the same name as the defining class.
+{
+radius = 1;
+}
+Does not have a return type—not even void.
+Circle(double newRadius)
+Can be overloaded to construct objects with different
+{
+options. radius = newRadius;
+}
+};
+If you declare a class without constructors:
+– A default constructor with an empty body is
+int main()
+implicitly declared.
+{
+Circle c1;
+Circle c2(10.5);
+}
+© Dr Tamer Ali, SP 25
+
+Constructors
+class Circle
+A special type of functions that are automatically
+{
+called when an object is created. public:
+double radius;
+– Normally is used to initialize the object.
+Circle()
+Has the same name as the defining class.
+{
+radius = 1;
+}
+Does not have a return type—not even void.
+Circle(double newRadius)
+Can be overloaded to construct objects with different
+{
+options. radius = newRadius;
+}
+};
+If you declare a class without constructors:
+– A default constructor with an empty body is
+int main()
+implicitly declared.
+{
+Circle c1;
+Circle c2(10.5);
+}
+© Dr Tamer Ali, SP 25
+
+Constructors
+class Circle
+A special type of functions that are automatically
+{
+called when an object is created. public:
+double radius;
+– Normally is used to initialize the object.
+Circle()
+Has the same name as the defining class.
+{
+radius = 1;
+}
+Does not have a return type—not even void.
+Circle(double newRadius)
+Can be overloaded to construct objects with different
+{
+options. radius = newRadius;
+}
+};
+If you declare a class without constructors:
+– A default constructor with an empty body is
+int main()
+implicitly declared.
+{
+Circle c1;
+Circle c2(10.5);
+}
+© Dr Tamer Ali, SP 25
+
+Constructors
+A special type of functions that are automatically class Circle
+{
+called when an object is created.
+public:
+– Normally is used to initialize the object. double radius;
+Has the same name as the defining class. Circle()
+{
+radius = 1;
+Does not have a return type—not even void.
+}
+Can be overloaded to construct objects with different
+Circle(double newRadius)
+options. {
+radius = newRadius;
+}
+If you declare a class without constructors:
+};
+– A default constructor with an empty body is
+implicitly declared.
+int main()
+{
+You typically provide a no-arg / default constructor,
+Circle c1;
+and different parametrized constructor overloads.
+Circle c2(10.5);
+}
+© Dr Tamer Ali, SP 25
+
+What is wrong with this code?
+class Circle
+{
+private:
+double radius;
+public:
+Circle(double r) { . . . }
+void setRadius(double) { . . . }
+double getRadius() const { . . . }
+double getArea() const { . . . }
+};
+no default constructor
+int main()
+{ exists for class Circle
+Circle c1;
+c1.setRadius(5);
+cout << c1.getArea();
+}
+© Dr Tamer Ali, SP 25
+
+What is wrong with this code?
+class Circle
+{
+private:
+double radius;
+public:
+Circle(double r = 1.0) { . . . }
+void setRadius(double) { . . . }
+double getRadius() const { . . . }
+double getArea() const { . . . }
+};
+int main()
+{
+Circle c1;
+c1.setRadius(5);
+cout << c1.getArea();
+}
+© Dr Tamer Ali, SP 25
+
+Constructors & Static Members
+Circle.h Circle.cpp
+#pragma once #include "Circle.h"
+int Circle::numOfObjects = 0;
+class Circle
+{
+// Can access static members
+public:
+// Can access non-static members
+Circle(double = 1);
+Circle::Circle(double newRadius)
+double getArea() const;
+{
+double getRadius() const;
+radius = newRadius;
+void setRadius(double);
+numOfObjects++++;;
+static int getNumOfObjects();
+}
+private:
+// Can ONLY access static members
+double radius;
+int Circle::getNumOfObjects()
+static int numOfObjects;
+{
+};
+return numOfObjects;
+}
+...
+© Dr Tamer Ali, SP 25
+
+Constructors & Static Members
+Circle.cpp
+#include <iostream> #include "Circle.h"
+#include "Circle.h"
+using namespace std;
+int Circle::numOfObjects = 0;
+int main()
+{
+// Can access static members
+cout << "Num of circles created: "
+// Can access non-static members
+<< Circle::getNumOfObjects() << endl;
+Circle::Circle(double newRadius)
+{
+Circle circ1;
+cout << "Num of circles created: " radius = newRadius;
+<< Circle::getNumOfObjects() << endl; numOfObjects++;
+}
+Circle circ2(5.0);
+cout << "Num of circles created: "
+// Can ONLY access static members
+<< circ1.getNumOfObjects() << endl;
+int Circle::getNumOfObjects()
+}
+{
+return numOfObjects;
+}
+...
+© Dr Tamer Ali, SP 25
+
+Constructors & Static Members
+Circle.cpp
+##iinncclluuddee <<iioossttrreeaamm>> #include "Circle.h"
+##iinncclluuddee ""CCiirrccllee..hh""
+uussiinngg nnaammeessppaaccee ssttdd;;
+int Circle::numOfObjects = 0;
+iinntt mmaaiinn(())
+{{
+// Can access static members
+ccoouutt <<<< ""NNuumm ooff cciirrcclleess ccrreeaatteedd:: ""
+// Can access non-static members
+<<<< CCiirrccllee::::ggeettNNuummOOffOObbjjeeccttss(()) <<<< eennddll;;
+Circle::Circle(double newRadius)
+{
+CCiirrccllee cciirrcc11;;
+ccoouutt <<<< ""NNuumm ooff cciirrcclleess ccrreeaatteedd:: "" radius = newRadius;
+<<<< CCiirrccllee::::ggeettNNuummOOffOObbjjeeccttss(()) <<<< eennddll;; numOfObjects++;
+}
+CCiirrccllee cciirrcc22((55..00));;
+ccoouutt <<<< ""NNuumm ooff cciirrcclleess ccrreeaatteedd:: ""
+// Can ONLY access static members
+Num of circles created: 0
+<<<< cciirrcc11..ggeettNNuummOOffOObbjjeeccttss(()) <<<< eennddll;;
+Num of circles created: 1
+int Circle::getNumOfObjects()
+}}
+Num of circles created: 2
+{
+return numOfObjects;
+}
+...
+© Dr Tamer Ali, SP 25
+
+Destructors
+A member function that is automatically called when an
+object is destroyed
+Destructor name is ~classname, e.g., ~Rectangle
+Has no return type; takes no arguments
+Only one destructor per class (no overloading)
+class Rectangle
+{
+public:
+Rectangle(); // Constructor
+~Rectangle(); // Destructor
+...
+};
+© Dr Tamer Ali, SP 25
+
+Destructors
+Circle.h Circle.cpp
+#pragma once #include "Circle.h"
+int Circle::numOfObjects = 0;
+class Circle
+{
+Circle::Circle(double newRadius)
+public:
+{
+Circle(double = 1);
+radius = newRadius;
+~Circle();
+numOfObjects++;
+}
+double getArea() const;
+double getRadius() const; int Circle::getNumOfObjects()
+{
+void setRadius(double);
+return numOfObjects;
+static int getNumOfObjects();
+}
+private:
+Circle::~Circle()
+double radius;
+{
+static int numOfObjects;
+numOfObjects--;
+};
+}
+© Dr Tamer Ali, SP 25
+
+Destructors
+class Demo
+{
+public:
+Demo() // Constructor
+{
+cout << "1. Welcome to the constructor!\n";
+}
+~Demo() // Destructor
+{
+cout << "2. The destructor is running.\n";
+}
+};
+int main() 1. Welcome to the constructor!
+{
+A. This is a demo
+Demo demoObject;
+B. for constructor & destructor.
+2. The destructor is running.
+cout << "A. This is a demo\n";
+cout << "B. for constructor & destructor.\n";
+}
+© Dr Tamer Ali, SP 25
+
+Destructors
+class Demo
+{
+public:
+Demo() // Constructor
+{
+cout << "1. Welcome to the constructor!\n";
+}
+~Demo() // Destructor
+{
+cout << "2. The destructor is running.\n";
+}
+};
+void SomeGlobalFunction() { Demo demoObject; }
+1. Welcome to the constructor!
+int main() 2. The destructor is running.
+{ A. This is a demo
+SomeGlobalFunction();
+B. for constructor & destructor.
+cout << "A. This is a demo\n";
+cout << "B. for constructor & destructor.\n";
+}
+© Dr Tamer Ali, SP 25
+
+Anonymous Object
+You may create an object and use it only once without the need to name it
+(anonymous object)
+cout << "The Area for a circle of radius 5 is "
+<< Circle(5).getArea() << endl;
+with-
+arg
+cout << "The Area for a circle of the default radius is "
+<< Circle().getArea() << endl;
+no-
+arg
+© Dr Tamer Ali, SP 25
+
+Initializing Member
+Data Fields
+© Dr Tamer Ali, SP 25
+
+ccllaassss RReeccttaannggllee
+{{
+Initializing Member Data Fields
+pprriivvaattee::
+ddoouubbllee lleennggtthh; = 1;
+ddoouubbllee wwiiddtthh ;= 1;
+……
+Rectangle::Rectangle()
+{
+int main()
+}
+{
+Rectangle r1;
+Default }
+member
+initializers
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+{
+Initializing Member Data Fields
+private:
+double length;
+double width;
+…
+Rectangle::Rectangle(double l, double w)
+{
+length = l; int main()
+width = w; {
+Rectangle r1;
+}
+Constructor
+}
+initialization
+Rectangle::Rectangle()
+{
+length = 1;
+width = 1;
+}
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+{
+Initializing Member Data Fields
+private:
+double length = 0;
+double width = 0;
+…
+Rectangle::Rectangle(double l, double w) ?
+{
+length = l; int main()
+width = w; {
+Rectangle r1;
+}
+Constructor
+}
+initialization
+Rectangle::Rectangle()
+{
+length = 1;
+width = 1;
+}
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+{
+Initializing Member Data Fields
+private:
+double length, width;
+…
+Rectangle::Rectangle(double l, double w) :
+length(l), width(w)
+{ int main()
+{
+Rectangle r1;
+}
+Initialization
+}
+lists
+Initializer list is
+Rectangle::Rectangle() :
+where you can
+length(1), width(1) initialize constant
+{ and reference
+member variables
+}
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+{
+Initializing Member Data Fields
+private:
+double length, width;
+…
+Rectangle::Rectangle(double l, double w) :
+length(l), width(w)
+{ int main()
+{
+} A constructor is Rectangle r1;
+}
+not called like a
+normal member
+function
+Rectangle::Rectangle()
+{
+R ectang le(1, 1); // Don't do that!!
+// This creates an extra unused object
+}
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+{
+Initializing Member Data Fields
+private:
+double length, width;
+…
+Rectangle::Rectangle(double l, double w) :
+length(l), width(w)
+{ iinntt mmaaiinn(())
+{{
+RReeccttaannggllee rr11;;
+}
+} Rectangle r2(2,3);
+}
+Rectangle::Rectangle() : Rectangle(1, 1)
+{
+Constructor
+Delegation
+}
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+{
+Initializing Member Data Fields
+private:
+double length, width;
+…
+Rectangle::Rectangle(double l, double w) :
+length(l), width(w)
+{
+iinntt mmaaiinn(())
+// Any other main steps
+{{
+}
+RReeccttaannggllee rr11;;
+} Rectangle r2(2,3);
+Rectangle::Rectangle() : Rectangle(1, 1)
+Rectangle r3(2);
+{
+}
+}
+Rectangle::Rectangle(double l) : Rectangle(l, l)
+Constructor
+{
+}
+Delegation
+.
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+{
+Initializing Member Data Fields
+private:
+double length, width;
+…
+Rectangle::Rectangle(double l, double w)
+{
+D
+setLength(l); int main()
+{
+setWidth(w);
+A
+Rectangle r1;
+}
+cout << "L = " << r1.getLength() << "\n";
+E cout << "W = " << r1.getWidth() << "\n";
+}
+R
+Rectangle::Rectangle() : Rectangle(l, l)
+L = 1
+{
+W = 1
+}
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+{
+Initializing Member Data Fields
+private:
+double length, width;
+…
+Rectangle::Rectangle(double l, double w)
+{
+D
+initRectangle(l, w); int main()
+} {
+A
+Rectangle r1;
+Rectangle::Rectangle()
+cout << "L = " << r1.getLength() << "\n";
+{
+E cout << "W = " << r1.getWidth() << "\n";
+initRectangle(1, 1);
+}
+}
+R
+void Rectangle::initRectangle(double l, double w)
+L = 1
+{
+W = 1
+setLength(l);
+setWidth(w);
+}
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+{
+Initializing Member Data Fields
+private:
+double length, width;
+…
+Rectangle::Rectangle(double l = 1, double w = 1)
+{
+D
+setLength(l); int main()
+setWidth(w); {
+A
+Rectangle r1;
+}
+cout << "L = " << r1.getLength() << "\n";
+E cout << "W = " << r1.getWidth() << "\n";
+}
+Use default
+R
+parameters L = 1
+W = 1
+.
+© Dr Tamer Ali, SP 25
+
+Initializing Member Data Fields
+How to initialize reference variables?
+D
+class Rectangle
+int main()
+{
+A {
+private:
+Rectangle r;
+E double width = 2; cout << r.Length;
+r.Length = 9;
+double length = 1;
+}
+R
+public:
+const double& Width = width;
+const double& Length = length;
+Read-only
+version of
+Rectangle() {};
+hidden
+length
+};
+© Dr Tamer Ali, SP 25
+
+Initializing Member Data Fields
+How to initialize reference variables?
+D
+class Rectangle
+int main()
+{
+A {
+private:
+Rectangle r;
+E double width = 2; cout << r.Length;
+r.Length = 9;
+double length = 1;
+}
+R
+public:
+Read-only
+const double& Width; version of
+hidden
+const double& Length; length
+Rectangle() : Width(width), Length (length) {};
+};
+© Dr Tamer Ali, SP 25
+
+class Rectangle
+!
+{
+!Initializing Member Data Fields
+F private:
+double width = 2;
+L
+double length = 1;
+E
+What is the output of each of these alternative?
+S
+R
+Rectangle::Rectangle() : length(10), width(20) { }
+U
+Rectangle::Rectangle() : length(10), width(length) { }
+O
+Rectangle::Rectangle() : length(width), width(20) { }
+Y
+T int main()
+{
+I
+Rectangle r1;
+O
+cout << "L = " << r1.getLength() << "\n";
+cout << "W = " << r1.getWidth() << "\n";
+D
+}
+© Dr Tamer Ali, SP 25
+
+Objects with
+Functions and Arrays
+© Dr Tamer Ali, SP 25
+
+Passing Objects to Functions
+You can pass objects by value or by reference, but it is more efficient
+to pass objects by reference or constant reference
+void displayCircle(((CCciiorrnccslltee&Cic)rcc)le& c)
+{
+class Circle
+cout << "Radius: " << c.getRadius() << endl;
+{
+cout << "Area: " << c.getArea() << endl;
+public:
+}
+Circle(double r = 1)
+void initializeCircle((CCiirrccllee&c,c,ddoouubblleer)r) : radius(r) {}
+{
+c.setRadius(r);
+double getArea() const;
+}
+double getRadius() const;
+int main() void setRadius(double r);
+{
+Circle c(5);
+private:
+initializeCircle(c, 10);
+displayCircle(c); double radius;
+}
+};
+© Dr Tamer Ali, SP 25
+
+Passing Objects to Functions
+class BankAccount
+{
+private:
+double balance;
+public:
+BankAccount(double initBal) : balance(initBal) {}
+bool hasSameBalance(const BankAccount& other) const
+{
+return balance == other.balance;
+}
+};
+int main()
+{
+BankAccount account1(5000.00), account2(3000.00);
+if (account1.hasSameBalance(account2))
+cout << "Same balance." << endl;
+else
+cout << "Different balances." << endl;
+}
+© Dr Tamer Ali, SP 25
+
+Passing Objects to Functions
+class BankAccount
+{
+private:
+double balance;
+public:
+BankAccount(double initBal) : balance(initBal) {}
+bool hasSameBalance(const BankAccount& other) const
+{
+return this->balance == other.balance;
+}
+};
+int main()
+{
+BankAccount account1(5000.00), account2(3000.00);
+if (account1.hasSameBalance(account2))
+cout << "Same balance." << endl;
+else
+cout << "Different balances." << endl;
+}
+© Dr Tamer Ali, SP 25
+
+Array of Objects
+int main() class Circle
+Default
+{ {
+const int SIZE = 10; constructor is public:
+called per item Circle(double newRadius = 1)
+: radius(newRadius) {}
+Circle circleArray[SIZE]; double getArea() const;
+double getRadius() const;
+for (int i = 0; i < SIZE; i++) void setRadius(double);
+{
+circleArray[i].setRadius(i + 1); private: double radius;
+} };
+cout << "The total area of circles is "
+double sum(const Circle cArray[], int N)
+<< sum(circleArray, SIZE) << endl;
+{
+double sum = 0;
+return 0;
+for (int i = 0; i < N; i++)
+}
+sum += cArray[i].getArea();
+return sum;
+}
+© Dr Tamer Ali, SP 25
+
+class Inventory
+{
+public:
+Inventory(string newName, double newSize) : name(newName), size(newSize)
+{
+cout << "You are using: Inventory(string, double)" << endl;
+s
+}
+t
+c
+Inventory(string newName) : Inventory(newName, 0.0)
+e
+{
+j
+b
+cout << "You are using: Inventory(string)" << endl;
+O
+}
+Inventory(double newSize) : Inventory("Tool", newSize)
+f
+o {
+cout << "You are using: Inventory(double)" << endl;
+y
+}
+a
+Inventory() : Inventory("Tool", 0.0)
+r
+r {
+A
+cout << "You are using: Inventory()" << endl;
+}
+int main()
+private:
+{
+string name;
+Inventory myInventoryAr1[5];
+double size;
+}
+};
+© Dr Tamer Ali, SP 25
+
+class Inventory
+{
+public:
+Inventory(string newName, double newSize) : name(newName), size(newSize)
+{
+cout << "You are using: Inventory(string, double)" << endl;
+s
+}
+t
+c
+Inventory(string newName) : Inventory(newName, 0.0)
+e
+{
+j
+b
+cout << "You are using: Inventory(string)" << endl;
+O
+} You are using: Inventory()
+Inventory(double newSize) : Inventory("ToYoolu" ,arnee wuSsizien)g: Inventory()
+f
+o {
+You are using: Inventory()
+cout << "You are using: Inventory(double)" << endl;
+y You are using: Inventory()
+}
+a
+You are using: Inventory()
+Inventory() : Inventory("Tool", 0.0)
+r
+r {
+A
+cout << "You are using: Inventory()" << endl;
+}
+int main()
+private:
+{
+string name;
+Inventory myInventoryAr1[5];
+double size;
+}
+};
+© Dr Tamer Ali, SP 25
+
+class Inventory
+{
+public:
+Inventory(string newName, double newSize) : name(newName), size(newSize)
+You are using: Inventory(double)
+{
+You are using: Inventory(double)
+cout << "You are using: Inventory(string, double)" << endl;
+s
+You are using: Inventory(double)
+}
+t
+c
+Inventory(string newName) : Inventory(newName, 0.0)
+e
+{
+j
+b
+cout << "You are using: Inventory(string)" << endl;
+O
+}
+Inventory(double newSize) : Inventory("Tool", newSize)
+f
+o {
+cout << "You are using: Inventory(double)" << endl;
+y
+}
+a
+Inventory() : Inventory("Tool", 0.0)
+r
+r {
+A
+cout << "You are using: Inventory()" << endl;
+}
+int main()
+private:
+{
+string name;
+Inventory myInventoryAr2[] = { 1,3,5 };
+double size;
+}
+};
+© Dr Tamer Ali, SP 25
+
+class Inventory
+{
+public:
+Inventory(string newName, double newSize) : name(newName), size(newSize)
+{
+cout << "You are using: Inventory(string, double)" << endl;
+int main()
+s
+}
+t {
+c
+Inventory(string newName) : Inventory(newName, 0.0)
+Inventory myInventoryAr3[] =
+D e
+{
+{
+j
+b
+cout << "You are using: Inventory(string)" << endl;
+string("Hammer"),
+O
+A }
+string("Wrench")
+Inventory(double newSize) : Inventory("Tool", newSize)
+};
+f
+o {
+}
+E
+cout << "You are using: Inventory(double)" << endl;
+y
+}
+a
+R Inventory() : Inventory("Tool", 0.0)
+r
+r {
+A You are using: Inventory(string)
+cout << "You are using: Inventory()" << endl;
+You are using: Inventory(string)
+}
+private:
+string name;
+double size;
+};
+© Dr Tamer Ali, SP 25
+
+class Inventory
+{
+public:
+Inventory(string newName, double newSize) : name(newName), size(newSize)
+int main()
+{
+{
+cout << "You are using: Inventory(string, double)" << endl;
+s Inventory myInventoryAr4[] =
+}
+t
+{
+c
+Inventory(string newName) : Inventory(newName, 0.0)
+D e 1,
+{
+j Inventory(),
+b
+cout << "You are using: Inventory(string)" << endl;
+Inventory("Hammer",5),
+O
+A }
+string("Wrench")
+Inventory(double newSize) : Inventory("Tool", newSize)
+f };
+o {
+E }
+cout << "You are using: Inventory(double)" << endl;
+y
+}
+a
+R Inventory() : Inventory("Tool", 0.0)
+r
+r { You are using: Inventory(double)
+A
+cout << "You are using: Inventory()" << endl;
+You are using: Inventory()
+}
+You are using: Inventory(string , double)
+private:
+You are using: Inventory(string)
+string name;
+double size;
+};
+© Dr Tamer Ali, SP 25
+
+Example
+Design a 'Book' class for a library system. Book
+Each book should have a title and an -title: string
+-author: string
+author.
+Underline
+-totNumBooks: int
+=
+The class needs to keep track and reports
+static
+the total number of books in the collection. +Book(t: string, a:string)
++setTitle(t: string): void
+For each book, it should be possible to
++setAuthor(a: string): void
+retrieve and update its details properly.
++getTitle(): string
++getAuthor(): string
+Also, include a function to display book's
++getNumBooks(): int Underline
+information.
+=
++displayInfo(): void
+static
+Add a constructor for initialization.
+Implement and test your class
+© Dr Tamer Ali, SP 25
+
+Example
+// Book.h // Book.cpp
+#pragma once
+int Book::bookCount = 0; // Initialize static member
+class Book
+Book::Book(string t, string a)
+{
+{
+private:
+title = t;
+string title, author;
+author = a;
+static int bookCount; // Static member
+bookCount++;
+public: }
+// Constructor
+Book(string t, string a); Inline void Book::displayDetails() const
+functions {
+cout << title << ", " << author << endl;
+// Getters
+}
+string getTitle() const { return title; }
+string getAuthor() const { return author; }
+Book
+int main()
+-title: string
+// Setters {
+-author: string
+void setTitle(const string& t) { title = t; }
+-totNumBooks: int
+void setAuthor(const string& a) { author = a; }
++Book(t: string, a:string)
+// Const function to display book details
++setTitle(t: string): void
+void displayDetails() const;
++setAuthor(a: string): void
++getTitle(): string
+// Static member function to get total book count
++getAuthor(): string
+static int getTotalBookCount() { return bookCount; }
+} +getNumBooks(): int
+};
++displayInfo(): void
+© Dr Tamer Ali, SP 25
+
+Example
+// Book.h // Book.cpp
+#pragma once
+int Book::bookCount = 0; // Initialize static member
+class Book
+Book::Book(string t, string a)
+{
+{
+private:
+title = t;
+string title, author;
+author = a;
+static int bookCount; // Static member
+"Inline"
+bookCount++;
+function
+public: }
+// Constructor
+Book(string t, string a); Inline inline void Book::displayDetails() const
+functions {
+cout << title << ", " << author << endl;
+// Getters
+}
+string getTitle() const { return title; }
+string getAuthor() const { return author; }
+Book
+int main()
+-title: string
+// Setters {
+-author: string
+void setTitle(const string& t) { title = t; }
+-totNumBooks: int
+void setAuthor(const string& a) { author = a; }
++Book(t: string, a:string)
+// Const function to display book details
++setTitle(t: string): void
+void displayDetails() const;
++setAuthor(a: string): void
++getTitle(): string
+// Static member function to get total book count
++getAuthor(): string
+static int getTotalBookCount() { return bookCount; }
+} +getNumBooks(): int
+};
++displayInfo(): void
+© Dr Tamer Ali, SP 25
+
+Example
+// Book.h // Book.cpp
+#pragma once
+int Book::bookCount = 0; // Initialize static member
+class Book
+Book::Book(string t, string a)
+{
+{
+private:
+title = t;
+string title, author;
+author = a;
+static int bookCount; // Static member
+"Inline"
+bookCount++;
+function
+public: }
+// Constructor
+Book(string t, string a); Inline inline void Book::displayDetails() const
+functions {
+cout << title << ", " << author << endl;
+// Getters
+}
+string getTitle() const { return title; }
+string getAuthor() const { return author; }
+int main()
+// Setters {
+void setTitle(const string& t) { title = t; } Book book1("Age of Science", "Ahmed Zewail");
+void setAuthor(const string& a) { author = a; } Book book2("The Book of Healing", "Ibn Sina");
+book1.displayDetails();
+// Const function to display book details
+book2.displayDetails();
+void displayDetails() const;
+cout << "Total books: "
+// Static member function to get total book count
+<< Book::getTotalBookCount() << endl;
+static int getTotalBookCount() { return bookCount; }
+}
+};
+© Dr Tamer Ali, SP 25
+
+Example
+// Book.h // Book.cpp
+#pragma once
+int Book::bookCount = 0; // Initialize static member
+class Book
+Book::Book(string t, string a)
+{
+{
+private:
+title = t;
+string title, author;
+author = a;
+static int bookCount; // Static member
+"Inline"
+bookCount++;
+function
+public: }
+// Constructor
+Book(string t, string a); Inline inline void Book::displayDetails() const
+functions {
+cout << title << ", " << author << endl;
+// Getters
+}
+string getTitle() const { return title; }
+string getAuthor() const { return author; }
+int main()
+Age of Science, Ahmed Zewail
+// Setters {
+void setTitle(const string& t) { title = t; } The B o o Bko okofbo oHke1(a"lAgienogf,S cIibennc e"S,i"nAahmed Zewail");
+void setAuthor(const string& a) { author = a; } Book book2("The Book of Healing", "Ibn Sina");
+Total books: 2
+book1.displayDetails();
+// Const function to display book details
+book2.displayDetails();
+void displayDetails() const;
+cout << "Total books: "
+// Static member function to get total book count
+<< Book::getTotalBookCount() << endl;
+static int getTotalBookCount() { return bookCount; }
+}
+};
+© Dr Tamer Ali, SP 25
+
+Introduction to
+Designing an Object-
+Oriented Solution
+© Dr Tamer Ali, SP 25
+
+Designing a Good Class
+Single Responsibility – one job / responsibility per class.
+Clarity – use clear and descriptive naming.
+Small / Focused Methods – do one thing well.
+Well-
+Encapsulation – hide internal details.
+designed, easy
+Abstraction – provide simple / intuitive interface. to use, and
+Low Coupling – operations are independent. efficient
+Completeness – provide all the necessary operations.
+Consistency – follow established conventions / patterns.
+No Magic Numbers – use named constants.
+© Dr Tamer Ali, SP 25
+
+Class Relationships
+Mobile
+MemoryDevice
+ComputingDevice
+Laptop
+Owner
+© Dr Tamer Ali, SP 25
+
+Class Relationships
+Aggregation / Composition: a Memory
+Device is a part of both Laptop and
+Owner "has a"
+Mobile
+"has a"
+ComputingDevice
+Inheritance / Generalization: a laptop is
+a kind of Computing Device
+"is a"
+"is a"
+Laptop
+Mobile
+Association: owners use Computing
+"has a"
+"has a"
+Devices, Computing Devices serve
+owners
+MemoryDevice
+© Dr Tamer Ali, SP 25
+
+"has a"
+Class Relationships: Aggregation / Composition
+Aggregation Composition
+Laptop Person
+MemoryDevice μProcessor Hand Leg
+© Dr Tamer Ali, SP 25
+
+Class Relationships: Association
+"has a"
+Owner 1..* Mobile
+Know about
+each others
+(Provide
+services)
+Student 1..* learns from Instructor
+teaches to 1..*
+© Dr Tamer Ali, SP 25
+
+Class Relationships: Aggregation / Composition
+Aggregation example Composition example
+TwoBook TwoRoom
+Package Apartment
+class Book class Room
+{ {
+private: string title, author; private: string name;
+public: Book(string t = "", string a = "") public: Room(string n = "Room") : name(n) {}
+: title(t), author(a) {} };
+};
+class TwoRoomApartment
+class TwoBookPackage {
+{ Book public: Room room1, room2; Room
+public: Book &book1, &book2; TwoRoomApartment(string n1, string n2)
+TwoBookPackage(Book& b1, Book& b2) : room1(n1), room2(n2)
+: book1(b1), book2(b2) {} {
+}; }
+Rooms do not exist
+Books exist independently };
+outside the apartment
+of the TwoBookPackage
+void testAggregation()
+{ void testComposition()
+Book book1("Age of Science", "A Zewail"); {
+Book book2("The Book of Healing","Ibn Sina"); TwoRoomApartment apartment(
+TwoBookPackage package(book1, book2); "Living Room", "Bedroom");
+} }
+© Dr Tamer Ali, SP 25
+
+Class Relationships: Inheritance / Generalization
+"is a"
+ComputingDevice GeometricShape
+n
+o
+i
+t
+a
+z
+i
+l
+a
+i
+c
+e
+p
+S
+n
+o
+i
+t
+a
+z
+i
+l
+Laptop Mobile a Circle Triangle Rectangle
+r
+e
+n
+e
+G
+© Dr Tamer Ali, SP 25
+
+Class Relationships: Inheritance / Generalization
+int main() class GeometricObject
+{ {
+GeometricObject o; public : string color = "red";
+cout << o.color << endl; };
+Is a
+Circle c1; class Circle : public GeometricObject
+cout << c1.color << endl; {
+cout << c1.radius << endl; public: double radius = 2;
+};
+Square s1;
+cout << s1.color << endl; class Square : public GeometricObject
+cout << s1.length << endl; {
+} public: double length = 5;
+};
+© Dr Tamer Ali, SP 25
+
+Class Relationships: Inheritance / Generalization
++ class GeometricObject { ... }
++ class Circle : public GeometricObject { ... }
+void dispGeometricObjectData(const GeometricObject& geom)
+{
+cout << geom.getColor();
+}
+int main()
+{
+GeometricObject geomObj;
+dispGeometricObjectData (geomObj);
+Circle circle;
+dispGeometricObjectData (circle);
+}
+© Dr Tamer Ali, SP 25

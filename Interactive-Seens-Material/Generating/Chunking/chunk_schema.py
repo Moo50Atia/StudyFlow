@@ -15,6 +15,11 @@ class Chunk(BaseModel):
     token_estimate: int = Field(..., description="Estimated token count")
     start_char_offset: int = Field(0, description="Start character offset in full text")
     end_char_offset: int = Field(0, description="End character offset in full text")
+    contains_code: bool = Field(False, description="Whether this chunk contains a code block")
+    contains_math: bool = Field(False, description="Whether this chunk contains a math formula")
+    contains_tables: bool = Field(False, description="Whether this chunk contains a table")
+    contains_images: bool = Field(False, description="Whether this chunk contains images")
+
 
 
 class ChunkManifest(BaseModel):

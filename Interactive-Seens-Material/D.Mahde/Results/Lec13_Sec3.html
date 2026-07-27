@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setter Range Validation - Interactive Visualization</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Three.js for 3D graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glowing-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glowing-button:hover {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            height: 6px;
+            border-radius: 9999px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.1s ease;
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #818cf8;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden">
+
+    <!-- Top Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <span class="text-xs font-bold tracking-wider text-indigo-400 uppercase bg-indigo-950/50 px-2.5 py-1 rounded-full border border-indigo-800/50">
+                    Lecture 13 • Section 3
+                </span>
+                <h1 class="text-2xl font-extrabold text-white mt-1.5 flex items-center gap-2">
+                    Setter Range Validation
+                </h1>
+            </div>
+            <p class="text-xs text-slate-400 max-w-md md:text-right">
+                Demonstrating input range filtering in Setter methods.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+        <!-- Left Sidebar: Controls & Code -->
+        <section class="lg:col-span-5 flex flex-col gap-5 h-full">
+
+            <!-- Learning Outcome Dashboard Card -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex flex-col gap-3">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-teal-400 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                    Visual Learning Outcome
+                </h2>
+                <div class="text-sm text-slate-300 leading-relaxed font-normal">
+                    Misconception corrected: Setters are not simple assignment functions. They act as defensive gates, validating values (e.g. range [1, 120]) and rejecting invalid data before mutating the state.
+                </div>
+            </div>
+
+            <!-- Flow Stepper / Phase Selector -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">Interactive Phase</h2>
+                <div class="grid grid-cols-4 gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800/80" id="phase-container">
+                    <!-- Dynamic tabs populated in JS -->
+                </div>
+
+                <!-- Active Narrative Card -->
+                <div class="mt-4 p-4 bg-slate-900/60 rounded-xl border border-slate-800 min-h-[110px] flex flex-col justify-between">
+                    <p id="narrative-text" class="text-xs text-slate-300 leading-relaxed italic">
+                        Loading...
+                    </p>
+                    <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-800/60">
+                        <span id="narrative-step-lbl" class="text-[10px] font-bold tracking-wider text-indigo-400 uppercase">Step 1</span>
+                        <button id="btn-play-pause" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-bold focus:outline-none">
+                            <span id="play-icon">▶</span> <span id="play-text">Auto-Play</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Memory Flow Tracker (Dynamic) -->
+                <div class="mt-3 p-3 bg-slate-950/80 rounded-xl border border-slate-900">
+                    <h4 class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Memory Flow (Current Moment)
+                    </h4>
+                    <p id="memory-flow-text" class="text-xs text-slate-300 font-mono leading-relaxed">
+                        Loading...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Parameters & Controls Container -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex-1 flex flex-col gap-4">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Controls & Code</h2>
+
+                <div class="flex flex-col gap-1.5 bg-slate-900/40 p-3 rounded-xl border border-slate-800">
+                    <label class="text-xs font-semibold text-slate-300">Set Value input</label>
+                    <input type="range" id="slider-setter-val" min="1" max="200" value="30" class="w-full">
+                </div>
+
+                <!-- Code Container -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-900 flex-1 flex flex-col gap-2 min-h-[150px]">
+                    <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">C++ Code Context</h3>
+                    <pre class="text-xs text-indigo-300 overflow-x-auto p-2 bg-slate-900/50 rounded border border-slate-800/50 font-mono" id="code-snippet">void setChannel(int c) {
+    if (c >= 1 && c <= 120) {
+        channel = c; // Accepted
+    } else {
+        // Warning: Rejected!
+    }
+}</pre>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Right Visual Scene Display Card -->
+        <section class="lg:col-span-7 flex flex-col gap-4 h-full min-h-[450px]">
+
+            <!-- Graph Visualizer Panel (3D Viewport) -->
+            <div class="glass-panel rounded-3xl p-4 md:p-6 border border-slate-800 flex-1 flex flex-col gap-4 relative overflow-hidden">
+
+                <!-- Dynamic Layer Controller Tabs -->
+                <div class="flex flex-wrap items-center justify-between gap-3 z-10 relative">
+                    <div class="flex bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-[11px] font-bold" id="layer-tabs">
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-white bg-indigo-600 transition-all" onclick="selectLayer('RAM')">RAM Topology</button>
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all" onclick="selectLayer('CPU')">CPU Flow</button>
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all" onclick="selectLayer('GPU')">GPU Layer</button>
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all" onclick="selectLayer('CORRECTOR')">Corrector</button>
+                    </div>
+                    <div class="text-[10px] bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800 text-slate-400">
+                        Interactive 3D Orbit
+                    </div>
+                </div>
+
+                <!-- Three.js Canvas Container -->
+                <div id="canvas-container" class="relative flex-1 bg-slate-950/80 rounded-2xl border border-slate-900 overflow-hidden cursor-grab active:cursor-grabbing">
+                    <!-- Canvas injected dynamically -->
+                </div>
+
+                <!-- Footer Info -->
+                <div class="flex items-center justify-between text-xs text-slate-400 bg-slate-900/30 p-3 rounded-xl border border-slate-800/50">
+                    <span class="flex items-center gap-1.5 text-slate-300">
+                        <i class="fa-solid fa-circle-info text-indigo-400"></i>
+                        <strong id="proof-label">Visual Proof:</strong>
+                    </span>
+                    <span id="canvas-status-indicator" class="text-indigo-300 font-semibold">Active State</span>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Deep System Architecture & Hardware-Software Bridge -->
+    <section class="max-w-7xl w-full mx-auto px-4 md:px-6 mb-6">
+        <div class="glass-panel rounded-3xl p-6 md:p-8 border border-slate-800 flex flex-col gap-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-indigo-400"></i>
+                    Deep System Architecture & Hardware-Software Bridge
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Deconstructing the computer science and hardware layers running this visualization.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- A. Memory Topology (RAM) -->
+                <div id="card-RAM" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-indigo-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-memory"></i>
+                        A. Memory Topology (RAM)
+                    </div>
+                    <p id="ram-desc" class="text-xs text-slate-300 leading-relaxed font-mono bg-slate-900/40 p-3 rounded-lg border border-slate-900">
+                        Heap: channel integer variable (4 bytes) remains at fixed offset location. Input values must successfully pass verification logic before writing to destination addresses.
+                    </p>
+                </div>
+                
+                <!-- B. CPU & Execution Flow -->
+                <div id="card-CPU" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-rose-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-microchip"></i>
+                        B. CPU & Execution Flow
+                    </div>
+                    <p id="cpu-desc" class="text-xs text-slate-300 leading-relaxed font-normal">
+                        Defensive execution branches: cmp ECX, 1; jl reject; cmp ECX, 120; jg reject. Writes are bypassed if comparisons validate as out of range.
+                    </p>
+                </div>
+                
+                <!-- C. GPU & VRAM -->
+                <div id="card-GPU" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-teal-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-gamepad"></i>
+                        C. GPU & VRAM
+                    </div>
+                    <p id="gpu-desc" class="text-xs text-slate-300 leading-relaxed font-normal">
+                        Gateways representing the range gate and central channel cores are drawn. Valid inputs trigger green pass particles; invalid inputs trigger red sparks.
+                    </p>
+                </div>
+                
+                <!-- D. Misconception Corrector -->
+                <div id="card-CORRECTOR" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        D. Low-Level Corrector
+                    </div>
+                    <p id="corrector-desc" class="text-xs text-slate-300 leading-relaxed font-normal">
+                        Setters do not merely copy variables. They implement protection algorithms, checking input parameters before mutating internal structures.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 mt-6">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
+            <p>© 2026 Interactive C++ Visualizer. All rights reserved.</p>
+            <p>Interactive features: Click/Hover canvas elements, use sliders, trigger phases.</p>
+        </div>
+    </footer>
+
+    <!-- Core Interactive Logic Script -->
+    <script>
+        const phases = [
+            {"label": "Accept Phase", "desc": "Valid value (30) is input. It passes range gate and updates the core.", "status": "Value accepted: state updated", "memory_flow": "Inflow: Load $30$. Outflow: Value checks as valid inside range $[1, 120]$; channel updated to $30$."},
+            {"label": "Reject Phase", "desc": "Invalid value (150) is input. The gate blocks the value, displaying warning flags.", "status": "Value rejected: BLOCKED", "memory_flow": "Inflow: Load $150$. Outflow: Range check fails ($$150 > 120$$); write bypassed, state stays $30$."}
+        ];
+        
+        let currentPhase = 0;
+        let isPlaying = false;
+        let playInterval = null;
+        let activeLayer = 'RAM';
+        let speedMultiplier = 1.0;
+        let inputVal = 30;
+        let signalProg = 0.0;
+
+        // 3D Canvas Context
+        let renderer, camera, scene, animFrameId;
+        const container = document.getElementById('canvas-container');
+
+        // Populate phases stepper
+        const phaseContainer = document.getElementById('phase-container');
+        phases.forEach((p, idx) => {
+            const btn = document.createElement('button');
+            btn.className = `phase-btn text-[11px] font-semibold py-2 px-1 rounded-lg transition-all ${idx === 0 ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`;
+            btn.innerText = p.label;
+            btn.onclick = () => selectPhase(idx);
+            btn.id = `btn-phase-${idx}`;
+            phaseContainer.appendChild(btn);
+        });
+
+        // Slider logic
+        document.getElementById('slider-setter-val').addEventListener('input', (e) => {
+            inputVal = parseInt(e.target.value);
+            updateStatusLabel();
+        });
+
+        function updateStatusLabel() {
+            let isValid = (inputVal >= 1 && inputVal <= 120);
+            document.getElementById('canvas-status-indicator').innerText = isValid ? "Value accepted: state updated" : "Value rejected: BLOCKED";
+            document.getElementById('memory-flow-text').innerHTML = `Inflow: Input $${inputVal}$. Outflow: State ` + (isValid ? `updated to $${inputVal}$.` : "stays old value.");
+            
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('memory-flow-text'), {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+        }
+
+        function selectPhase(idx) {
+            currentPhase = idx;
+            inputVal = (idx === 0) ? 30 : 150;
+            document.getElementById('slider-setter-val').value = inputVal;
+            document.querySelectorAll('.phase-btn').forEach((btn, bIdx) => {
+                if (bIdx === idx) {
+                    btn.classList.add('bg-indigo-600', 'text-white');
+                    btn.classList.remove('text-slate-400', 'hover:text-white');
+                } else {
+                    btn.classList.remove('bg-indigo-600', 'text-white');
+                    btn.classList.add('text-slate-400', 'hover:text-white');
+                }
+            });
+            document.getElementById('narrative-text').innerHTML = phases[idx].desc;
+            document.getElementById('narrative-step-lbl').innerText = `Step ${idx + 1} of ${phases.length}`;
+            updateStatusLabel();
+            
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('narrative-text'), {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+            
+            onPhaseUpdate(idx);
+        }
+
+        function selectLayer(layerName) {
+            activeLayer = layerName;
+            document.querySelectorAll('.layer-tab').forEach(tab => {
+                if (tab.innerText.toLowerCase().includes(layerName.toLowerCase())) {
+                    tab.classList.add('bg-indigo-600', 'text-white');
+                    tab.classList.remove('text-slate-400', 'hover:text-white');
+                } else {
+                    tab.classList.remove('bg-indigo-600', 'text-white');
+                    tab.classList.add('text-slate-400', 'hover:text-white');
+                }
+            });
+
+            ['RAM', 'CPU', 'GPU', 'CORRECTOR'].forEach(l => {
+                const card = document.getElementById(`card-${l}`);
+                if (l === layerName) {
+                    card.classList.add('border-indigo-500/80', 'bg-slate-900/80', 'ring-1', 'ring-indigo-500/30');
+                    card.classList.remove('border-slate-900/80', 'bg-slate-950/60');
+                } else {
+                    card.classList.remove('border-indigo-500/80', 'bg-slate-900/80', 'ring-1', 'ring-indigo-500/30');
+                    card.classList.add('border-slate-900/80', 'bg-slate-950/60');
+                }
+            });
+
+            initThreeJS();
+        }
+
+        const btnPlayPause = document.getElementById('btn-play-pause');
+        const playIcon = document.getElementById('play-icon');
+        const playText = document.getElementById('play-text');
+
+        btnPlayPause.onclick = () => {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                playIcon.innerText = "⏸";
+                playText.innerText = "Pause";
+                playInterval = setInterval(() => {
+                    let next = (currentPhase + 1) % phases.length;
+                    selectPhase(next);
+                }, 3000 / speedMultiplier);
+            } else {
+                playIcon.innerText = "▶";
+                playText.innerText = "Auto-Play";
+                clearInterval(playInterval);
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            selectPhase(0);
+            selectLayer('RAM');
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+        });
+
+        // WebGL Strict Memory Management and Cleanup
+        function cleanupThreeJS() {
+            if (animFrameId) {
+                cancelAnimationFrame(animFrameId);
+            }
+            if (scene) {
+                scene.traverse(object => {
+                    if (!object.isMesh) return;
+                    if (object.geometry) object.geometry.dispose();
+                    if (object.material) {
+                        if (Array.isArray(object.material)) {
+                            object.material.forEach(material => material.dispose());
+                        } else {
+                            object.material.dispose();
+                        }
+                    }
+                });
+            }
+            const prevCanvas = container.querySelector('canvas');
+            if (prevCanvas) prevCanvas.remove();
+        }
+
+        let objects = [];
+        let particlesArray = [];
+
+        function initThreeJS() {
+            cleanupThreeJS();
+            
+            const w = container.clientWidth;
+            const h = container.clientHeight || 400;
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x020617); // bg-slate-950
+
+            camera = new THREE.PerspectiveCamera(45, w / h, 1, 1000);
+            camera.position.set(0, 15, 25);
+            camera.lookAt(0, 1.5, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(window.devicePixelRatio || 1);
+            container.appendChild(renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambient);
+            const directional = new THREE.DirectionalLight(0x10b981, 0.8);
+            directional.position.set(10, 20, 10);
+            scene.add(directional);
+
+            objects = [];
+            particlesArray = [];
+
+            if (activeLayer === 'RAM') {
+                const gridHelper = new THREE.GridHelper(20, 20, 0x10b981, 0x1e293b);
+                scene.add(gridHelper);
+
+                // Central Channel Value Core (indigo sphere)
+                const coreGeo = new THREE.SphereGeometry(1.6, 32, 32);
+                const coreMat = new THREE.MeshPhongMaterial({ color: 0x6366f1 });
+                const core = new THREE.Mesh(coreGeo, coreMat);
+                core.position.set(4, 1.5, 0);
+                scene.add(core);
+                objects.push(core); // objects[0] is core
+
+                // Setter Range Gate (middle box)
+                const gateGeo = new THREE.BoxGeometry(2, 4, 3);
+                const gateMat = new THREE.MeshPhongMaterial({ color: 0x10b981 });
+                const gate = new THREE.Mesh(gateGeo, gateMat);
+                gate.position.set(-1, 2, 0);
+                scene.add(gate);
+                objects.push(gate); // objects[1] is range gate
+
+            } else if (activeLayer === 'CPU') {
+                const node = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshPhongMaterial({ color: 0xef4444 }));
+                node.position.set(0, 1.5, 0);
+                scene.add(node);
+                objects.push(node);
+
+            } else if (activeLayer === 'GPU') {
+                const grid = new THREE.GridHelper(20, 10, 0x10b981, 0x0f172a);
+                scene.add(grid);
+
+            } else if (activeLayer === 'CORRECTOR') {
+                const box = new THREE.Mesh(new THREE.BoxGeometry(5, 5, 5), new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true }));
+                box.position.set(0, 2.5, 0);
+                scene.add(box);
+                objects.push(box);
+            }
+
+            animate();
+        }
+
+        function triggerParticle() {
+            if (activeLayer !== 'RAM') return;
+            const pGeo = new THREE.SphereGeometry(0.2, 8, 8);
+            let isValid = (inputVal >= 1 && inputVal <= 120);
+            const pMat = new THREE.MeshBasicMaterial({ color: isValid ? 0x10b981 : 0xef4444 });
+            const p = new THREE.Mesh(pGeo, pMat);
+            p.position.set(-6, 1.5, 0);
+            scene.add(p);
+            particlesArray.push({ mesh: p, startX: -6, endX: 4, isValid: isValid });
+        }
+
+        let clock = new THREE.Clock();
+        function animate() {
+            animFrameId = requestAnimationFrame(animate);
+            const elapsed = clock.getElapsedTime() * speedMultiplier;
+
+            signalProg += 0.02 * speedMultiplier;
+            if (signalProg > 1.0) {
+                signalProg = 0;
+                triggerParticle();
+            }
+
+            if (activeLayer === 'RAM') {
+                if (objects[0]) objects[0].rotation.y += 0.01;
+                
+                let isValid = (inputVal >= 1 && inputVal <= 120);
+                if (objects[1]) {
+                    objects[1].material.color.setHex(isValid ? 0x10b981 : 0xef4444);
+                }
+
+                // Move signal particles
+                for(let i=particlesArray.length - 1; i>=0; i--) {
+                    const p = particlesArray[i];
+                    
+                    if (p.isValid) {
+                        // pass clean through
+                        p.mesh.position.x = p.startX + (p.endX - p.startX) * signalProg;
+                        if (signalProg >= 1.0) {
+                            scene.remove(p.mesh);
+                            particlesArray.splice(i, 1);
+                            
+                            // pulse core
+                            if (objects[0]) {
+                                objects[0].scale.setScalar(1.0 + (inputVal / 200.0));
+                            }
+                        }
+                    } else {
+                        // bounce back off gate at x = -1
+                        if (signalProg < 0.5) {
+                            p.mesh.position.x = p.startX + (-1 - p.startX) * (signalProg * 2.0);
+                        } else {
+                            p.mesh.position.x = -1 - (-1 - p.startX) * ((signalProg - 0.5) * 2.0);
+                        }
+
+                        if (signalProg >= 1.0) {
+                            scene.remove(p.mesh);
+                            particlesArray.splice(i, 1);
+                        }
+                    }
+                }
+            } else if (activeLayer === 'CPU') {
+                if (objects[0]) objects[0].rotation.y = elapsed;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function onPhaseUpdate(phaseIdx) {
+            particlesArray.forEach(p => {
+                scene.remove(p.mesh);
+                p.mesh.geometry.dispose();
+                p.mesh.material.dispose();
+            });
+            particlesArray = [];
+            signalProg = 0;
+            triggerParticle();
+        }
+
+        window.addEventListener('resize', () => {
+            if (!renderer || !camera) return;
+            const w = container.clientWidth;
+            const h = container.clientHeight || 400;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        });
+
+    </script>
+</body>
+</html>

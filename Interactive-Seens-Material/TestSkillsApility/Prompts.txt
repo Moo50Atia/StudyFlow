@@ -1,0 +1,545 @@
+Lec1 (Sec1):
+Visual Learning Outcome: A fully illuminated linear path from top to bottom.
+Corrects misconception: Demonstrates that execution order is the primary organizational principle rather than data ownership.
+1. THE SOFTWARE LAYER:
+A 3D vertical track (rendered as a glowing pipe geometry in Three.js) representing the execution path. Instruction blocks ("Step 1: Calculate", "Step 2: Print", "Step 3: Save") are floating 3D glass panels aligned along the Z-axis. An interactive slider controls playback speed. A glowing progress cylinder grows down the track.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack Frame: process() [size: 16 bytes]. Local variable 'double area' occupies 8 bytes at offset -8 from Base Pointer RBP. Heap: Unused (0 bytes). Dynamic allocs: None. Stack grows downwards when process() is called and shrinks upwards when it returns.
+3. THE CPU & REGISTERS LAYER:
+Program Counter (RIP) moves sequentially: 0x00401010 -> 0x00401025 -> 0x0040103E. Instruction Pointer register ($RIP$) increments sequentially by 4 bytes ($$\Delta RIP = +4$$). ALU performs floating-point multiplication in XMM0 register ($$Area = \pi \times r^2$$).
+4. THE GPU / VRAM LAYER:
+Three.js creates a 3D scene. The procedural flow track and pointer are drawn as 3D pipe geometries. Vertex buffers (VBOs) store the geometries of the 3D track and glass panels. A custom fragment shader renders the active instruction with a glowing neon border ($0.0, 1.0, 0.0$ emission) and streams glowing line primitives to represent data flow.
+5. UNDER-THE-HOOD CORRECTOR:
+In procedural programming, there are no hardware-enforced boundaries. Variables on the stack are simple memory locations. Any instruction with the correct address offset can read or write to them, as memory safety is purely a compiler-level concept.
+
+Lec1 (Sec2):
+Visual Learning Outcome: A central data node physically connected to every logic module with no boundary barriers.
+Corrects misconception: Visually proves that global data lacks protection or specific ownership.
+1. THE SOFTWARE LAYER:
+A central 3D glowing sphere ("Global Data") surrounded by 3D floating nodes representing functions ("Withdraw", "Deposit", "CheckBalance"). Users toggle functions concurrently, sending visual signal waves (flying particle systems) toward the central sphere, which updates a live counter value.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Global Data Segment (.data/.bss): Variable 'balance' is stored at fixed, shared address 0x004B2004. Stack: Local thread stacks (4KB each) hold call-return addresses. Heap: Unused.
+3. THE CPU & REGISTERS LAYER:
+Threads run concurrently on CPU cores. IP moves independently. Thread A loads balance into RAX, Thread B loads into RBX. Without hardware lock prefix: $$\text{Lost Update} = \Delta RAX - \Delta RBX$$.
+4. THE GPU / VRAM LAYER:
+Central global data sphere and surrounding logic rings are rendered in 3D. Selecting the GPU tab triggers an animation of particle vectors (representing read/write signals) streaming from rings to the central node in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+Global data resides in a fixed segment accessible by all CPU cores. Without thread-safe hardware synchronization (like lock prefixes, atomic instructions, or memory barriers), concurrent access causes race conditions and cache line thrashing.
+
+Lec2 (Sec1):
+Visual Learning Outcome: A decentralized network of independent communicating entities.
+Corrects misconception: Shows that OOP organization is based on interacting autonomous entities rather than a single linear instruction list.
+1. THE SOFTWARE LAYER:
+Multiple autonomous 3D sphere objects floating in space, each containing internal data meshes and surrounded by rotating logic rings. Visual signal pulses are triggered between spheres to demonstrate message passing.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Heap: Allocated objects (e.g. obj1 at 0x01A0, obj2 at 0x01B8) containing private data fields. Stack: References pointing to Heap addresses. Stack grows/shrinks as methods are called.
+3. THE CPU & REGISTERS LAYER:
+IP jumps from main logic to object method entry points in the code segment. The 'this' pointer is passed as an implicit argument in the RCX register ($$RIP = \text{Method Address}$$), routing member queries to the specific heap address base.
+4. THE GPU / VRAM LAYER:
+Autonomous spheres and communication networks rendered in 3D. Selecting GPU tab animates message-passing signals (glowing vertices) traveling through spatial 3D wireframe connections in the GPU frame buffer.
+5. UNDER-THE-HOOD CORRECTOR:
+OOP execution is not a single linear list of instructions. It uses message passing/method invocation where execution jumps between method entry points with discrete context pointers.
+
+Lec2 (Sec2):
+Visual Learning Outcome: A single structural unit binding identity, current data values, and available actions.
+Corrects misconception: Demonstrates that state and behavior are inseparable components of an object's identity.
+1. THE SOFTWARE LAYER:
+A 3D box object showing three distinct tiers: Identity label on top, interactive state meters in the middle, and action buttons at the bottom. Toggling actions modifies state meters dynamically.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Heap/Stack: Object block containing state variables (e.g., identity_id, meter_values). Methods are stored in the Code Segment (.text) and shared among all instances.
+3. THE CPU & REGISTERS LAYER:
+IP targets the shared method address. Base-register addressing ($$\text{Address} = \text{Base (RCX)} + \text{Offset}$$) resolves class member offsets at runtime. Control signals route state updates through the ALU to the data bus.
+4. THE GPU / VRAM LAYER:
+Identity blocks and state indicators are rendered in 3D. GPU shader cores process vertex scaling for state meters and animate color shifts (emerald to crimson) based on uniform values.
+5. UNDER-THE-HOOD CORRECTOR:
+Methods are not duplicated in memory for each object instance. The compiler keeps one copy of the function in the text segment and passes the object instance address to it.
+
+Lec2 (Sec3):
+Visual Learning Outcome: A secured data core accessible only through specific predefined gateways.
+Corrects misconception: Proves internal data is unreachable by external code except through the public interface.
+1. THE SOFTWARE LAYER:
+A central glowing 3D data core enclosed within a semi-transparent defensive shield (the encapsulation barrier). External signal nodes attempt to penetrate the shield. Direct paths bounce off, while public gateway paths open portal animations.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack/Heap: Object memory layout contains member variables. Access modifiers ('private', 'public') are strictly compile-time constraints; physical RAM has no read/write access restrictions.
+3. THE CPU & REGISTERS LAYER:
+Direct access compiles to syntax errors. Authorized access compiles to call instructions that jump to public getter/setter routines. Instruction Pointer branches to validation checks before mutating state.
+4. THE GPU / VRAM LAYER:
+Protective shield is rendered as a semi-transparent 3D bubble using alpha blending. Switching to the GPU tab animates input rays bouncing off the bubble, demonstrating access containment.
+5. UNDER-THE-HOOD CORRECTOR:
+Class access levels (private, public) are compiler abstractions. In raw machine code, any memory address is accessible if the code has physical read/write permissions.
+
+Lec3 (Sec1):
+Visual Learning Outcome: A data field whose value directly dictates the physical condition of the object.
+Corrects misconception: Proves that state is the collection of an object's current descriptive values.
+1. THE SOFTWARE LAYER:
+A 3D sphere object representing a "Circle" with an interactive slider adjusting its "radius" property. Adjusting the slider transforms the sphere's volume dynamically.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack/Heap: Object contains attribute double variable (8 bytes). Slider mutations trigger updates to this address. Stack frame tracks temporary pointer variables.
+3. THE CPU & REGISTERS LAYER:
+Instruction Pointer moves through the setter function. Bus lines transfer mutated radius values from registers into the RAM cell corresponding to the object's offset ($$RSP \rightarrow \text{Address Offset}$$).
+4. THE GPU / VRAM LAYER:
+Radius values scale a 3D cylinder primitive. GPU vertex shader applies a scale transformation matrix derived from the radius uniform ($$V_{\text{new}} = V_{\text{old}} \times \text{radius}$$), resizing the mesh in real time.
+5. UNDER-THE-HOOD CORRECTOR:
+State is not an abstract concept; it is the physical bit layout of an object's variables in memory. Changing state directly modifies these bits.
+
+Lec3 (Sec2):
+Visual Learning Outcome: An entity that processes internal data to perform specific actions.
+Corrects misconception: Demonstrates that behavior is the functional capability bundled within the object.
+1. THE SOFTWARE LAYER:
+A 3D model containing a rotating logic gear representing active method execution. Interactive buttons trigger actions like getArea() and setRadius().
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack: Holds temporary local return parameters and call-frame linkage. Code Segment: Holds machine instructions for getArea() and setRadius(). Heap: Contains object attribute memory.
+3. THE CPU & REGISTERS LAYER:
+Instruction Pointer jumps to method instruction block (e.g. 0x00401120). Execution executes floating-point arithmetic (FMUL) using FPU registers ($$Area = \pi \times \text{radius}^2$$), returning the result to calling frame.
+4. THE GPU / VRAM LAYER:
+Interactive widgets and logic operations are rendered in 3D. Selecting the GPU tab animates internal rotating gears representing calculations, drawn via vertex rotations.
+5. UNDER-THE-HOOD CORRECTOR:
+Behavior is code (text segment) while state is data (stack/heap). An object instance contains data, but its behaviors are shared instructions.
+
+Lec3 (Sec3):
+Visual Learning Outcome: A set of distinct entities all sharing the exact structural properties defined by a single master template.
+Corrects misconception: Clearly separates the abstract definition (Class) from the concrete instances (Objects).
+1. THE SOFTWARE LAYER:
+A 3D template overlay ("Class") and a conveyor belt spawning independent 3D cubes ("Objects"). Each object block is customized with unique colors and values.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack: Tracks loop counters and object creation stack frames. Heap: Allocates distinct, contiguous blocks for every generated instance (e.g. Object 1, Object 2, Object 3). Code Segment: Holds single Class definition metadata.
+3. THE CPU & REGISTERS LAYER:
+Instruction Pointer executes loop, invoking constructor call instructions sequentially. Allocations map base registers to distinct heap addresses, writing structural presets.
+4. THE GPU / VRAM LAYER:
+A 3D template mold (Class) and a conveyor belt of 3D cubes (Objects). GPU renders instance-specific offsets dynamically when the conveyor animation flows.
+5. UNDER-THE-HOOD CORRECTOR:
+A Class is a compile-time template describing memory layout. Only an Object occupies actual memory at runtime.
+
+Lec4 (Sec1):
+Visual Learning Outcome: A complete UML class box with data and behavior separated by horizontal tiers.
+Corrects misconception: Ensures students don't confuse the placement of attributes and operations.
+1. THE SOFTWARE LAYER:
+A 3D representation of a UML card. Floating text blocks are dragged into their corresponding slots: name on top, attributes in the middle, methods at the bottom.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Compile-time symbol table mapping. No active RAM allocation. Represents physical structure where 'radius' sits at offset +0 and 'getArea' maps to external code symbol.
+3. THE CPU & REGISTERS LAYER:
+Compiler translates UML representation to binary layout. Memory offsets are hardcoded (e.g., [RCX + 0] for radius). No runtime CPU execution occurs during design visualization.
+4. THE GPU / VRAM LAYER:
+3D UML boxes with attributes and operations separated by dimensional planes. Tab switches animate data vectors loading into texture coordinates to draw class layouts.
+5. UNDER-THE-HOOD CORRECTOR:
+UML class boxes are design blueprints. In hardware, there are no boxes; variables and functions are split into completely different memory segments.
+
+Lec4 (Sec2):
+Visual Learning Outcome: A visual legend where symbols dictate access and underlining represents class-wide sharing.
+Corrects misconception: Clarifies that underlines are a functional notation for static members, not just a decorative choice.
+1. THE SOFTWARE LAYER:
+A 3D scene containing access gates. Plus ('+') opens a public gateway; minus ('-') raises a private wall. Underlined items map to a static platform accessed by all object meshes.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Global/Static Segment: Holds static variable at a single memory address (e.g. 0x004C5000). Stack/Heap: Holds individual object instances (which do not allocate space for static variables).
+3. THE CPU & REGISTERS LAYER:
+Access to static member generates direct addressing instructions (e.g., mov eax, [0x004C5000]), bypassing the 'this' pointer base offset register, linking all objects to one data cell.
+4. THE GPU / VRAM LAYER:
+Shared static platform (3D block) connected to individual object instances. GPU animates signal vectors bridging from object meshes directly to the static address block.
+5. UNDER-THE-HOOD CORRECTOR:
+Underlining a member in UML indicates it is static, meaning it does not reside inside object instances in memory; only one copy exists globally.
+
+Lec5 (Sec1):
+Visual Learning Outcome: A complete syntactical unit that is non-functional until sealed by a semicolon.
+Corrects misconception: Visually reinforces that the semicolon is a mandatory structural seal for class declarations.
+1. THE SOFTWARE LAYER:
+A 3D class outline box with an open slot at the closing brace. A semicolon key must be inserted to close the outline, triggering a power-up animation.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+No runtime RAM allocation. Compiler allocates symbol tables to define class attributes and methods layout. Missing semicolon causes compile-time parsing loop errors.
+3. THE CPU & REGISTERS LAYER:
+Parser execution (lexical analysis) validates tokens. When semicolon character is read, state machine updates, completing type registration. Without it, compiler raises error and aborts.
+4. THE GPU / VRAM LAYER:
+3D wireframe container representing the class scope. The semicolon is rendered as a 3D key. Inserting the semicolon key triggers a vertex color glow, making the container solid.
+5. UNDER-THE-HOOD CORRECTOR:
+In C++, class declarations require a terminating semicolon because they can be followed immediately by object instance definitions (e.g. `class C {} obj;`).
+
+Lec5 (Sec2):
+Visual Learning Outcome: A protective barrier around data fields that defaults to locked status.
+Corrects misconception: Demonstrates that members are private by default in a C++ class.
+1. THE SOFTWARE LAYER:
+A 3D vault with variables inside. External signals attempt direct access and are automatically repelled unless public labels are explicitly added.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack/Heap: Object memory block containing data fields. At runtime, memory has no boundaries; access checking is strictly enforced by compile-time semantic analysis.
+3. THE CPU & REGISTERS LAYER:
+Compiler checks access tables. Attempts to directly load/store private offsets from external classes fail verification, halting binary code generation. Public pathways compile to valid call instructions.
+4. THE GPU / VRAM LAYER:
+3D locked zones (red block) and public access channels (green tube). CPU-VRAM transfers show signal packets hitting the red zone boundary and getting deleted.
+5. UNDER-THE-HOOD CORRECTOR:
+In C++, `class` members default to `private`, while `struct` members default to `public`. This is a compile-time rule only.
+
+Lec6 (Sec1):
+Visual Learning Outcome: An object where external interaction is restricted to public gateways while the core data remains inaccessible.
+Corrects misconception: Proves that code outside a class cannot touch private members even if they are known to exist.
+1. THE SOFTWARE LAYER:
+A 3D User model and a Circle model with public gate paths and private walls. Signal blocks passing to private areas are destroyed, while public routes succeed.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack/Heap: Class instance variables are allocated at specific offsets. Direct external accesses are prevented by the compiler, enforcing routing through public methods.
+3. THE CPU & REGISTERS LAYER:
+Execution branches from caller to public method (e.g. 0x00401560). Method loads internal radius offset from base pointer register [RCX + 8] and returns value.
+4. THE GPU / VRAM LAYER:
+3D private vault meshes and public gateway gates. Incoming requests are represented as spheres; they bounce off the vault walls unless routed through the gate.
+5. UNDER-THE-HOOD CORRECTOR:
+Code outside a class cannot access private members directly, even if the memory address of the member is known (unless cast via unsafe pointers).
+
+Lec6 (Sec2):
+Visual Learning Outcome: A variable that is automatically locked by the compiler until explicitly marked as public.
+Corrects misconception: Reinforces that the default state of class members is private, not public.
+1. THE SOFTWARE LAYER:
+A 3D code viewer panel with variables. A padlock icon attaches to new variables. Inserting "public:" removes the padlocks.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Compiler symbol table. Variables are marked as private until the parser reads the 'public:' label token, modifying access flags in the symbol table.
+3. THE CPU & REGISTERS LAYER:
+Compiler semantic analyzer parses text. Access level transitions from PRIVATE (default) to PUBLIC, changing token access status. No runtime CPU execution occurs.
+4. THE GPU / VRAM LAYER:
+C++ code text strings are mapped to textures in VRAM. Transition triggers a 3D key turning, unlocking a visual latch on the variable container box.
+5. UNDER-THE-HOOD CORRECTOR:
+C++ variables declared inside class brackets are private by default. A public section must be explicitly declared to open them.
+
+Lec6 (Sec3):
+Visual Learning Outcome: A visual demonstration of how public data exposure leads to state corruption.
+Corrects misconception: Shows that making data private isn't just about 'hiding', but about protecting the system's logic and stability.
+1. THE SOFTWARE LAYER:
+An interactive slider sets a circle radius value. Setting a negative radius triggers a glitch animation and drops a stability meter to zero.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack/Heap: Object memory contains radius variable. Bypassing getters/setters allows invalid data to be written directly to the variable's RAM address.
+3. THE CPU & REGISTERS LAYER:
+CPU executes direct store instruction (e.g. mov [rcx+8], -5.0) without checking constraints. ALU processes negative area logic, causing state corruption.
+4. THE GPU / VRAM LAYER:
+Data slots are rendered as 3D containers. Writing a negative value triggers a shader distortion filter, displaying noise static on the object container.
+5. UNDER-THE-HOOD CORRECTOR:
+Public data exposure bypasses validation logic, allowing external code to put the hardware state into invalid configurations.
+
+Lec7 (Sec1):
+Visual Learning Outcome: A function physically embedded within class boundaries, marked for high-speed execution.
+Corrects misconception: Clarifies that code written inside the class isn't just 'there', but is functionally optimized as inline by the compiler.
+1. THE SOFTWARE LAYER:
+A 3D class container box. Triggering execution shows logic processing directly inside the call track without jumping to external blocks.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack: No call frame is allocated for inline functions. Code is physically embedded directly inside caller's stack frame. Code Segment: Holds function instructions nested within class context.
+3. THE CPU & REGISTERS LAYER:
+IP flows straight through the inlined code. The compiler replaces call/ret instruction sequences with the actual body of the function (e.g., inline multiplication inside main's loop).
+4. THE GPU / VRAM LAYER:
+3D Class frame container and lightning bolts. Inline execution triggers instant vertex color shifts on caller timeline node, drawn via custom shaders.
+5. UNDER-THE-HOOD CORRECTOR:
+Writing functions inside the class declaration implicitly tells the compiler to inline them. This trades code size (in flash/ROM) for speed (fewer instructions).
+
+Lec7 (Sec2):
+Visual Learning Outcome: A functional link between a clean interface inside the class and detailed logic outside.
+Corrects misconception: Ensures students understand that external functions are still part of the class identity through the :: operator.
+1. THE SOFTWARE LAYER:
+A 3D representation showing Class A (Declaration) and Box B (Definition) linked by a glowing bridge (::). Signals flow across the bridge.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Code Segment (.text): Class definition (interface) and external method logic are stored at distinct locations. Symbol table uses :: to bind the logic back to the class namespaces.
+3. THE CPU & REGISTERS LAYER:
+The :: operator translates during compilation to the absolute namespace address in the symbol table. IP jumps to external memory offset when class method is called.
+4. THE GPU / VRAM LAYER:
+Class box A and Definition box B linked by a 3D structural bridge. Activating execution shows signal flows crossing the bridge in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+The :: operator is a compiler directive to associate an external function with a class's scope, ensuring the correct member offsets are compiled.
+
+Lec7 (Sec3):
+Visual Learning Outcome: Code logic that is physically defined elsewhere but virtually 'injected' at the call site for speed.
+Corrects misconception: Proves that 'outside definition' and 'inline optimization' are not mutually exclusive when the inline keyword is used.
+1. THE SOFTWARE LAYER:
+An external definition block with an "inline" tag. A timeline track injects code copies at call sites.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Code Segment: Method body is stored once but copied inline at every call site in compile-time layout. Stack: Call stack remains flat (no new stack frame pushed on execution).
+3. THE CPU & REGISTERS LAYER:
+IP avoids call/ret jumps. Assembly instructions are inlined, removing stack push/pop instructions and register preservation instructions from the instruction stream.
+4. THE GPU / VRAM LAYER:
+Timeline tracks and code blocks rendered as 3D pipelines. The inline keyword splits the code block and inserts copies directly along the execution track in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+The `inline` keyword is a compiler hint. External definitions can still be inlined if defined in headers with the `inline` keyword.
+
+Lec8 (Sec1):
+Visual Learning Outcome: A central data point physically linked to every logic module regardless of spatial order.
+Corrects misconception: Proves that member functions do not need to be declared after data fields to access them.
+1. THE SOFTWARE LAYER:
+A central data node with method blocks arranged out of order. Connection lines connect methods to data successfully.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack/Heap: Variables are allocated sequentially (e.g., radius variable). Methods reside in the code segment. Symbol table binds methods to variables regardless of their sequence in code.
+3. THE CPU & REGISTERS LAYER:
+Compiler executes a multi-pass parse. Variables are resolved before method translation. Access instructions load variable offset (e.g. mov rbx, [rcx + 8]) successfully.
+4. THE GPU / VRAM LAYER:
+Central data cylinder and surrounding method rings. Execution triggers dynamic laser pointers projecting from rings to the central cylinder in 3D.
+5. UNDER-THE-HOOD CORRECTOR:
+Member functions can access variables declared later in the class because C++ compilers parse class declarations completely before compiling method bodies.
+
+Lec8 (Sec2):
+Visual Learning Outcome: A variable that exists only during the 'lifetime' of its parent frame.
+Corrects misconception: Shows that local variables are not persistent and cannot be reached once the function terminates.
+1. THE SOFTWARE LAYER:
+A 3D function frame container. A local variable mesh lights up inside. Exiting the frame causes the variable to dissolve into dust.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack: Allocation of local stack frame [offset -4 contains variable 'a']. Reclaimed automatically upon function return by resetting RSP. Heap: Unused.
+3. THE CPU & REGISTERS LAYER:
+IP moves into function block, executing sub rsp, 4. Upon exit, executes add rsp, 4 or leave/ret. Variable 'a' becomes unreachable immediately.
+4. THE GPU / VRAM LAYER:
+Local variable container inside stack boundaries. Exiting scope triggers a physics explosion shader, dissolving the container into particles in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+Local variables are allocated on the Stack. Once the function execution completes, their memory is reclaimed, and they can no longer be accessed.
+
+Lec8 (Sec3):
+Visual Learning Outcome: A visual hierarchy where the nearest scope object masks the more distant one.
+Corrects misconception: Proves that naming a local variable the same as a data field doesn't delete the data field; it just makes it invisible to simple references.
+1. THE SOFTWARE LAYER:
+A background "Member x" box and a foreground "Local x" box. A spotlight beam highlights only the local box, fading the member box.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack Frame: Local variable 'x' (offset -8). Heap/Stack Instance: Member variable 'x' (offset +8). Both variables coexist in RAM at different physical addresses.
+3. THE CPU & REGISTERS LAYER:
+Compiler resolves identifier 'x' to the closest scope (local stack, offset -8). The member variable's address is bypassed in instruction generation unless scoped explicitly.
+4. THE GPU / VRAM LAYER:
+Foreground local box blocks background member box. Switching layers animates a spotlight pointing only to local stack cell, casting shadow on member address.
+5. UNDER-THE-HOOD CORRECTOR:
+Shadowing does not delete or overwrite the member variable; it simply shifts the compiler's lookup scope, hiding the member behind the local.
+
+Lec8 (Sec4):
+Visual Learning Outcome: Precise navigation through memory layers using explicit scoping keys.
+Corrects misconception: Demonstrates that 'hidden' variables are always reachable if the correct address syntax is used.
+1. THE SOFTWARE LAYER:
+Three layers of variables (Global, Member, Local). Selector scopes direct targeting lasers past local boundaries to global or member targets.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Global Segment: Global 'x' (address 0x0040A0). Heap: Member 'x' (address 0x01B8+8). Stack: Local 'x' (address RBP-8). Three independent memory locations.
+3. THE CPU & REGISTERS LAYER:
+Scoping triggers specific instruction addressing: 'this->x' compiles to mov eax, [rcx + 8]; '::x' compiles to mov eax, [0x0040A0]; local 'x' compiles to mov eax, [rbp - 8].
+4. THE GPU / VRAM LAYER:
+3D stack layer, heap layer, and global segment layer. Selector scopes direct targeting lasers past local boundaries to global or member targets in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+Scoping operators (`this->`, `::`) explicitly tell the compiler to look in different scopes, bypassing the default local search order.
+
+Lec9 (Sec1):
+Visual Learning Outcome: A clear visual transition from standard text to the formal class naming convention.
+Corrects misconception: Prevents students from using camelCase (lowercase start) for class blueprints.
+1. THE SOFTWARE LAYER:
+Text blocks are stamped by capitalization tools, shifting characters to PascalCase formats.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Compile-time symbol lookup tables. No runtime memory allocations occur. Custom class symbols are registered in PascalCase format.
+3. THE CPU & REGISTERS LAYER:
+Compiler processes class names during compilation. No runtime CPU instructions are executed for name formatting checks.
+4. THE GPU / VRAM LAYER:
+Characters rendered as 3D text plates. Capitalization changes scale and applies metallic textures to the letters, glowing in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+PascalCase is a readability convention for classes, helping developers differentiate between class types and variable instances at a glance.
+
+Lec9 (Sec2):
+Visual Learning Outcome: A visual distinction between the static naming of system types and the dynamic naming of user objects.
+Corrects misconception: Ensures students do not capitalize standard library types like string by mistake.
+1. THE SOFTWARE LAYER:
+A folder structure separating standard library types (lowercase) and custom user classes (PascalCase).
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Compiler symbol metadata. Standard system classes (e.g. std::string) map to lowercase library templates, whereas custom user instances map to user layouts.
+3. THE CPU & REGISTERS LAYER:
+Compiler resolves standard types from precompiled headers. No runtime CPU execution maps type naming rules.
+4. THE GPU / VRAM LAYER:
+Library nodes (lowercase) and custom instances. Signal lines connect standard classes to system folders and custom objects to local heaps.
+5. UNDER-THE-HOOD CORRECTOR:
+Standard library types like `string` are lowercased for historical C-compatibility. User-defined classes should follow PascalCase.
+
+Lec10 (Sec1):
+Visual Learning Outcome: A synchronized state where two distinct containers hold identical internal data.
+Corrects misconception: Proves that assignment creates a data duplicate rather than merging two objects into one.
+1. THE SOFTWARE LAYER:
+Two parallel 3D boxes. Triggering copy sends value streams from c1 slots to c2 slots, updating c2 contents.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Heap/Stack: Object c1 (address 0x01E0, 16 bytes) and Object c2 (address 0x01F0, 16 bytes). Values are copied from 0x01E0 to 0x01F0, leaving two distinct duplicates in RAM.
+3. THE CPU & REGISTERS LAYER:
+CPU executes copy instructions (e.g., rep movsq or sequential mov commands) transferring bytes from source address registers to target address registers.
+4. THE GPU / VRAM LAYER:
+Two identical 3D boxes. Activating copy shows value spheres floating across a physical divider from container c1 to c2 in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+Object assignment (`obj2 = obj1`) copies values to a new memory location. The two objects remain distinct entities in RAM.
+
+Lec10 (Sec2):
+Visual Learning Outcome: A visual block indicating that equality checking is a non-default functionality for objects.
+Corrects misconception: Warns students that the success of the = operator does not mean the == operator is automatically available.
+1. THE SOFTWARE LAYER:
+Two boxes and a "==" logic gate. Comparing them triggers red warning signs at the gate.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Compiler errors out. Memory blocks cannot be compared using raw '==' operator unless overloaded. No memory allocation changes.
+3. THE CPU & REGISTERS LAYER:
+CPU does not execute comparison since compiler fails during semantic analysis. Type verification asserts no overloaded '==' function matches the operands.
+4. THE GPU / VRAM LAYER:
+Object boxes colliding at a comparison barrier. Collision triggers a 3D red warning mesh and fragment shader distortion.
+5. UNDER-THE-HOOD CORRECTOR:
+The compiler does not automatically know how to compare complex structures; developers must explicitly overload the `==` operator.
+
+Lec11 (Sec1):
+Visual Learning Outcome: A simplified view where only high-level operations remain accessible.
+Corrects misconception: Clarifies that abstraction isn't removing features, but hiding the complexity of their internal execution.
+1. THE SOFTWARE LAYER:
+A sliding metal cover (Interface) hiding complex 3D circuit board layouts (Implementation).
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack/Heap: Complex inner structures exist in RAM. Abstraction hides these offsets, exposing only public endpoint pointers in client code interfaces.
+3. THE CPU & REGISTERS LAYER:
+Client executes public interface calls. Low-level pipeline processes complex registers, but execution detail is encapsulated behind a single jump instruction.
+4. THE GPU / VRAM LAYER:
+Complex 3D circuit board representing implementation details. Clicking abstraction triggers a metal sheet cover sliding over circuits, leaving only simple buttons visible.
+5. UNDER-THE-HOOD CORRECTOR:
+Abstraction is not removing implementation; it is decoupling the interface from internal hardware instructions to manage complexity.
+
+Lec11 (Sec2):
+Visual Learning Outcome: A secured unit where internal data is unreachable except through predefined method paths.
+Corrects misconception: Proves that encapsulation is a physical-logical barrier for data protection rather than just organization.
+1. THE SOFTWARE LAYER:
+A central data node enclosed in a rotating gear shell. Input lines bounce off the shell unless routed through matching gear gears.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Heap/Stack: Data and function pointer records are bundled into a cohesive block. Access barriers prevent external manipulation of internal offsets.
+3. THE CPU & REGISTERS LAYER:
+Control signals are routed through designated method interfaces, ensuring memory registers cannot be altered without passing validation paths first.
+4. THE GPU / VRAM LAYER:
+3D secure vault container. Access gates rotate like puzzle pieces. Input variables must align with gate keys to modify data in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+Encapsulation enforces data integrity. It prevents external code from directly writing arbitrary values to object memory.
+
+Lec12 (Sec1):
+Visual Learning Outcome: Data corruption occurring due to the absence of a protective logic barrier.
+Corrects misconception: Proves that public status is not just a 'shorthand' but a significant safety risk.
+1. THE SOFTWARE LAYER:
+An input box panel. Writing negative values directly modifies the data block, crashing the stability meter.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Heap: Direct write to the object's offset bypasses safety checks. No temporary stack validation frame is created. State registers get corrupted.
+3. THE CPU & REGISTERS LAYER:
+Direct memory write instruction executed (mov [rcx+8], -5). Bypasses sanity checks in code, causing ALU calculations to produce invalid results.
+4. THE GPU / VRAM LAYER:
+Stability towers are rendered in 3D. Direct writing of invalid inputs causes the tower to crumble via physics simulations in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+Public variables are unsafe because they expose raw hardware registers to external mutations, risking crash conditions.
+
+Lec12 (Sec2):
+Visual Learning Outcome: A fragile architecture where internal implementation changes cause global system failures.
+Corrects misconception: Demonstrates that data hiding is essential for long-term code maintainability, not just immediate security.
+1. THE SOFTWARE LAYER:
+A central node linked to multiple external client panels. Modifying central data properties snaps connection cables.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Binary interface breakage. Modifying member variables shifts memory offsets (e.g. radius moves from offset +8 to +16), making precompiled client offset reads invalid.
+3. THE CPU & REGISTERS LAYER:
+CPU reads incorrect offsets, loading garbage data into execution registers. Invalid addressing causes segmentation faults or logical crashes.
+4. THE GPU / VRAM LAYER:
+Linked 3D nodes. Modifying the central node layout snaps connection cables and triggers warning overlays on dependent models.
+5. UNDER-THE-HOOD CORRECTOR:
+Public data exposure creates tight coupling. Shifting a single member variable shifts memory offsets, breaking external binaries.
+
+Lec13 (Sec1):
+Visual Learning Outcome: A secure architecture where all data interaction is routed through public control points.
+Corrects misconception: Demonstrates that 'hiding' data doesn't mean it's unusable, just that its access is formally managed.
+1. THE SOFTWARE LAYER:
+A private data core core enclosed in a translucent shield shell. Signals must route through getter/setter bridges.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Heap: Encapsulated member variable. Stack: Call frames for accessor/mutator methods. The variables can only be touched through these intermediate stack frames.
+3. THE CPU & REGISTERS LAYER:
+Call instructions jump to accessor offsets (e.g. call 0x0040E5A0). IP processes instructions in getter/setter before writing/reading data registers.
+4. THE GPU / VRAM LAYER:
+Vault container and getter/setter bridge nodes. Signal routes cross the bridge paths to read or modify vault blocks.
+5. UNDER-THE-HOOD CORRECTOR:
+Accessors and mutators are the interface contract, protecting the raw memory slots from invalid state configurations.
+
+Lec13 (Sec2):
+Visual Learning Outcome: A non-destructive operation that retrieves information without risking state mutation.
+Corrects misconception: Visually reinforces that getters should never change internal data.
+1. THE SOFTWARE LAYER:
+A read channel with a const filter pane. Values duplicate through the filter; original objects remain untouched.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack: Temporary copy of the double/int variable returned. Heap: Object data stays completely read-only during method execution context.
+3. THE CPU & REGISTERS LAYER:
+The 'const' qualifier enforces compile-time read-only status on the 'this' pointer (const ClassName* const). IP prevents generating any store instructions to object offsets.
+4. THE GPU / VRAM LAYER:
+Data slots and const filter panes. Reading data sends a duplicate through the pane while the original object remains locked in green.
+5. UNDER-THE-HOOD CORRECTOR:
+Marking getters `const` ensures the function cannot mutate object bits, preventing accidental side effects at the CPU level.
+
+Lec13 (Sec3):
+Visual Learning Outcome: A defensive interface that rejects invalid data to maintain object stability.
+Corrects misconception: Shows that setters are purposeful logic barriers, not just passive assignment functions.
+1. THE SOFTWARE LAYER:
+An input value signal passing toward a validation gate check. Inputs outside range are rejected with warnings.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack: Holds input argument parameter. Heap: Object memory updated only after input argument passes boundary verification checks.
+3. THE CPU & REGISTERS LAYER:
+IP processes conditional branch instructions (e.g., cmp [esp+4], 120 followed by jg error_handler). Direct memory write only executes on validation success.
+4. THE GPU / VRAM LAYER:
+Filter grids with min/max scale values. Values falling outside bounds collide with the grid and disappear, while valid values pass to container.
+5. UNDER-THE-HOOD CORRECTOR:
+Setters are validation checkpoints. They ensure the hardware state remains within defined, safe parameters.
+
+Lec15 (Sec1):
+Visual Learning Outcome: An object reaching a valid state automatically upon creation.
+Corrects misconception: Shows that constructors are system-triggered events, not manual functions called after creation.
+1. THE SOFTWARE LAYER:
+Empty object wireframe meshes. Applying the constructor stamp applies solid texturing, creating active objects.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Heap/Stack: Empty block of size N is allocated. Constructor initialization routine writes default values directly to these addresses, turning uninitialized space into a valid object.
+3. THE CPU & REGISTERS LAYER:
+Memory allocation is triggered (stack push or malloc call). Instruction Pointer then jumps to constructor code address, executing write commands to object offsets.
+4. THE GPU / VRAM LAYER:
+Empty 3D frames. Stamping them with the 'Constructor' blocks applies solid shaders, transforming wireframes into textured models.
+5. UNDER-THE-HOOD CORRECTOR:
+Constructors are automatically executed by the system runtime at object creation; they cannot be manually invoked on existing objects.
+
+Lec15 (Sec2):
+Visual Learning Outcome: An object's existence ending automatically when its scope expires.
+Corrects misconception: Demonstrates that the destructor is the inverse of the constructor, cleaning up memory as objects die.
+1. THE SOFTWARE LAYER:
+A 3D active scope zone. Objects crossing boundaries fade out, turning into dust particles.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack Frame: Deallocated. RSP increments by frame size. Heap allocations held by the object are freed via delete/free calls, returning memory to the system pool.
+3. THE CPU & REGISTERS LAYER:
+IP crosses scope brace. Compiler-inserted cleanup sequence calls the destructor, running cleanup instructions, then pops the activation record off the stack.
+4. THE GPU / VRAM LAYER:
+3D active scope zone. Crossing boundaries triggers a fade-out animation, dissolving the object block into memory dust in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+Destructors run automatically when objects go out of scope, releasing critical resources (like file handles or heap memory) back to the OS.
+
+Lec15 (Sec3):
+Visual Learning Outcome: Data fields initialized prior to the execution of the constructor's code body.
+Corrects misconception: Visualizes the efficiency difference between initializing a member and assigning it inside the constructor body.
+1. THE SOFTWARE LAYER:
+Initializer slots. Input values pass directly to variables, bypassing empty constructor boxes.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack/Heap: Member variables. Initializer lists bypass default initialization and write values directly to memory cells, preventing double-write cycles.
+3. THE CPU & REGISTERS LAYER:
+IP executes initialization instructions before entering the constructor body curly braces, avoiding extra default setup branches.
+4. THE GPU / VRAM LAYER:
+Data slots and initializer tags. Values flow directly into data slots before the main constructor body container is highlighted.
+5. UNDER-THE-HOOD CORRECTOR:
+Initializer lists initialize members directly, avoiding double-initialization overhead and allowing initialization of `const` and reference members.
+
+Lec15 (Sec4):
+Visual Learning Outcome: One constructor leveraging the logic of another to avoid code duplication.
+Corrects misconception: Prevents the creation of temporary objects by showing delegation as a direct logic transfer.
+1. THE SOFTWARE LAYER:
+Primary and Target constructor containers. Signals flow from primary to target, updating parameters, and return.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack: Single object memory block is modified. Delegation pushes call pointers for target constructor onto the stack, executing on same memory layout.
+3. THE CPU & REGISTERS LAYER:
+IP jumps from primary constructor entry to target constructor offset, passing the same 'this' pointer in RCX, preventing temporary object instantiation.
+4. THE GPU / VRAM LAYER:
+Primary and Target constructor blocks in 3D. A calling signal transfers execution flow from primary to target, updating parameters, and returns.
+5. UNDER-THE-HOOD CORRECTOR:
+Delegating constructors reuse initialization code within the same memory footprint, preventing redundant work.
+
+Lec15 (Sec5):
+Visual Learning Outcome: References providing a direct path to existing data without duplication overhead.
+Corrects misconception: Proves that passing objects by reference is more memory-efficient than passing by value.
+1. THE SOFTWARE LAYER:
+Lanes comparing copy costs. Value copies the entire block; reference maps a pointer line.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Stack: Value lane contains duplicate object block (e.g. 64 bytes). Reference lane contains a single 8-byte pointer addressing the original heap/stack object.
+3. THE CPU & REGISTERS LAYER:
+Pass-by-value executes copy constructor (iterating variables, copying bytes, high instruction count). Pass-by-reference loads pointer address in register (1 clock cycle).
+4. THE GPU / VRAM LAYER:
+Side-by-side lanes. Value lane duplicates the entire 3D block; reference lane displays a pointer line mapping to the original block.
+5. UNDER-THE-HOOD CORRECTOR:
+Passing objects by reference avoids expensive heap/stack allocations, drastically improving CPU cache performance and reducing instruction count.
+
+Lec15 (Sec6):
+Visual Learning Outcome: A sequence of objects each individually initialized by the class constructor.
+Corrects misconception: Demonstrates that an array of objects is not just memory allocation but a series of individual construction events.
+1. THE SOFTWARE LAYER:
+Array slot grids. Constructor stamp moves along, initializing blocks at each index.
+2. THE MEMORY TOPOLOGY (RAM) LAYER:
+Heap/Stack: Contiguous memory chunk of size [N * object_size]. Loops through offsets +0, +size, +2*size, calling the default constructor at each block.
+3. THE CPU & REGISTERS LAYER:
+IP runs a loop (using ECX counter register). In each iteration, it calculates object address offset and calls constructor, executing sequential writes.
+4. THE GPU / VRAM LAYER:
+3D array grids. Loop stamp animations move along the slots, instantiating individual object blocks sequentially in VRAM.
+5. UNDER-THE-HOOD CORRECTOR:
+An array of objects does not just allocate memory; it executes the class constructor for every individual element in the array sequentially.

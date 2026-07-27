@@ -1,0 +1,1457 @@
+{
+  "extracted_at": "2026-07-10T18:55:17.329038+00:00",
+  "total_pages": 114,
+  "total_characters": 52450,
+  "pages_with_text": 111,
+  "pages_needing_ocr": 0,
+  "ocr_page_numbers": [],
+  "total_visual_assets_extracted": 529,
+  "errors": [
+    "Page 4: OCR error: Unable to get page count. Is poppler installed and in PATH?",
+    "Page 16: OCR error: Unable to get page count. Is poppler installed and in PATH?",
+    "Page 45: OCR error: Unable to get page count. Is poppler installed and in PATH?"
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "chars": 63,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_1_fig_1.png",
+        "OOP Test8/assets/page_1_fig_3.png",
+        "OOP Test8/assets/page_1_fig_4.png",
+        "OOP Test8/assets/page_1_fig_5.png",
+        "OOP Test8/assets/page_1_fig_6.png"
+      ]
+    },
+    {
+      "page": 2,
+      "chars": 84,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_2_fig_1.png",
+        "OOP Test8/assets/page_2_fig_3.png"
+      ]
+    },
+    {
+      "page": 3,
+      "chars": 349,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_3_fig_1.png",
+        "OOP Test8/assets/page_3_fig_2.png",
+        "OOP Test8/assets/page_3_fig_3.png",
+        "OOP Test8/assets/page_3_fig_4.png",
+        "OOP Test8/assets/page_3_fig_5.png",
+        "OOP Test8/assets/page_3_fig_6.png",
+        "OOP Test8/assets/page_3_fig_7.png",
+        "OOP Test8/assets/page_3_fig_8.png",
+        "OOP Test8/assets/page_3_fig_9.png"
+      ]
+    },
+    {
+      "page": 4,
+      "chars": 28,
+      "has_text": false,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_4_fig_1.png",
+        "OOP Test8/assets/page_4_fig_2.png",
+        "OOP Test8/assets/page_4_fig_3.png",
+        "OOP Test8/assets/page_4_fig_4.png",
+        "OOP Test8/assets/page_4_fig_5.png",
+        "OOP Test8/assets/page_4_fig_6.png",
+        "OOP Test8/assets/page_4_fig_7.png",
+        "OOP Test8/assets/page_4_fig_8.png",
+        "OOP Test8/assets/page_4_fig_9.png",
+        "OOP Test8/assets/page_4_fig_10.png",
+        "OOP Test8/assets/page_4_fig_11.png",
+        "OOP Test8/assets/page_4_fig_12.png",
+        "OOP Test8/assets/page_4_fig_13.png",
+        "OOP Test8/assets/page_4_fig_14.png",
+        "OOP Test8/assets/page_4_fig_15.png",
+        "OOP Test8/assets/page_4_fig_17.png",
+        "OOP Test8/assets/page_4_fig_19.png"
+      ]
+    },
+    {
+      "page": 5,
+      "chars": 58,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_5_fig_1.png"
+      ]
+    },
+    {
+      "page": 6,
+      "chars": 406,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_6_fig_1.png",
+        "OOP Test8/assets/page_6_fig_2.png",
+        "OOP Test8/assets/page_6_fig_3.png",
+        "OOP Test8/assets/page_6_fig_4.png",
+        "OOP Test8/assets/page_6_fig_5.png"
+      ]
+    },
+    {
+      "page": 7,
+      "chars": 103,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_7_fig_1.png",
+        "OOP Test8/assets/page_7_fig_2.png",
+        "OOP Test8/assets/page_7_fig_3.png",
+        "OOP Test8/assets/page_7_fig_4.png",
+        "OOP Test8/assets/page_7_fig_5.png",
+        "OOP Test8/assets/page_7_fig_6.png",
+        "OOP Test8/assets/page_7_fig_7.png",
+        "OOP Test8/assets/page_7_fig_8.png",
+        "OOP Test8/assets/page_7_fig_9.png",
+        "OOP Test8/assets/page_7_fig_10.png",
+        "OOP Test8/assets/page_7_fig_11.png",
+        "OOP Test8/assets/page_7_fig_12.png",
+        "OOP Test8/assets/page_7_fig_13.png",
+        "OOP Test8/assets/page_7_fig_14.png",
+        "OOP Test8/assets/page_7_fig_15.png"
+      ]
+    },
+    {
+      "page": 8,
+      "chars": 93,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_8_fig_1.png",
+        "OOP Test8/assets/page_8_fig_2.png",
+        "OOP Test8/assets/page_8_fig_3.png",
+        "OOP Test8/assets/page_8_fig_4.png",
+        "OOP Test8/assets/page_8_fig_5.png",
+        "OOP Test8/assets/page_8_fig_6.png",
+        "OOP Test8/assets/page_8_fig_7.png",
+        "OOP Test8/assets/page_8_fig_8.png",
+        "OOP Test8/assets/page_8_fig_9.png",
+        "OOP Test8/assets/page_8_fig_10.png",
+        "OOP Test8/assets/page_8_fig_11.png",
+        "OOP Test8/assets/page_8_fig_12.png",
+        "OOP Test8/assets/page_8_fig_13.png",
+        "OOP Test8/assets/page_8_fig_14.png",
+        "OOP Test8/assets/page_8_fig_15.png",
+        "OOP Test8/assets/page_8_fig_16.png"
+      ]
+    },
+    {
+      "page": 9,
+      "chars": 524,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_9_fig_1.png"
+      ]
+    },
+    {
+      "page": 10,
+      "chars": 494,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_10_fig_1.png",
+        "OOP Test8/assets/page_10_fig_2.png",
+        "OOP Test8/assets/page_10_fig_3.png",
+        "OOP Test8/assets/page_10_fig_4.png",
+        "OOP Test8/assets/page_10_fig_5.png"
+      ]
+    },
+    {
+      "page": 11,
+      "chars": 286,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_11_fig_1.png",
+        "OOP Test8/assets/page_11_fig_2.png",
+        "OOP Test8/assets/page_11_fig_3.png",
+        "OOP Test8/assets/page_11_fig_4.png",
+        "OOP Test8/assets/page_11_fig_5.png",
+        "OOP Test8/assets/page_11_fig_6.png",
+        "OOP Test8/assets/page_11_fig_7.png",
+        "OOP Test8/assets/page_11_fig_8.png",
+        "OOP Test8/assets/page_11_fig_9.png",
+        "OOP Test8/assets/page_11_fig_10.png",
+        "OOP Test8/assets/page_11_fig_11.png",
+        "OOP Test8/assets/page_11_fig_12.png",
+        "OOP Test8/assets/page_11_fig_13.png",
+        "OOP Test8/assets/page_11_fig_14.png",
+        "OOP Test8/assets/page_11_fig_15.png",
+        "OOP Test8/assets/page_11_fig_16.png",
+        "OOP Test8/assets/page_11_fig_17.png",
+        "OOP Test8/assets/page_11_fig_18.png",
+        "OOP Test8/assets/page_11_fig_19.png"
+      ]
+    },
+    {
+      "page": 12,
+      "chars": 367,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_12_fig_1.png",
+        "OOP Test8/assets/page_12_fig_2.png",
+        "OOP Test8/assets/page_12_fig_3.png",
+        "OOP Test8/assets/page_12_fig_4.png",
+        "OOP Test8/assets/page_12_fig_5.png",
+        "OOP Test8/assets/page_12_fig_6.png",
+        "OOP Test8/assets/page_12_fig_7.png",
+        "OOP Test8/assets/page_12_fig_8.png",
+        "OOP Test8/assets/page_12_fig_9.png",
+        "OOP Test8/assets/page_12_fig_10.png",
+        "OOP Test8/assets/page_12_fig_11.png",
+        "OOP Test8/assets/page_12_fig_12.png",
+        "OOP Test8/assets/page_12_fig_13.png",
+        "OOP Test8/assets/page_12_fig_14.png"
+      ]
+    },
+    {
+      "page": 13,
+      "chars": 208,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_13_fig_1.png",
+        "OOP Test8/assets/page_13_fig_2.png",
+        "OOP Test8/assets/page_13_fig_3.png"
+      ]
+    },
+    {
+      "page": 14,
+      "chars": 176,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_14_fig_1.png",
+        "OOP Test8/assets/page_14_fig_2.png",
+        "OOP Test8/assets/page_14_fig_3.png",
+        "OOP Test8/assets/page_14_fig_4.png",
+        "OOP Test8/assets/page_14_fig_5.png"
+      ]
+    },
+    {
+      "page": 15,
+      "chars": 501,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_15_fig_1.png"
+      ]
+    },
+    {
+      "page": 16,
+      "chars": 45,
+      "has_text": false,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_16_fig_1.png"
+      ]
+    },
+    {
+      "page": 17,
+      "chars": 316,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_17_fig_1.png"
+      ]
+    },
+    {
+      "page": 18,
+      "chars": 569,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_18_fig_1.png",
+        "OOP Test8/assets/page_18_fig_2.png",
+        "OOP Test8/assets/page_18_fig_3.png"
+      ]
+    },
+    {
+      "page": 19,
+      "chars": 386,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_19_fig_1.png",
+        "OOP Test8/assets/page_19_fig_2.png",
+        "OOP Test8/assets/page_19_fig_3.png"
+      ]
+    },
+    {
+      "page": 20,
+      "chars": 361,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_20_fig_1.png",
+        "OOP Test8/assets/page_20_fig_2.png",
+        "OOP Test8/assets/page_20_fig_3.png"
+      ]
+    },
+    {
+      "page": 21,
+      "chars": 779,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_21_fig_1.png",
+        "OOP Test8/assets/page_21_fig_2.png",
+        "OOP Test8/assets/page_21_fig_4.png",
+        "OOP Test8/assets/page_21_fig_5.png",
+        "OOP Test8/assets/page_21_fig_6.png",
+        "OOP Test8/assets/page_21_fig_7.png",
+        "OOP Test8/assets/page_21_fig_8.png",
+        "OOP Test8/assets/page_21_fig_9.png",
+        "OOP Test8/assets/page_21_fig_10.png",
+        "OOP Test8/assets/page_21_fig_11.png",
+        "OOP Test8/assets/page_21_fig_12.png",
+        "OOP Test8/assets/page_21_fig_13.png",
+        "OOP Test8/assets/page_21_fig_14.png",
+        "OOP Test8/assets/page_21_fig_15.png",
+        "OOP Test8/assets/page_21_fig_16.png",
+        "OOP Test8/assets/page_21_fig_17.png",
+        "OOP Test8/assets/page_21_fig_18.png",
+        "OOP Test8/assets/page_21_fig_19.png",
+        "OOP Test8/assets/page_21_fig_20.png",
+        "OOP Test8/assets/page_21_fig_21.png",
+        "OOP Test8/assets/page_21_fig_22.png",
+        "OOP Test8/assets/page_21_fig_23.png",
+        "OOP Test8/assets/page_21_fig_24.png",
+        "OOP Test8/assets/page_21_fig_25.png",
+        "OOP Test8/assets/page_21_fig_26.png",
+        "OOP Test8/assets/page_21_fig_27.png",
+        "OOP Test8/assets/page_21_fig_28.png",
+        "OOP Test8/assets/page_21_fig_29.png",
+        "OOP Test8/assets/page_21_fig_30.png",
+        "OOP Test8/assets/page_21_fig_31.png",
+        "OOP Test8/assets/page_21_fig_32.png",
+        "OOP Test8/assets/page_21_fig_33.png",
+        "OOP Test8/assets/page_21_fig_34.png",
+        "OOP Test8/assets/page_21_fig_35.png",
+        "OOP Test8/assets/page_21_fig_36.png",
+        "OOP Test8/assets/page_21_fig_37.png",
+        "OOP Test8/assets/page_21_fig_38.png",
+        "OOP Test8/assets/page_21_fig_39.png",
+        "OOP Test8/assets/page_21_fig_40.png",
+        "OOP Test8/assets/page_21_fig_41.png",
+        "OOP Test8/assets/page_21_fig_42.png",
+        "OOP Test8/assets/page_21_fig_43.png",
+        "OOP Test8/assets/page_21_fig_44.png",
+        "OOP Test8/assets/page_21_fig_45.png",
+        "OOP Test8/assets/page_21_fig_46.png",
+        "OOP Test8/assets/page_21_fig_47.png",
+        "OOP Test8/assets/page_21_fig_48.png",
+        "OOP Test8/assets/page_21_fig_49.png",
+        "OOP Test8/assets/page_21_fig_50.png",
+        "OOP Test8/assets/page_21_fig_51.png",
+        "OOP Test8/assets/page_21_fig_52.png",
+        "OOP Test8/assets/page_21_fig_53.png",
+        "OOP Test8/assets/page_21_fig_54.png",
+        "OOP Test8/assets/page_21_fig_55.png",
+        "OOP Test8/assets/page_21_fig_56.png",
+        "OOP Test8/assets/page_21_fig_57.png",
+        "OOP Test8/assets/page_21_fig_58.png",
+        "OOP Test8/assets/page_21_fig_59.png",
+        "OOP Test8/assets/page_21_fig_60.png",
+        "OOP Test8/assets/page_21_fig_61.png",
+        "OOP Test8/assets/page_21_fig_62.png",
+        "OOP Test8/assets/page_21_fig_63.png",
+        "OOP Test8/assets/page_21_fig_64.png",
+        "OOP Test8/assets/page_21_fig_65.png",
+        "OOP Test8/assets/page_21_fig_66.png",
+        "OOP Test8/assets/page_21_fig_67.png",
+        "OOP Test8/assets/page_21_fig_68.png",
+        "OOP Test8/assets/page_21_fig_69.png",
+        "OOP Test8/assets/page_21_fig_70.png",
+        "OOP Test8/assets/page_21_fig_71.png",
+        "OOP Test8/assets/page_21_fig_72.png",
+        "OOP Test8/assets/page_21_fig_73.png",
+        "OOP Test8/assets/page_21_fig_74.png",
+        "OOP Test8/assets/page_21_fig_75.png",
+        "OOP Test8/assets/page_21_fig_76.png",
+        "OOP Test8/assets/page_21_fig_77.png",
+        "OOP Test8/assets/page_21_fig_78.png",
+        "OOP Test8/assets/page_21_fig_79.png"
+      ]
+    },
+    {
+      "page": 22,
+      "chars": 249,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_22_fig_1.png",
+        "OOP Test8/assets/page_22_fig_2.png",
+        "OOP Test8/assets/page_22_fig_3.png",
+        "OOP Test8/assets/page_22_fig_4.png",
+        "OOP Test8/assets/page_22_fig_5.png"
+      ]
+    },
+    {
+      "page": 23,
+      "chars": 453,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_23_fig_1.png",
+        "OOP Test8/assets/page_23_fig_2.png",
+        "OOP Test8/assets/page_23_fig_3.png",
+        "OOP Test8/assets/page_23_fig_4.png",
+        "OOP Test8/assets/page_23_fig_5.png",
+        "OOP Test8/assets/page_23_fig_6.png",
+        "OOP Test8/assets/page_23_fig_7.png"
+      ]
+    },
+    {
+      "page": 24,
+      "chars": 843,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_24_fig_1.png",
+        "OOP Test8/assets/page_24_fig_2.png"
+      ]
+    },
+    {
+      "page": 25,
+      "chars": 407,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_25_fig_1.png",
+        "OOP Test8/assets/page_25_fig_2.png"
+      ]
+    },
+    {
+      "page": 26,
+      "chars": 605,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_26_fig_1.png",
+        "OOP Test8/assets/page_26_fig_2.png"
+      ]
+    },
+    {
+      "page": 27,
+      "chars": 269,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_27_fig_1.png",
+        "OOP Test8/assets/page_27_fig_2.png"
+      ]
+    },
+    {
+      "page": 28,
+      "chars": 278,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_28_fig_1.png",
+        "OOP Test8/assets/page_28_fig_2.png",
+        "OOP Test8/assets/page_28_fig_3.png"
+      ]
+    },
+    {
+      "page": 29,
+      "chars": 338,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_29_fig_1.png",
+        "OOP Test8/assets/page_29_fig_2.png",
+        "OOP Test8/assets/page_29_fig_3.png"
+      ]
+    },
+    {
+      "page": 30,
+      "chars": 445,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_30_fig_1.png",
+        "OOP Test8/assets/page_30_fig_2.png"
+      ]
+    },
+    {
+      "page": 31,
+      "chars": 445,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_31_fig_1.png",
+        "OOP Test8/assets/page_31_fig_2.png"
+      ]
+    },
+    {
+      "page": 32,
+      "chars": 340,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_32_fig_1.png",
+        "OOP Test8/assets/page_32_fig_2.png",
+        "OOP Test8/assets/page_32_fig_3.png",
+        "OOP Test8/assets/page_32_fig_4.png",
+        "OOP Test8/assets/page_32_fig_5.png",
+        "OOP Test8/assets/page_32_fig_6.png",
+        "OOP Test8/assets/page_32_fig_7.png"
+      ]
+    },
+    {
+      "page": 33,
+      "chars": 418,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_33_fig_1.png",
+        "OOP Test8/assets/page_33_fig_2.png"
+      ]
+    },
+    {
+      "page": 34,
+      "chars": 51,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_34_fig_1.png"
+      ]
+    },
+    {
+      "page": 35,
+      "chars": 533,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_35_fig_1.png",
+        "OOP Test8/assets/page_35_fig_2.png",
+        "OOP Test8/assets/page_35_fig_3.png",
+        "OOP Test8/assets/page_35_fig_4.png",
+        "OOP Test8/assets/page_35_fig_5.png",
+        "OOP Test8/assets/page_35_fig_6.png",
+        "OOP Test8/assets/page_35_fig_7.png"
+      ]
+    },
+    {
+      "page": 36,
+      "chars": 308,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_36_fig_1.png",
+        "OOP Test8/assets/page_36_fig_2.png",
+        "OOP Test8/assets/page_36_fig_3.png",
+        "OOP Test8/assets/page_36_fig_4.png",
+        "OOP Test8/assets/page_36_fig_5.png",
+        "OOP Test8/assets/page_36_fig_6.png"
+      ]
+    },
+    {
+      "page": 37,
+      "chars": 584,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_37_fig_1.png"
+      ]
+    },
+    {
+      "page": 38,
+      "chars": 680,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_38_fig_1.png",
+        "OOP Test8/assets/page_38_fig_2.png"
+      ]
+    },
+    {
+      "page": 39,
+      "chars": 917,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_39_fig_1.png"
+      ]
+    },
+    {
+      "page": 40,
+      "chars": 758,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_40_fig_1.png"
+      ]
+    },
+    {
+      "page": 41,
+      "chars": 929,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_41_fig_1.png"
+      ]
+    },
+    {
+      "page": 42,
+      "chars": 812,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_42_fig_1.png"
+      ]
+    },
+    {
+      "page": 43,
+      "chars": 824,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_43_fig_1.png"
+      ]
+    },
+    {
+      "page": 44,
+      "chars": 511,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_44_fig_1.png"
+      ]
+    },
+    {
+      "page": 45,
+      "chars": 49,
+      "has_text": false,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_45_fig_1.png"
+      ]
+    },
+    {
+      "page": 46,
+      "chars": 308,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_46_fig_1.png"
+      ]
+    },
+    {
+      "page": 47,
+      "chars": 466,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_47_fig_1.png",
+        "OOP Test8/assets/page_47_fig_2.png",
+        "OOP Test8/assets/page_47_fig_3.png",
+        "OOP Test8/assets/page_47_fig_4.png"
+      ]
+    },
+    {
+      "page": 48,
+      "chars": 351,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_48_fig_1.png",
+        "OOP Test8/assets/page_48_fig_2.png",
+        "OOP Test8/assets/page_48_fig_3.png"
+      ]
+    },
+    {
+      "page": 49,
+      "chars": 402,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_49_fig_1.png"
+      ]
+    },
+    {
+      "page": 50,
+      "chars": 534,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_50_fig_1.png"
+      ]
+    },
+    {
+      "page": 51,
+      "chars": 500,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_51_fig_1.png",
+        "OOP Test8/assets/page_51_fig_2.png",
+        "OOP Test8/assets/page_51_fig_3.png",
+        "OOP Test8/assets/page_51_fig_4.png",
+        "OOP Test8/assets/page_51_fig_5.png",
+        "OOP Test8/assets/page_51_fig_6.png",
+        "OOP Test8/assets/page_51_fig_7.png",
+        "OOP Test8/assets/page_51_fig_8.png",
+        "OOP Test8/assets/page_51_fig_9.png",
+        "OOP Test8/assets/page_51_fig_10.png",
+        "OOP Test8/assets/page_51_fig_11.png",
+        "OOP Test8/assets/page_51_fig_12.png"
+      ]
+    },
+    {
+      "page": 52,
+      "chars": 449,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_52_fig_1.png",
+        "OOP Test8/assets/page_52_fig_2.png",
+        "OOP Test8/assets/page_52_fig_3.png",
+        "OOP Test8/assets/page_52_fig_4.png"
+      ]
+    },
+    {
+      "page": 53,
+      "chars": 768,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_53_fig_1.png"
+      ]
+    },
+    {
+      "page": 54,
+      "chars": 622,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_54_fig_1.png"
+      ]
+    },
+    {
+      "page": 55,
+      "chars": 762,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_55_fig_1.png",
+        "OOP Test8/assets/page_55_fig_2.png",
+        "OOP Test8/assets/page_55_fig_3.png",
+        "OOP Test8/assets/page_55_fig_4.png",
+        "OOP Test8/assets/page_55_fig_5.png",
+        "OOP Test8/assets/page_55_fig_6.png",
+        "OOP Test8/assets/page_55_fig_7.png",
+        "OOP Test8/assets/page_55_fig_8.png",
+        "OOP Test8/assets/page_55_fig_9.png",
+        "OOP Test8/assets/page_55_fig_10.png",
+        "OOP Test8/assets/page_55_fig_11.png",
+        "OOP Test8/assets/page_55_fig_12.png",
+        "OOP Test8/assets/page_55_fig_13.png",
+        "OOP Test8/assets/page_55_fig_14.png"
+      ]
+    },
+    {
+      "page": 56,
+      "chars": 618,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_56_fig_1.png",
+        "OOP Test8/assets/page_56_fig_2.png",
+        "OOP Test8/assets/page_56_fig_3.png",
+        "OOP Test8/assets/page_56_fig_4.png",
+        "OOP Test8/assets/page_56_fig_5.png",
+        "OOP Test8/assets/page_56_fig_6.png",
+        "OOP Test8/assets/page_56_fig_7.png",
+        "OOP Test8/assets/page_56_fig_8.png",
+        "OOP Test8/assets/page_56_fig_9.png",
+        "OOP Test8/assets/page_56_fig_10.png",
+        "OOP Test8/assets/page_56_fig_11.png"
+      ]
+    },
+    {
+      "page": 57,
+      "chars": 638,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_57_fig_1.png",
+        "OOP Test8/assets/page_57_fig_2.png",
+        "OOP Test8/assets/page_57_fig_3.png",
+        "OOP Test8/assets/page_57_fig_4.png"
+      ]
+    },
+    {
+      "page": 58,
+      "chars": 711,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_58_fig_1.png",
+        "OOP Test8/assets/page_58_fig_2.png",
+        "OOP Test8/assets/page_58_fig_3.png"
+      ]
+    },
+    {
+      "page": 59,
+      "chars": 50,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_59_fig_1.png"
+      ]
+    },
+    {
+      "page": 60,
+      "chars": 344,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_60_fig_1.png",
+        "OOP Test8/assets/page_60_fig_2.png",
+        "OOP Test8/assets/page_60_fig_3.png",
+        "OOP Test8/assets/page_60_fig_4.png"
+      ]
+    },
+    {
+      "page": 61,
+      "chars": 596,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_61_fig_1.png",
+        "OOP Test8/assets/page_61_fig_2.png",
+        "OOP Test8/assets/page_61_fig_3.png",
+        "OOP Test8/assets/page_61_fig_4.png",
+        "OOP Test8/assets/page_61_fig_5.png",
+        "OOP Test8/assets/page_61_fig_6.png"
+      ]
+    },
+    {
+      "page": 62,
+      "chars": 581,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_62_fig_1.png",
+        "OOP Test8/assets/page_62_fig_2.png",
+        "OOP Test8/assets/page_62_fig_3.png",
+        "OOP Test8/assets/page_62_fig_4.png",
+        "OOP Test8/assets/page_62_fig_5.png",
+        "OOP Test8/assets/page_62_fig_6.png"
+      ]
+    },
+    {
+      "page": 63,
+      "chars": 581,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_63_fig_1.png",
+        "OOP Test8/assets/page_63_fig_2.png",
+        "OOP Test8/assets/page_63_fig_3.png",
+        "OOP Test8/assets/page_63_fig_4.png",
+        "OOP Test8/assets/page_63_fig_5.png",
+        "OOP Test8/assets/page_63_fig_6.png"
+      ]
+    },
+    {
+      "page": 64,
+      "chars": 581,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_64_fig_1.png",
+        "OOP Test8/assets/page_64_fig_2.png",
+        "OOP Test8/assets/page_64_fig_3.png",
+        "OOP Test8/assets/page_64_fig_4.png",
+        "OOP Test8/assets/page_64_fig_5.png",
+        "OOP Test8/assets/page_64_fig_6.png"
+      ]
+    },
+    {
+      "page": 65,
+      "chars": 685,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_65_fig_1.png",
+        "OOP Test8/assets/page_65_fig_2.png",
+        "OOP Test8/assets/page_65_fig_3.png",
+        "OOP Test8/assets/page_65_fig_4.png",
+        "OOP Test8/assets/page_65_fig_5.png",
+        "OOP Test8/assets/page_65_fig_6.png",
+        "OOP Test8/assets/page_65_fig_7.png"
+      ]
+    },
+    {
+      "page": 66,
+      "chars": 341,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_66_fig_1.png",
+        "OOP Test8/assets/page_66_fig_2.png"
+      ]
+    },
+    {
+      "page": 67,
+      "chars": 300,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_67_fig_1.png",
+        "OOP Test8/assets/page_67_fig_2.png"
+      ]
+    },
+    {
+      "page": 68,
+      "chars": 564,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_68_fig_1.png"
+      ]
+    },
+    {
+      "page": 69,
+      "chars": 666,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_69_fig_1.png"
+      ]
+    },
+    {
+      "page": 70,
+      "chars": 1022,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_70_fig_1.png",
+        "OOP Test8/assets/page_70_fig_2.png",
+        "OOP Test8/assets/page_70_fig_3.png",
+        "OOP Test8/assets/page_70_fig_4.png",
+        "OOP Test8/assets/page_70_fig_5.png",
+        "OOP Test8/assets/page_70_fig_6.png",
+        "OOP Test8/assets/page_70_fig_7.png",
+        "OOP Test8/assets/page_70_fig_8.png",
+        "OOP Test8/assets/page_70_fig_9.png",
+        "OOP Test8/assets/page_70_fig_10.png",
+        "OOP Test8/assets/page_70_fig_11.png",
+        "OOP Test8/assets/page_70_fig_12.png",
+        "OOP Test8/assets/page_70_fig_13.png",
+        "OOP Test8/assets/page_70_fig_14.png",
+        "OOP Test8/assets/page_70_fig_15.png"
+      ]
+    },
+    {
+      "page": 71,
+      "chars": 331,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_71_fig_1.png",
+        "OOP Test8/assets/page_71_fig_2.png",
+        "OOP Test8/assets/page_71_fig_3.png",
+        "OOP Test8/assets/page_71_fig_4.png"
+      ]
+    },
+    {
+      "page": 72,
+      "chars": 492,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_72_fig_1.png",
+        "OOP Test8/assets/page_72_fig_2.png"
+      ]
+    },
+    {
+      "page": 73,
+      "chars": 417,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_73_fig_1.png",
+        "OOP Test8/assets/page_73_fig_2.png",
+        "OOP Test8/assets/page_73_fig_3.png",
+        "OOP Test8/assets/page_73_fig_4.png"
+      ]
+    },
+    {
+      "page": 74,
+      "chars": 469,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_74_fig_1.png",
+        "OOP Test8/assets/page_74_fig_2.png",
+        "OOP Test8/assets/page_74_fig_3.png",
+        "OOP Test8/assets/page_74_fig_4.png"
+      ]
+    },
+    {
+      "page": 75,
+      "chars": 318,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_75_fig_1.png"
+      ]
+    },
+    {
+      "page": 76,
+      "chars": 53,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_76_fig_1.png"
+      ]
+    },
+    {
+      "page": 77,
+      "chars": 252,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_77_fig_1.png"
+      ]
+    },
+    {
+      "page": 78,
+      "chars": 285,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_78_fig_1.png"
+      ]
+    },
+    {
+      "page": 79,
+      "chars": 295,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_79_fig_1.png"
+      ]
+    },
+    {
+      "page": 80,
+      "chars": 355,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_80_fig_1.png",
+        "OOP Test8/assets/page_80_fig_2.png",
+        "OOP Test8/assets/page_80_fig_3.png"
+      ]
+    },
+    {
+      "page": 81,
+      "chars": 362,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_81_fig_1.png",
+        "OOP Test8/assets/page_81_fig_2.png",
+        "OOP Test8/assets/page_81_fig_3.png",
+        "OOP Test8/assets/page_81_fig_4.png",
+        "OOP Test8/assets/page_81_fig_5.png"
+      ]
+    },
+    {
+      "page": 82,
+      "chars": 311,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_82_fig_1.png"
+      ]
+    },
+    {
+      "page": 83,
+      "chars": 407,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_83_fig_1.png"
+      ]
+    },
+    {
+      "page": 84,
+      "chars": 353,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_84_fig_1.png"
+      ]
+    },
+    {
+      "page": 85,
+      "chars": 431,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_85_fig_1.png",
+        "OOP Test8/assets/page_85_fig_2.png",
+        "OOP Test8/assets/page_85_fig_3.png"
+      ]
+    },
+    {
+      "page": 86,
+      "chars": 341,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_86_fig_1.png",
+        "OOP Test8/assets/page_86_fig_2.png"
+      ]
+    },
+    {
+      "page": 87,
+      "chars": 346,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_87_fig_1.png",
+        "OOP Test8/assets/page_87_fig_4.png",
+        "OOP Test8/assets/page_87_fig_5.png"
+      ]
+    },
+    {
+      "page": 88,
+      "chars": 361,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_88_fig_1.png",
+        "OOP Test8/assets/page_88_fig_4.png",
+        "OOP Test8/assets/page_88_fig_5.png"
+      ]
+    },
+    {
+      "page": 89,
+      "chars": 465,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_89_fig_1.png",
+        "OOP Test8/assets/page_89_fig_4.png"
+      ]
+    },
+    {
+      "page": 90,
+      "chars": 55,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_90_fig_1.png"
+      ]
+    },
+    {
+      "page": 91,
+      "chars": 627,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_91_fig_1.png"
+      ]
+    },
+    {
+      "page": 92,
+      "chars": 426,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_92_fig_1.png"
+      ]
+    },
+    {
+      "page": 93,
+      "chars": 432,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_93_fig_1.png"
+      ]
+    },
+    {
+      "page": 94,
+      "chars": 597,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_94_fig_1.png"
+      ]
+    },
+    {
+      "page": 95,
+      "chars": 600,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_95_fig_1.png"
+      ]
+    },
+    {
+      "page": 96,
+      "chars": 733,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_96_fig_1.png",
+        "OOP Test8/assets/page_96_fig_2.png"
+      ]
+    },
+    {
+      "page": 97,
+      "chars": 710,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_97_fig_1.png",
+        "OOP Test8/assets/page_97_fig_2.png",
+        "OOP Test8/assets/page_97_fig_3.png",
+        "OOP Test8/assets/page_97_fig_4.png"
+      ]
+    },
+    {
+      "page": 98,
+      "chars": 714,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_98_fig_1.png",
+        "OOP Test8/assets/page_98_fig_4.png",
+        "OOP Test8/assets/page_98_fig_5.png",
+        "OOP Test8/assets/page_98_fig_6.png"
+      ]
+    },
+    {
+      "page": 99,
+      "chars": 804,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_99_fig_1.png",
+        "OOP Test8/assets/page_99_fig_4.png",
+        "OOP Test8/assets/page_99_fig_5.png",
+        "OOP Test8/assets/page_99_fig_6.png"
+      ]
+    },
+    {
+      "page": 100,
+      "chars": 667,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_100_fig_1.png",
+        "OOP Test8/assets/page_100_fig_2.png",
+        "OOP Test8/assets/page_100_fig_3.png",
+        "OOP Test8/assets/page_100_fig_4.png",
+        "OOP Test8/assets/page_100_fig_5.png",
+        "OOP Test8/assets/page_100_fig_6.png"
+      ]
+    },
+    {
+      "page": 101,
+      "chars": 1028,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_101_fig_1.png"
+      ]
+    },
+    {
+      "page": 102,
+      "chars": 1053,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_102_fig_1.png"
+      ]
+    },
+    {
+      "page": 103,
+      "chars": 1038,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_103_fig_1.png"
+      ]
+    },
+    {
+      "page": 104,
+      "chars": 1110,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_104_fig_1.png",
+        "OOP Test8/assets/page_104_fig_2.png",
+        "OOP Test8/assets/page_104_fig_3.png",
+        "OOP Test8/assets/page_104_fig_4.png"
+      ]
+    },
+    {
+      "page": 105,
+      "chars": 76,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_105_fig_1.png"
+      ]
+    },
+    {
+      "page": 106,
+      "chars": 520,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_106_fig_1.png",
+        "OOP Test8/assets/page_106_fig_2.png",
+        "OOP Test8/assets/page_106_fig_3.png",
+        "OOP Test8/assets/page_106_fig_4.png",
+        "OOP Test8/assets/page_106_fig_5.png",
+        "OOP Test8/assets/page_106_fig_6.png",
+        "OOP Test8/assets/page_106_fig_7.png",
+        "OOP Test8/assets/page_106_fig_8.png",
+        "OOP Test8/assets/page_106_fig_9.png",
+        "OOP Test8/assets/page_106_fig_10.png",
+        "OOP Test8/assets/page_106_fig_11.png",
+        "OOP Test8/assets/page_106_fig_12.png",
+        "OOP Test8/assets/page_106_fig_13.png",
+        "OOP Test8/assets/page_106_fig_14.png",
+        "OOP Test8/assets/page_106_fig_16.png",
+        "OOP Test8/assets/page_106_fig_17.png"
+      ]
+    },
+    {
+      "page": 107,
+      "chars": 90,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_107_fig_1.png"
+      ]
+    },
+    {
+      "page": 108,
+      "chars": 358,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_108_fig_1.png",
+        "OOP Test8/assets/page_108_fig_2.png",
+        "OOP Test8/assets/page_108_fig_3.png",
+        "OOP Test8/assets/page_108_fig_4.png",
+        "OOP Test8/assets/page_108_fig_5.png",
+        "OOP Test8/assets/page_108_fig_6.png",
+        "OOP Test8/assets/page_108_fig_7.png",
+        "OOP Test8/assets/page_108_fig_8.png",
+        "OOP Test8/assets/page_108_fig_9.png",
+        "OOP Test8/assets/page_108_fig_10.png",
+        "OOP Test8/assets/page_108_fig_11.png",
+        "OOP Test8/assets/page_108_fig_12.png",
+        "OOP Test8/assets/page_108_fig_13.png",
+        "OOP Test8/assets/page_108_fig_14.png",
+        "OOP Test8/assets/page_108_fig_15.png",
+        "OOP Test8/assets/page_108_fig_16.png",
+        "OOP Test8/assets/page_108_fig_17.png"
+      ]
+    },
+    {
+      "page": 109,
+      "chars": 147,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_109_fig_1.png",
+        "OOP Test8/assets/page_109_fig_2.png",
+        "OOP Test8/assets/page_109_fig_3.png",
+        "OOP Test8/assets/page_109_fig_4.png",
+        "OOP Test8/assets/page_109_fig_5.png"
+      ]
+    },
+    {
+      "page": 110,
+      "chars": 174,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_110_fig_1.png",
+        "OOP Test8/assets/page_110_fig_2.png",
+        "OOP Test8/assets/page_110_fig_3.png"
+      ]
+    },
+    {
+      "page": 111,
+      "chars": 911,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_111_fig_1.png",
+        "OOP Test8/assets/page_111_fig_2.png",
+        "OOP Test8/assets/page_111_fig_3.png",
+        "OOP Test8/assets/page_111_fig_4.png"
+      ]
+    },
+    {
+      "page": 112,
+      "chars": 205,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_112_fig_1.png",
+        "OOP Test8/assets/page_112_fig_2.png",
+        "OOP Test8/assets/page_112_fig_3.png",
+        "OOP Test8/assets/page_112_fig_4.png",
+        "OOP Test8/assets/page_112_fig_5.png"
+      ]
+    },
+    {
+      "page": 113,
+      "chars": 461,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_113_fig_1.png",
+        "OOP Test8/assets/page_113_fig_2.png",
+        "OOP Test8/assets/page_113_fig_3.png",
+        "OOP Test8/assets/page_113_fig_4.png",
+        "OOP Test8/assets/page_113_fig_5.png",
+        "OOP Test8/assets/page_113_fig_6.png",
+        "OOP Test8/assets/page_113_fig_7.png",
+        "OOP Test8/assets/page_113_fig_8.png",
+        "OOP Test8/assets/page_113_fig_9.png"
+      ]
+    },
+    {
+      "page": 114,
+      "chars": 362,
+      "has_text": true,
+      "extraction_method": "pdfplumber",
+      "visual_assets": [
+        "OOP Test8/assets/page_114_fig_1.png",
+        "OOP Test8/assets/page_114_fig_2.png",
+        "OOP Test8/assets/page_114_fig_3.png",
+        "OOP Test8/assets/page_114_fig_4.png",
+        "OOP Test8/assets/page_114_fig_5.png"
+      ]
+    }
+  ]
+}

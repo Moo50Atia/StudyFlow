@@ -1,0 +1,33 @@
+{
+  "domain": "Object-Oriented Programming (C++)",
+  "route": "Computer Science",
+  "confidence": 1.0,
+  "fallback_used": false,
+  "keyword_scores": {
+    "Medical": {
+      "hits": 0,
+      "total_keywords": 45,
+      "score": 0.0
+    },
+    "Engineering": {
+      "hits": 0,
+      "total_keywords": 30,
+      "score": 0.0
+    },
+    "Computer Science": {
+      "hits": 2,
+      "total_keywords": 26,
+      "score": 0.077
+    },
+    "Mathematics": {
+      "hits": 1,
+      "total_keywords": 26,
+      "score": 0.038
+    },
+    "Physics": {
+      "hits": 0,
+      "total_keywords": 24,
+      "score": 0.0
+    }
+  }
+}

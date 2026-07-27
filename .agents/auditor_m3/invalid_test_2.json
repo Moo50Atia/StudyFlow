@@ -1,0 +1,25 @@
+[
+  {
+    "Name": "Dakahlia STEM School",
+    "Location": {
+      "Address": "Gamasa, Dakahlia",
+      "Maps_Link": "ftp://maps.google.com"
+    },
+    "Non_Official_Contacts": [
+      "Phone: +201000000000"
+    ],
+    "General_Info": {
+      "Established_Year": "2015",
+      "Official_Website": "invalid-url-no-protocol.com"
+    },
+    "Funding_And_Projects": [
+      {
+        "Name": "STESSA Project",
+        "Year": 2019,
+        "Funding_Body": "USAID",
+        "Amount": "$10M",
+        "Description": "Test project"
+      }
+    ]
+  }
+]

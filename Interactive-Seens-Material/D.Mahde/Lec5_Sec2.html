@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private By Default - Interactive Visualization</title>
+    <!-- Tailwind CSS for rich modern UI styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <style>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glowing-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glowing-button:hover {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            height: 6px;
+            border-radius: 9999px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.1s ease;
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #818cf8;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.3);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden">
+
+    <!-- Top Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <span class="text-xs font-bold tracking-wider text-indigo-400 uppercase bg-indigo-950/50 px-2.5 py-1 rounded-full border border-indigo-800/50">
+                    Lecture 5 • Section 2
+                </span>
+                <h1 class="text-2xl font-extrabold text-white mt-1.5 flex items-center gap-2">
+                    Private By Default
+                </h1>
+            </div>
+            <p class="text-xs text-slate-400 max-w-md md:text-right">
+                Understanding why class elements default to private in C++.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+        <!-- Left Sidebar: Controls & Code -->
+        <section class="lg:col-span-5 flex flex-col gap-5 h-full">
+
+            <!-- Learning Outcome Dashboard Card -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex flex-col gap-3">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-teal-400 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                    Visual Learning Outcome
+                </h2>
+                <div class="text-sm text-slate-300 leading-relaxed font-normal">
+                    Misconception corrected: In C++, class members are private by default. Without an explicit access specifier (like public:), variables cannot be reached from outside.
+                </div>
+            </div>
+
+            <!-- Flow Stepper / Phase Selector -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">Interactive Phase</h2>
+                <div class="grid grid-cols-4 gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800/80" id="phase-container">
+                    <!-- Phases will be populated dynamically -->
+                </div>
+
+                <!-- Active Narrative Card -->
+                <div class="mt-4 p-4 bg-slate-900/60 rounded-xl border border-slate-800 min-h-[110px] flex flex-col justify-between">
+                    <p id="narrative-text" class="text-xs text-slate-300 leading-relaxed italic">
+                        Loading...
+                    </p>
+                    <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-800/60">
+                        <span id="narrative-step-lbl" class="text-[10px] font-bold tracking-wider text-indigo-400 uppercase">Step 1</span>
+                        <button id="btn-play-pause" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-bold focus:outline-none">
+                            <span id="play-icon">▶</span> <span id="play-text">Auto-Play</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parameters & Controls Container -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex-1 flex flex-col gap-4">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Controls & Code</h2>
+
+                
+            <div class="flex gap-2">
+                <button id="btn-toggle-spec" class="glowing-button bg-indigo-600 text-xs px-3 py-2 rounded-lg font-bold">Add public: Specifier</button>
+            </div>
+        
+
+                <!-- Code Container -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-900 flex-1 flex flex-col gap-2 min-h-[150px]">
+                    <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">C++ Code Context</h3>
+                    <pre class="text-xs text-indigo-300 overflow-x-auto p-2 bg-slate-900/50 rounded border border-slate-800/50 font-mono" id="code-snippet">// Private-by-default behavior
+class Circle {
+    double radius; // Default private!
+public:
+    double getArea(); // Explicit public
+};</pre>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Right Visual Scene Display Card -->
+        <section class="lg:col-span-7 flex flex-col gap-4 h-full min-h-[450px]">
+
+            <!-- Graph Visualizer Panel -->
+            <div class="glass-panel rounded-3xl p-4 md:p-6 border border-slate-800 flex-1 flex flex-col gap-4 relative overflow-hidden">
+
+                <!-- Legend / Status -->
+                <div class="flex flex-wrap items-center justify-between gap-3 z-10 relative">
+                    <div class="flex items-center gap-3.5" id="legend-container">
+                        
+            <div class="flex items-center gap-1.5">
+                <span class="w-3.5 h-3.5 bg-red-600 rounded"></span>
+                <span class="text-xs font-semibold text-slate-300">Locked Zone</span>
+            </div>
+        
+                    </div>
+                    <div class="text-[10px] bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800 text-slate-400">
+                        Interactive Hover Enabled
+                    </div>
+                </div>
+
+                <!-- Canvas Wrapping Container -->
+                <div class="relative flex-1 bg-slate-950/80 rounded-2xl border border-slate-900 overflow-hidden cursor-crosshair">
+                    <canvas id="graph-canvas" class="absolute inset-0 w-full h-full block"></canvas>
+                </div>
+
+                <!-- Footer Info -->
+                <div class="flex items-center justify-between text-xs text-slate-400 bg-slate-900/30 p-3 rounded-xl border border-slate-800/50">
+                    <span class="flex items-center gap-1.5 text-slate-300">
+                        <svg class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <strong id="proof-label">Visual Proof:</strong>
+                    </span>
+                    <span id="canvas-status-indicator" class="text-indigo-300 font-semibold">Active State</span>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 mt-6">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
+            <p>© 2026 Interactive C++ Visualizer. All rights reserved.</p>
+            <p>Interactive features: Click/Hover canvas elements, use sliders, trigger phases.</p>
+        </div>
+    </footer>
+
+    <!-- Core Interactive Logic Script -->
+    <script>
+        // Phase narrative arrays
+        const phases = [{"label": "Private Default", "desc": "Look at the variables inside. They lack access qualifiers and automatically default to private status.", "status": "Privacy status: LOCKED"}, {"label": "Explicit Public", "desc": "Adding public: explicitly overrides the default status and exposes the gateway.", "status": "Explicit status: PUBLIC"}];
+        
+        let currentPhase = 0;
+        let isPlaying = false;
+        let playInterval = null;
+
+        // Populate phases
+        const phaseContainer = document.getElementById('phase-container');
+        phases.forEach((p, idx) => {
+            const btn = document.createElement('button');
+            btn.className = `phase-btn text-[11px] font-semibold py-2 px-1 rounded-lg transition-all ${idx === 0 ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`;
+            btn.innerText = p.label || `Phase ${idx+1}`;
+            btn.onclick = () => selectPhase(idx);
+            btn.id = `btn-phase-${idx}`;
+            phaseContainer.appendChild(btn);
+        });
+
+        function selectPhase(idx) {
+            currentPhase = idx;
+            document.querySelectorAll('.phase-btn').forEach((btn, bIdx) => {
+                if (bIdx === idx) {
+                    btn.classList.add('bg-indigo-600', 'text-white');
+                    btn.classList.remove('text-slate-400', 'hover:text-white');
+                } else {
+                    btn.classList.remove('bg-indigo-600', 'text-white');
+                    btn.classList.add('text-slate-400', 'hover:text-white');
+                }
+            });
+            document.getElementById('narrative-text').innerHTML = phases[idx].desc;
+            document.getElementById('narrative-step-lbl').innerText = `Step ${idx + 1} of ${phases.length}`;
+            document.getElementById('canvas-status-indicator').innerText = phases[idx].status || 'Active';
+            
+            // Auto-render math in narrative
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('narrative-text'), {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+            
+            // Call scene-specific phase change handler
+            if (window.onPhaseChange) {
+                window.onPhaseChange(idx);
+            }
+        }
+
+        // Play / Pause loop
+        const btnPlayPause = document.getElementById('btn-play-pause');
+        const playIcon = document.getElementById('play-icon');
+        const playText = document.getElementById('play-text');
+
+        btnPlayPause.onclick = () => {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                playIcon.innerText = "⏸";
+                playText.innerText = "Pause";
+                playInterval = setInterval(() => {
+                    let next = (currentPhase + 1) % phases.length;
+                    selectPhase(next);
+                }, 3000);
+            } else {
+                playIcon.innerText = "▶";
+                playText.innerText = "Auto-Play";
+                clearInterval(playInterval);
+            }
+        };
+
+        // Initialize KaTeX
+        document.addEventListener("DOMContentLoaded", () => {
+            selectPhase(0);
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+        });
+
+        // Setup Canvas
+        const canvas = document.getElementById('graph-canvas');
+        const ctx = canvas.getContext('2d');
+        let dpr = window.devicePixelRatio || 1;
+
+        function resize() {
+            const width = canvas.parentElement.clientWidth;
+            const height = canvas.parentElement.clientHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Hover inspector state
+        let mouse = { x: 0, y: 0, hovered: false };
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+            mouse.hovered = true;
+        });
+        canvas.addEventListener('mouseleave', () => {
+            mouse.hovered = false;
+        });
+
+        // Custom canvas animations injected below
+        
+        let specAdded = false;
+
+        document.getElementById('btn-toggle-spec').onclick = () => {
+            specAdded = !specAdded;
+        };
+
+        window.onPhaseChange = (phaseIdx) => {
+            specAdded = (phaseIdx === 1);
+        };
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const cx = 250, cy = 200;
+
+            // Draw Class Container Box
+            ctx.fillStyle = '#0f172a';
+            ctx.strokeStyle = specAdded ? '#10b981' : '#ef4444';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.roundRect(cx - 100, cy - 100, 200, 200, 10);
+            ctx.fill(); ctx.stroke();
+
+            // Draw Access Status Label
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText("class Circle", cx, cy - 75);
+
+            // specifier block
+            if (specAdded) {
+                ctx.fillStyle = '#10b981';
+                ctx.font = 'bold 11px monospace';
+                ctx.fillText("public:", cx - 50, cy - 30);
+            }
+
+            // Variable block with dynamic padlock
+            ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+            ctx.strokeStyle = specAdded ? '#10b981' : '#ef4444';
+            ctx.beginPath();
+            ctx.roundRect(cx - 80, cy - 10, 160, 45, 6);
+            ctx.fill(); ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '11px monospace';
+            ctx.fillText("double radius;", cx, cy + 18);
+
+            // Draw padlock icon
+            ctx.fillStyle = specAdded ? '#10b981' : '#ef4444';
+            ctx.beginPath();
+            if (specAdded) {
+                // Open lock checkmark
+                ctx.arc(cx, cy + 30, 5, 0, Math.PI*2);
+                ctx.fill();
+            } else {
+                // Closed Lock
+                ctx.roundRect(cx - 6, cy - 25, 12, 10, 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ef4444';
+                ctx.beginPath();
+                ctx.arc(cx, cy - 25, 4, Math.PI, 0);
+                ctx.stroke();
+            }
+
+            requestAnimationFrame(drawScene);
+        }
+        drawScene();
+        
+
+    </script>
+</body>
+</html>

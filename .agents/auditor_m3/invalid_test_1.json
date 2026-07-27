@@ -1,0 +1,31 @@
+[
+  {
+    "Name": "TBD",
+    "Location": {
+      "Address": "Gamasa, Dakahlia",
+      "Maps_Link": "https://maps.google.com"
+    },
+    "Non_Official_Contacts": [
+      "Phone: 123"
+    ],
+    "Decision_Makers": [
+      {
+        "Name": "Person A",
+        "Role": "Principal",
+        "LinkedIn": "https://www.linkedin.com/in/person-a"
+      }
+    ],
+    "General_Info": {
+      "Established_Year": "2015"
+    },
+    "Funding_And_Projects": [
+      {
+        "Name": "Project 1",
+        "Year": 2024,
+        "Funding_Body": "Body 1",
+        "Amount": "100k",
+        "Description": "Desc 1"
+      }
+    ]
+  }
+]

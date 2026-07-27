@@ -1,0 +1,25 @@
+========================================
+QUERY: Dakahlia STEM School contact phone email
+========================================
+Failed. HTTP Status: 404
+
+========================================
+QUERY: Talkha STEM School principal headteacher coordinator LinkedIn
+========================================
+Failed. HTTP Status: 404
+
+========================================
+QUERY: Mansoura STEM School address coordinates Google Maps
+========================================
+Failed. HTTP Status: 404
+
+========================================
+QUERY: Dakhlia STEM School funding sponsorship projects USAID
+========================================
+Failed. HTTP Status: 404
+
+========================================
+QUERY: Dakahlia STEM School Capstone exhibition
+========================================
+Failed. HTTP Status: 404
+

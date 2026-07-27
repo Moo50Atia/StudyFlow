@@ -1,0 +1,47 @@
+{
+  "ContentForFunding": {
+    "Universities": {
+      "Why": "Partnerships",
+      "Priority": "Critical",
+      "Category_For_Company": ["Research Project"],
+      "Entities": [
+        {
+          "Name": "Cairo University' OR '1'='1",
+          "Category": "Universities",
+          "Category_For_Company": ["Research Project"],
+          "Priority": "Critical",
+          "Country": "Egypt",
+          "City": "Giza",
+          "Official_Website": "https://cu.edu.eg",
+          "Official_Email": "info@cu.edu.eg",
+          "LinkedIn": "https://linkedin.com/school/cairo-university",
+          "Phone": "+20235676105",
+          "Description": "<script>alert('xss')</script>"
+        }
+      ]
+    },
+    "Government": {
+      "Why": "Grants",
+      "Priority": "Critical",
+      "Structure": {},
+      "Entities": [
+        {
+          "Name": "Science & Technology Development Fund",
+          "Official_Website": "https://stdf.eg",
+          "Funding_Programs": ["Research Grant Program"],
+          "Last_Project_Link": "https://stdf.eg/awards",
+          "Eligibility": ["Egyptian researchers"],
+          "Required_Documents": ["Research proposal"],
+          "Funding_Amount": "1,000,000 EGP",
+          "Application_Process": ["Submit online"],
+          "Success_Stories": ["Funded projects"],
+          "Acceptance_Rate": "20%",
+          "Expected_Duration": "6 months",
+          "Notes": "Non-dilutive government funding.",
+          "Steps_For_Any_Project_To_Get_Funded": ["Create portal account"],
+          "Steps_For_This_Project_To_Get_Funded": ["Target track"]
+        }
+      ]
+    }
+  }
+}

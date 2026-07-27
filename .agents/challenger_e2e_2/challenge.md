@@ -1,0 +1,2 @@
+# Challenger 2 Metadata - E2E Testing Track
+- Working Directory: d:/projects/laravel_projects/college_project/.agents/challenger_e2e_2

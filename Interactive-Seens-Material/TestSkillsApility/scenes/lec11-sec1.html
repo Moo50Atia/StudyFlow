@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lec 11 Sec 1 — Abstraction: Hiding Complexity</title>
+  
+  <!-- CDNs: Three.js, OrbitControls, KaTeX, Inter Font -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Typography */
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-size-body: 16px;
+      --font-size-caption: 14px;
+      --font-size-heading: 24px;
+      --font-size-title: 32px;
+      --line-height-body: 1.6;
+      --line-height-heading: 1.2;
+
+      /* Spacing Scale */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+
+      /* Border Radius */
+      --radius-button: 14px;
+      --radius-card: 20px;
+      --radius-dialog: 24px;
+      --radius-badge: 999px;
+
+      /* Glassmorphism Design System (VisionOS Style) */
+      --glass-bg: rgba(15, 18, 30, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-blur: 24px;
+      --glass-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+
+      /* Semantic Colors */
+      --color-learning: #3b82f6;     /* Blue */
+      --color-success: #22c55e;      /* Green */
+      --color-attention: #f59e0b;    /* Orange */
+      --color-creative: #a855f7;     /* Purple */
+      --color-danger: #ef4444;       /* Red */
+      --color-focus: #eab308;        /* Yellow */
+      --color-programming: #06b6d4;  /* Cyan */
+
+      /* Layer Specific Colors */
+      --layer-software: var(--color-learning);
+      --layer-ram: var(--color-creative);
+      --layer-cpu: var(--color-programming);
+      --layer-gpu: var(--color-success);
+      --layer-corrector: var(--color-danger);
+
+      /* Z-Index Layers */
+      --z-canvas: 0;
+      --z-interactive: 5;
+      --z-panel: 10;
+      --z-dialog: 20;
+      --z-alert: 30;
+      --z-tooltip: 40;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-body);
+      color: #f1f5f9;
+      background-color: #020617;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* WebGL Canvas */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: var(--z-canvas);
+    }
+
+    /* Glass Panels Layout */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--glass-shadow);
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Header Panel */
+    header.glass-panel {
+      position: fixed;
+      top: var(--space-md);
+      left: var(--space-md);
+      right: var(--space-md);
+      height: 70px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-lg);
+    }
+
+    .header-title-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-breadcrumb {
+      font-size: var(--font-size-caption);
+      color: #94a3b8;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 180ms ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
+
+    /* Tabs Navigation (Bottom Center) */
+    .tab-bar.glass-panel {
+      position: fixed;
+      bottom: var(--space-md);
+      left: 50%;
+      transform: translateX(-50%);
+      height: 60px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-xs);
+      border-radius: var(--radius-button);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: calc(var(--radius-button) - 4px);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 250ms ease;
+    }
+
+    .tab-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+      border-bottom: 2px solid var(--layer-color, var(--color-learning));
+    }
+
+    /* Details Panel (Right Side) */
+    .details-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      right: var(--space-md);
+      bottom: 90px;
+      width: 380px;
+      z-index: var(--z-panel);
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-lg);
+      overflow-y: auto;
+      max-width: calc(100vw - var(--space-lg) * 2);
+    }
+
+    .details-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .details-content {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .details-content p {
+      margin-bottom: var(--space-md);
+    }
+
+    /* Controls Panel (Left Side) */
+    .controls-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      left: var(--space-md);
+      width: 320px;
+      z-index: var(--z-panel);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .controls-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: var(--space-xs);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .control-label {
+      font-size: 14px;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: var(--radius-badge);
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .control-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-programming);
+      border: 2px solid #ffffff;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .control-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    /* Interactive index list */
+    #nav-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: var(--z-dialog);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 300ms ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #nav-drawer.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer-content.glass-panel {
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: var(--space-xl);
+      position: relative;
+    }
+
+    .drawer-close {
+      position: absolute;
+      top: var(--space-lg);
+      right: var(--space-lg);
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .drawer-close:hover {
+      color: #ffffff;
+    }
+
+    .drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .scene-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-button);
+      padding: var(--space-md);
+      text-decoration: none;
+      color: #cbd5e1;
+      transition: all 200ms ease;
+    }
+
+    .scene-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--color-programming);
+      transform: translateY(-2px);
+    }
+
+    .scene-card.active {
+      border-color: var(--color-learning);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    button:focus-visible, input:focus-visible, a:focus-visible {
+      outline: 2px solid var(--color-programming) !important;
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 1024px) {
+      .details-panel.glass-panel {
+        width: 320px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      .details-panel.glass-panel, .controls-panel.glass-panel {
+        position: static;
+        width: 100%;
+        margin-top: var(--space-md);
+        bottom: auto;
+        height: auto;
+      }
+      .tab-bar.glass-panel {
+        position: static;
+        transform: none;
+        width: 100%;
+        margin-top: var(--space-md);
+        display: flex;
+        justify-content: space-around;
+        height: auto;
+        padding: var(--space-xs);
+      }
+      header.glass-panel {
+        position: static;
+        height: auto;
+        padding: var(--space-md);
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+      #mobile-layout-wrap {
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-md);
+        margin-top: 80px;
+        position: relative;
+        z-index: var(--z-panel);
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- WebGL Render Target -->
+  <div id="canvas-container"></div>
+  
+  <!-- Mobile Content Layout Wrapper -->
+  <div id="mobile-layout-wrap">
+    
+    <!-- Floating Header -->
+    <header class="glass-panel">
+      <div class="header-title-section">
+        <span class="header-breadcrumb">Lecture 11 · Section 1</span>
+        <h1 class="header-title" id="scene-title">Abstraction: Hiding Complexity</h1>
+      </div>
+      <div class="header-nav">
+        <a class="nav-btn" href="#" id="prev-btn">← Prev</a>
+        <button class="nav-btn" id="menu-btn" aria-label="Open Navigation Hub">☰ Index</button>
+        <a class="nav-btn" href="#" id="next-btn">Next →</a>
+      </div>
+    </header>
+
+    <!-- Controls Panel -->
+    <section class="controls-panel glass-panel" aria-label="Scene Controls">
+      <h2 class="controls-title">Interactive Panel</h2>
+      
+      <div class="control-group">
+        <div class="control-label">
+          <span>Abstraction Layer</span>
+          <span id="abstraction-val">Closed (1.0x)</span>
+        </div>
+        <input type="range" class="control-slider" id="abstraction-slider" min="0" max="1" step="0.01" value="1" aria-label="Adjust abstraction cover position">
+      </div>
+
+      <div class="control-group" id="btn-group">
+        <span class="control-label">Public Interface Buttons</span>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <button class="nav-btn" id="action-start" style="flex: 1; justify-content: center;">START</button>
+          <button class="nav-btn" id="action-stop" style="flex: 1; justify-content: center;">STOP</button>
+        </div>
+      </div>
+      
+      <div class="control-group">
+        <div class="control-label">
+          <span>Simulation Speed</span>
+          <span id="speed-val">1.0x</span>
+        </div>
+        <input type="range" class="control-slider" id="speed-slider" min="0.1" max="2.0" step="0.1" value="1.0" aria-label="Adjust speed multiplier">
+      </div>
+    </section>
+
+    <!-- Details Panel -->
+    <main class="details-panel glass-panel" aria-label="Explanation Panel">
+      <h2 class="details-title" id="panel-layer-name">THE SOFTWARE LAYER</h2>
+      <div class="details-content" id="panel-dynamic-content">
+        <!-- Render content here dynamically -->
+      </div>
+    </main>
+
+    <!-- Tab Bar -->
+    <nav class="tab-bar glass-panel" aria-label="Visual Layers Selection">
+      <button class="tab-btn active" data-tab="0" style="--layer-color: var(--layer-software)">Software</button>
+      <button class="tab-btn" data-tab="1" style="--layer-color: var(--layer-ram)">RAM Map</button>
+      <button class="tab-btn" data-tab="2" style="--layer-color: var(--layer-cpu)">CPU / RIP</button>
+      <button class="tab-btn" data-tab="3" style="--layer-color: var(--layer-gpu)">GPU FX</button>
+      <button class="tab-btn" data-tab="4" style="--layer-color: var(--layer-corrector)">Corrector</button>
+    </nav>
+    
+  </div>
+
+  <!-- Interactive Navigation Hub Drawer -->
+  <div id="nav-drawer" role="dialog" aria-modal="true" aria-label="Interactive Navigation Grid">
+    <div class="drawer-content glass-panel">
+      <button class="drawer-close" id="drawer-close-btn" aria-label="Close index hub">×</button>
+      <h2 class="header-title" style="margin-bottom: var(--space-md);">All Visual Scenes</h2>
+      <div class="drawer-grid" id="drawer-scenes-grid">
+        <!-- Grid dynamically loaded -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Manager Infrastructure -->
+  <script>
+    // Navigation index configurations
+    const allScenes = [
+      { id: "lec11-sec1", title: "Abstraction Covers", path: "lec11-sec1.html" },
+      { id: "lec11-sec2", title: "Encapsulation Safety Lock", path: "lec11-sec2.html" },
+      { id: "lec12-sec1", title: "Stability Tower Collapse", path: "lec12-sec1.html" },
+      { id: "lec12-sec2", title: "Tight Coupling Snaps", path: "lec12-sec2.html" },
+      { id: "lec13-sec1", title: "Getter/Setter Bridge Channels", path: "lec13-sec1.html" },
+      { id: "lec13-sec2", title: "The Const Read-Only Filter", path: "lec13-sec2.html" },
+      { id: "lec13-sec3", title: "Setter Boundary Validation", path: "lec13-sec3.html" }
+    ];
+
+    // ----------------------------------------------------
+    // BASE 3D CONTENT GENERATOR (ABSTRACT)
+    // ----------------------------------------------------
+    class BaseGenerator {
+      constructor(scene) {
+        this.scene = scene;
+        this.meshes = [];
+        this.materials = [];
+        this.geometries = [];
+        this.activeLayer = 0;
+      }
+
+      create() {
+        // Build scene-specific geometries here
+      }
+
+      update(delta, speed) {
+        // Frame animation logic
+      }
+
+      transitionLayer(tabIndex) {
+        this.activeLayer = tabIndex;
+      }
+
+      handleInteraction(controlId, value) {
+        // Interaction logic
+      }
+
+      dispose() {
+        this.meshes.forEach(mesh => {
+          this.scene.remove(mesh);
+        });
+        this.geometries.forEach(geo => geo.dispose());
+        this.materials.forEach(mat => mat.dispose());
+        this.meshes = [];
+        this.geometries = [];
+        this.materials = [];
+      }
+
+      smoothTransitionColor(material, targetHex, duration = 600) {
+        const startColor = material.color.clone();
+        const targetColor = new THREE.Color(targetHex);
+        const startTime = performance.now();
+
+        const animate = () => {
+          const elapsed = performance.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = progress < 0.5 
+            ? 2 * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+          material.color.lerpColors(startColor, targetColor, ease);
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+        requestAnimationFrame(animate);
+      }
+    }
+
+    // ----------------------------------------------------
+    // SCENE GENERATOR SUBCLASS: Abstraction Covers
+    // ----------------------------------------------------
+    class AbstractionGenerator extends BaseGenerator {
+      create() {
+        // 1. Complex Circuit Board (Implementation Detail)
+        this.boardGroup = new THREE.Group();
+        this.scene.add(this.boardGroup);
+        this.meshes.push(this.boardGroup);
+
+        // Ground base plane
+        const baseGeo = new THREE.BoxGeometry(6, 0.2, 6);
+        const baseMat = new THREE.MeshPhysicalMaterial({
+          color: 0x1e293b,
+          roughness: 0.8,
+          metalness: 0.2
+        });
+        const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+        baseMesh.position.y = -0.5;
+        this.boardGroup.add(baseMesh);
+        this.materials.push(baseMat);
+        this.geometries.push(baseGeo);
+
+        // Add circuit lines and components
+        this.circuitLines = [];
+        const colors = [0xef4444, 0x3b82f6, 0xa855f7, 0x06b6d4, 0xeab308];
+        for (let i = 0; i < 20; i++) {
+          const compGeo = new THREE.BoxGeometry(0.3 + Math.random()*0.5, 0.2 + Math.random()*0.4, 0.3 + Math.random()*0.5);
+          const compMat = new THREE.MeshPhysicalMaterial({
+            color: colors[Math.floor(Math.random() * colors.length)],
+            roughness: 0.2,
+            metalness: 0.8
+          });
+          const compMesh = new THREE.Mesh(compGeo, compMat);
+          compMesh.position.set(
+            (Math.random() - 0.5) * 5,
+            -0.3,
+            (Math.random() - 0.5) * 5
+          );
+          this.boardGroup.add(compMesh);
+          this.materials.push(compMat);
+          this.geometries.push(compGeo);
+        }
+
+        // 2. Sliding Metal Cover (Interface abstraction)
+        const coverGeo = new THREE.BoxGeometry(6.2, 0.3, 6.2);
+        this.coverMat = new THREE.MeshPhysicalMaterial({
+          color: 0x475569,
+          roughness: 0.1,
+          metalness: 0.9,
+          transparent: true,
+          opacity: 0.85,
+          transmission: 0.3,
+          thickness: 1.0
+        });
+        this.coverMesh = new THREE.Mesh(coverGeo, this.coverMat);
+        this.coverMesh.position.set(0, 0.2, 0); // At abstraction=1, covers fully
+        this.scene.add(this.coverMesh);
+        this.meshes.push(this.coverMesh);
+        this.materials.push(this.coverMat);
+        this.geometries.push(coverGeo);
+
+        // 3. Simple Interface Buttons (Floating above cover)
+        this.interfaceGroup = new THREE.Group();
+        this.scene.add(this.interfaceGroup);
+        this.meshes.push(this.interfaceGroup);
+
+        const btn1Geo = new THREE.BoxGeometry(1.2, 0.3, 0.8);
+        this.btn1Mat = new THREE.MeshPhysicalMaterial({
+          color: 0x06b6d4, // Cyan
+          roughness: 0.3,
+          metalness: 0.8,
+          emissive: 0x06b6d4,
+          emissiveIntensity: 0.2
+        });
+        const btn1 = new THREE.Mesh(btn1Geo, this.btn1Mat);
+        btn1.position.set(-1.5, 0.6, 0);
+        this.interfaceGroup.add(btn1);
+        this.materials.push(this.btn1Mat);
+        this.geometries.push(btn1Geo);
+
+        const btn2Geo = new THREE.BoxGeometry(1.2, 0.3, 0.8);
+        this.btn2Mat = new THREE.MeshPhysicalMaterial({
+          color: 0x22c55e, // Green
+          roughness: 0.3,
+          metalness: 0.8,
+          emissive: 0x22c55e,
+          emissiveIntensity: 0.2
+        });
+        const btn2 = new THREE.Mesh(btn2Geo, this.btn2Mat);
+        btn2.position.set(1.5, 0.6, 0);
+        this.interfaceGroup.add(btn2);
+        this.materials.push(this.btn2Mat);
+        this.geometries.push(btn2Geo);
+
+        // Pulse signal mesh for interface triggers
+        const pulseGeo = new THREE.SphereGeometry(0.15, 16, 16);
+        this.pulseMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4 });
+        this.pulseMesh = new THREE.Mesh(pulseGeo, this.pulseMat);
+        this.pulseMesh.visible = false;
+        this.scene.add(this.pulseMesh);
+        this.meshes.push(this.pulseMesh);
+        this.geometries.push(pulseGeo);
+        this.materials.push(this.pulseMat);
+
+        this.abstractionLevel = 1.0;
+      }
+
+      update(delta, speed) {
+        // Slow spin to visualize detail
+        this.boardGroup.rotation.y += delta * 0.1 * speed;
+        this.interfaceGroup.rotation.y = this.boardGroup.rotation.y;
+        
+        // Match cover position according to abstractionLevel (1 = fully covered, 0 = retracted)
+        // Slide in along Z-axis
+        const targetZ = (1.0 - this.abstractionLevel) * 7.0; 
+        this.coverMesh.position.z += (targetZ - this.coverMesh.position.z) * 0.1;
+        this.coverMesh.rotation.y = this.boardGroup.rotation.y;
+
+        // Button hovering effects
+        this.interfaceGroup.children.forEach((btn, idx) => {
+          btn.position.y = 0.6 + Math.sin(performance.now() * 0.003 + idx * Math.PI) * 0.05;
+        });
+
+        // Pulse animation
+        if (this.pulseMesh.visible) {
+          this.pulseMesh.position.y -= delta * 4 * speed;
+          if (this.pulseMesh.position.y < -0.3) {
+            // Signal penetrates or does internal logic
+            if (this.abstractionLevel < 0.5) {
+              // Visible routing simulation
+              this.pulseMesh.position.y = 0.6;
+              this.pulseMesh.position.x += (Math.random() - 0.5) * 1.5;
+            } else {
+              this.pulseMesh.visible = false;
+            }
+          }
+        }
+      }
+
+      transitionLayer(tabIndex) {
+        super.transitionLayer(tabIndex);
+        
+        // Reset properties
+        this.coverMat.wireframe = false;
+        this.btn1Mat.wireframe = false;
+        this.btn2Mat.wireframe = false;
+        this.coverMat.opacity = 0.85;
+
+        switch (tabIndex) {
+          case 0: // Software (Realistic)
+            this.smoothTransitionColor(this.coverMat, 0x475569);
+            break;
+          case 1: // RAM Map (Creative Purple wireframe overlay)
+            this.coverMat.wireframe = true;
+            this.smoothTransitionColor(this.coverMat, 0xa855f7);
+            this.coverMat.opacity = 0.3;
+            break;
+          case 2: // CPU (Cyan highlights)
+            this.smoothTransitionColor(this.coverMat, 0x06b6d4);
+            break;
+          case 3: // GPU FX (Green glowing highlights)
+            this.coverMat.wireframe = true;
+            this.smoothTransitionColor(this.coverMat, 0x22c55e);
+            break;
+          case 4: // Corrector (Danger Red indicator)
+            this.smoothTransitionColor(this.coverMat, 0xef4444);
+            break;
+        }
+      }
+
+      handleInteraction(controlId, value) {
+        if (controlId === 'abstraction') {
+          this.abstractionLevel = parseFloat(value);
+          document.getElementById('abstraction-val').innerText = 
+            this.abstractionLevel === 1 ? 'Closed (1.0x)' : 
+            this.abstractionLevel === 0 ? 'Retracted (0.0x)' : 
+            `Slide (${this.abstractionLevel.toFixed(2)}x)`;
+        } else if (controlId === 'start') {
+          this.triggerPulse(-1.5, 0x06b6d4);
+        } else if (controlId === 'stop') {
+          this.triggerPulse(1.5, 0x22c55e);
+        }
+      }
+
+      triggerPulse(startX, colorHex) {
+        this.pulseMesh.position.set(startX, 0.6, 0);
+        this.pulseMesh.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.boardGroup.rotation.y);
+        this.pulseMat.color.setHex(colorHex);
+        this.pulseMesh.visible = true;
+      }
+    }
+
+    // ----------------------------------------------------
+    // THREE.JS SCENE MANAGEMENT LAYER
+    // ----------------------------------------------------
+    class SceneManager {
+      constructor(container) {
+        this.container = container;
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x020617);
+        this.scene.fog = new THREE.FogExp2(0x020617, 0.015);
+
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.1;
+        this.container.appendChild(this.renderer.domElement);
+
+        this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 100);
+        this.camera.position.set(0, 5, 8);
+
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+        this.controls.maxPolarAngle = Math.PI / 2 + 0.1;
+        this.controls.minDistance = 2;
+        this.controls.maxDistance = 25;
+
+        this.lights = new LightingManager(this.scene);
+        this.generator = new AbstractionGenerator(this.scene);
+
+        this.clock = new THREE.Clock();
+        this.animationFrameId = null;
+
+        this.onResize = this.onResize.bind(this);
+        window.addEventListener('resize', this.onResize);
+      }
+
+      init() {
+        this.lights.createStandardRig();
+        this.generator.create();
+        this.animate();
+      }
+
+      onResize() {
+        this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+      }
+
+      animate() {
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+        const delta = this.clock.getDelta();
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reducedMotion) {
+          this.generator.update(delta, window.app.speedMultiplier);
+        }
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+      }
+
+      dispose() {
+        cancelAnimationFrame(this.animationFrameId);
+        window.removeEventListener('resize', this.onResize);
+        this.generator.dispose();
+        this.lights.dispose();
+        this.controls.dispose();
+        this.renderer.dispose();
+        this.renderer.domElement.remove();
+      }
+    }
+
+    // ----------------------------------------------------
+    // LIGHTING CONFIGURATION MANAGER
+    // ----------------------------------------------------
+    class LightingManager {
+      constructor(scene) {
+        this.scene = scene;
+        this.lights = [];
+      }
+
+      createStandardRig() {
+        const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+        this.scene.add(ambient);
+        this.lights.push(ambient);
+
+        const key = new THREE.DirectionalLight(0xffffff, 0.95);
+        key.position.set(5, 8, 5);
+        key.castShadow = true;
+        key.shadow.mapSize.width = 1024;
+        key.shadow.mapSize.height = 1024;
+        this.scene.add(key);
+        this.lights.push(key);
+
+        const fill = new THREE.DirectionalLight(0x06b6d4, 0.45);
+        fill.position.set(-5, 4, -5);
+        this.scene.add(fill);
+        this.lights.push(fill);
+      }
+
+      dispose() {
+        this.lights.forEach(light => this.scene.remove(light));
+        this.lights = [];
+      }
+    }
+
+    // ----------------------------------------------------
+    // APPLICATION & INTERACTION CONTROLLER
+    // ----------------------------------------------------
+    class ApplicationManager {
+      constructor() {
+        this.speedMultiplier = 1.0;
+        this.sceneConfig = {
+          id: "lec11-sec1",
+          title: "Abstraction: Hiding Complexity",
+          breadcrumb: "Lecture 11 · Section 1",
+          layers: [
+            {
+              name: "THE SOFTWARE LAYER",
+              content: `<p>Abstraction simplifies interaction by exposing only high-level operations, decoupling interface from internal execution. Under the hood, complex circuit board structures manage execution, but client code sees only simple commands.</p>
+                        <p>Use the <strong>Abstraction Layer</strong> slider to slide the metal interface cover. When closed ($$\\text{Abstraction} = 1.0$$), only the high-level buttons are accessible, concealing internal routing complexity.</p>`
+            },
+            {
+              name: "THE MEMORY TOPOLOGY (RAM) LAYER",
+              content: `<p><strong>Stack Frame:</strong> Exposes only public method entry pointers. Memory layout hides complex inner member offsets (e.g., <code>private_bus_id</code> at offset $+12$, <code>reg_buffer</code> at $+24$).</p>
+                        <p>Client applications store references to the abstract class interface pointer ($$\\text{vptr}$$ pointing to its virtual table $$\\text{vtable}$$), decoupling the physical memory layout of the implementation:</p>
+                        <p>$$\\text{Offset}(\\text{public\\_func}) = \\text{vptr}[0]$$</p>`
+            },
+            {
+              name: "THE CPU & REGISTERS LAYER",
+              content: `<p>The client invokes a public interface method. The CPU processes a single virtual call instruction:</p>
+                        <p>$$RIP \\leftarrow \\text{vptr}[\\text{offset}]$$</p>
+                        <p>This single jump hides the execution of dozens of lower-level register moves and arithmetic instructions within the implementation: $$RAX \\leftarrow \\text{Data}, RBX \\leftarrow \\text{Control}$$, etc.</p>`
+            },
+            {
+              name: "THE GPU / VRAM LAYER",
+              content: `<p>The 3D canvas renders the circuit board. Enabling abstraction triggers an animation that slides a metallic shield cover over the high-complexity circuits, leaving only the interface points illuminated.</p>
+                        <p>Buffers store vertex information for the sliding plane and the discrete interface gates ($$\\text{VBO} \\to \\text{VRAM}$$).</p>`
+            },
+            {
+              name: "UNDER-THE-HOOD CORRECTOR",
+              content: `<p><strong>Misconception Shattered:</strong> Abstraction does not delete or remove low-level code or data from hardware. Every single bit and CPU register instruction still exists and executes in physical silicon. Abstraction is a pure compiler-level and logical separation boundary to prevent human developers from dealing with unnecessary complexity.</p>`
+            }
+          ]
+        };
+      }
+
+      init() {
+        const canvasContainer = document.getElementById('canvas-container');
+        this.sceneManager = new SceneManager(canvasContainer);
+        this.sceneManager.init();
+
+        this.initEventListeners();
+        this.buildNavigationHub();
+        this.switchTab(0);
+        
+        window.addEventListener('beforeunload', () => {
+          this.sceneManager.dispose();
+        });
+      }
+
+      initEventListeners() {
+        // Tab buttons
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.switchTab(parseInt(btn.dataset.tab));
+          });
+        });
+
+        // Abstraction Slider
+        const absSlider = document.getElementById('abstraction-slider');
+        if (absSlider) {
+          absSlider.addEventListener('input', (e) => {
+            this.sceneManager.generator.handleInteraction('abstraction', e.target.value);
+          });
+        }
+
+        // Buttons
+        document.getElementById('action-start').addEventListener('click', () => {
+          this.sceneManager.generator.handleInteraction('start');
+        });
+        document.getElementById('action-stop').addEventListener('click', () => {
+          this.sceneManager.generator.handleInteraction('stop');
+        });
+
+        // Speed Slider
+        const slider = document.getElementById('speed-slider');
+        const speedVal = document.getElementById('speed-val');
+        if (slider) {
+          slider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            this.speedMultiplier = val;
+            speedVal.innerText = val.toFixed(1) + 'x';
+          });
+        }
+
+        // Navigation drawer
+        const menuBtn = document.getElementById('menu-btn');
+        const drawer = document.getElementById('nav-drawer');
+        const drawerClose = document.getElementById('drawer-close-btn');
+
+        if (menuBtn && drawer) {
+          menuBtn.addEventListener('click', () => drawer.classList.add('open'));
+        }
+        if (drawerClose && drawer) {
+          drawerClose.addEventListener('click', () => drawer.classList.remove('open'));
+        }
+
+        // Prev / Next button routing
+        const currentIdx = allScenes.findIndex(s => s.id === this.sceneConfig.id);
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        if (currentIdx > 0) {
+          prevBtn.href = allScenes[currentIdx - 1].path;
+        } else {
+          prevBtn.style.opacity = 0.5;
+          prevBtn.style.pointerEvents = 'none';
+        }
+
+        if (currentIdx < allScenes.length - 1) {
+          nextBtn.href = allScenes[currentIdx + 1].path;
+        } else {
+          nextBtn.style.opacity = 0.5;
+          nextBtn.style.pointerEvents = 'none';
+        }
+
+        // Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+          if (e.key >= '1' && e.key <= '5') {
+            const btn = document.querySelector(`.tab-btn[data-tab="${parseInt(e.key) - 1}"]`);
+            if (btn) btn.click();
+          }
+        });
+      }
+
+      switchTab(tabIdx) {
+        const layer = this.sceneConfig.layers[tabIdx];
+        document.getElementById('panel-layer-name').innerText = layer.name;
+        
+        const contentContainer = document.getElementById('panel-dynamic-content');
+        contentContainer.innerHTML = layer.content;
+
+        if (window.renderMathInElement) {
+          renderMathInElement(contentContainer, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false }
+            ]
+          });
+        }
+
+        this.sceneManager.generator.transitionLayer(tabIdx);
+      }
+
+      buildNavigationHub() {
+        const grid = document.getElementById('drawer-scenes-grid');
+        grid.innerHTML = '';
+        allScenes.forEach(scene => {
+          const card = document.createElement('a');
+          card.className = `scene-card ${scene.id === this.sceneConfig.id ? 'active' : ''}`;
+          card.href = scene.path;
+          card.innerHTML = `
+            <div class="card-meta">${scene.id.toUpperCase()}</div>
+            <div style="font-weight:600;color:#fff;margin-top:4px;">${scene.title}</div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+    }
+
+    // Launch App
+    window.addEventListener('DOMContentLoaded', () => {
+      window.app = new ApplicationManager();
+      window.app.init();
+    });
+  </script>
+</body>
+</html>

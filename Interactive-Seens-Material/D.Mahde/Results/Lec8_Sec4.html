@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicit Scope Resolution - Interactive Visualization</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Three.js for 3D graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glowing-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glowing-button:hover {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden">
+
+    <!-- Top Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <span class="text-xs font-bold tracking-wider text-indigo-400 uppercase bg-indigo-950/50 px-2.5 py-1 rounded-full border border-indigo-800/50">
+                    Lecture 8 • Section 4
+                </span>
+                <h1 class="text-2xl font-extrabold text-white mt-1.5 flex items-center gap-2">
+                    Explicit Scope Resolution
+                </h1>
+            </div>
+            <p class="text-xs text-slate-400 max-w-md md:text-right">
+                Visualizing target resolution using scoping keys this-> and ::.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+        <!-- Left Sidebar: Controls & Code -->
+        <section class="lg:col-span-5 flex flex-col gap-5 h-full">
+
+            <!-- Learning Outcome Dashboard Card -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex flex-col gap-3">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-teal-400 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                    Visual Learning Outcome
+                </h2>
+                <div class="text-sm text-slate-300 leading-relaxed font-normal">
+                    Misconception corrected: Shadowed variables are never unreachable. You can explicitly bypass local scopes using this-> for member fields, and :: for global scope fields.
+                </div>
+            </div>
+
+            <!-- Flow Stepper / Phase Selector -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">Interactive Phase</h2>
+                <div class="grid grid-cols-4 gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800/80" id="phase-container">
+                    <!-- Dynamic tabs populated in JS -->
+                </div>
+
+                <!-- Active Narrative Card -->
+                <div class="mt-4 p-4 bg-slate-900/60 rounded-xl border border-slate-800 min-h-[110px] flex flex-col justify-between">
+                    <p id="narrative-text" class="text-xs text-slate-300 leading-relaxed italic">
+                        Loading...
+                    </p>
+                    <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-800/60">
+                        <span id="narrative-step-lbl" class="text-[10px] font-bold tracking-wider text-indigo-400 uppercase">Step 1</span>
+                        <button id="btn-play-pause" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-bold focus:outline-none">
+                            <span id="play-icon">▶</span> <span id="play-text">Auto-Play</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Memory Flow Tracker (Dynamic) -->
+                <div class="mt-3 p-3 bg-slate-950/80 rounded-xl border border-slate-900">
+                    <h4 class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Memory Flow (Current Moment)
+                    </h4>
+                    <p id="memory-flow-text" class="text-xs text-slate-300 font-mono leading-relaxed">
+                        Loading...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Parameters & Controls Container -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex-1 flex flex-col gap-4">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Controls & Code</h2>
+
+                <div class="flex gap-2">
+                    <button id="btn-toggle-resolver" class="glowing-button bg-indigo-600 text-xs px-3 py-2 rounded-lg font-bold">Toggle Resolver Target</button>
+                </div>
+
+                <!-- Code Container -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-900 flex-1 flex flex-col gap-2 min-h-[150px]">
+                    <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">C++ Code Context</h3>
+                    <pre class="text-xs text-indigo-300 overflow-x-auto p-2 bg-slate-900/50 rounded border border-slate-800/50 font-mono" id="code-snippet">double value = 20.0; // Global
+
+class Controller {
+    double value = 5.0; // Member
+public:
+    void process() {
+        double value = 1.0; // Local
+        
+        this->value = 10.0; // Targets Member!
+        ::value = 30.0;     // Targets Global!
+    }
+};</pre>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Right Visual Scene Display Card -->
+        <section class="lg:col-span-7 flex flex-col gap-4 h-full min-h-[450px]">
+
+            <!-- Graph Visualizer Panel (3D Viewport) -->
+            <div class="glass-panel rounded-3xl p-4 md:p-6 border border-slate-800 flex-1 flex flex-col gap-4 relative overflow-hidden">
+
+                <!-- Dynamic Layer Controller Tabs -->
+                <div class="flex flex-wrap items-center justify-between gap-3 z-10 relative">
+                    <div class="flex bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-[11px] font-bold" id="layer-tabs">
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-white bg-indigo-600 transition-all" onclick="selectLayer('RAM')">RAM Topology</button>
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all" onclick="selectLayer('CPU')">CPU Flow</button>
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all" onclick="selectLayer('GPU')">GPU Layer</button>
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all" onclick="selectLayer('CORRECTOR')">Corrector</button>
+                    </div>
+                    <div class="text-[10px] bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800 text-slate-400">
+                        Interactive 3D Orbit
+                    </div>
+                </div>
+
+                <!-- Three.js Canvas Container -->
+                <div id="canvas-container" class="relative flex-1 bg-slate-950/80 rounded-2xl border border-slate-900 overflow-hidden cursor-grab active:cursor-grabbing">
+                    <!-- Canvas injected dynamically -->
+                </div>
+
+                <!-- Footer Info -->
+                <div class="flex items-center justify-between text-xs text-slate-400 bg-slate-900/30 p-3 rounded-xl border border-slate-800/50">
+                    <span class="flex items-center gap-1.5 text-slate-300">
+                        <i class="fa-solid fa-circle-info text-indigo-400"></i>
+                        <strong id="proof-label">Visual Proof:</strong>
+                    </span>
+                    <span id="canvas-status-indicator" class="text-indigo-300 font-semibold">Active State</span>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Deep System Architecture & Hardware-Software Bridge -->
+    <section class="max-w-7xl w-full mx-auto px-4 md:px-6 mb-6">
+        <div class="glass-panel rounded-3xl p-6 md:p-8 border border-slate-800 flex flex-col gap-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-indigo-400"></i>
+                    Deep System Architecture & Hardware-Software Bridge
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Deconstructing the computer science and hardware layers running this visualization.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- A. Memory Topology (RAM) -->
+                <div id="card-RAM" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-indigo-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-memory"></i>
+                        A. Memory Topology (RAM)
+                    </div>
+                    <p id="ram-desc" class="text-xs text-slate-300 leading-relaxed font-mono bg-slate-900/40 p-3 rounded-lg border border-slate-900">
+                        Global Data Segment (.data) houses global value at fixed location. Heap houses member value inside class layout. Stack frame houses local variable.
+                    </p>
+                </div>
+                
+                <!-- B. CPU & Execution Flow -->
+                <div id="card-CPU" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-rose-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-microchip"></i>
+                        B. CPU & Execution Flow
+                    </div>
+                    <p id="cpu-desc" class="text-xs text-slate-300 leading-relaxed font-normal">
+                        Using :: compiles to absolute memory load instructions (e.g. [0x004B5000]). Using this-> compiles to relative register-base offset load instructions (e.g. [RCX + 8]).
+                    </p>
+                </div>
+                
+                <!-- C. GPU & VRAM -->
+                <div id="card-GPU" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-teal-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-gamepad"></i>
+                        C. GPU & VRAM
+                    </div>
+                    <p id="gpu-desc" class="text-xs text-slate-300 leading-relaxed font-normal">
+                        Nested scope grids are rendered. A yellow pointer beam originates from the inner local sphere, extending outwards to target the selected resolver scope variable.
+                    </p>
+                </div>
+                
+                <!-- D. Misconception Corrector -->
+                <div id="card-CORRECTOR" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        D. Low-Level Corrector
+                    </div>
+                    <p id="corrector-desc" class="text-xs text-slate-300 leading-relaxed font-normal">
+                        Local variables never replace class or global variables in memory. Shadowing is a compiler mapping constraint. Using explicit pointers allows full, parallel access.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 mt-6">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
+            <p>© 2026 Interactive C++ Visualizer. All rights reserved.</p>
+            <p>Interactive features: Click/Hover canvas elements, use sliders, trigger phases.</p>
+        </div>
+    </footer>
+
+    <!-- Core Interactive Logic Script -->
+    <script>
+        const phases = [
+            {"label": "this-> Pointer", "desc": "Attaching this-> bypasses the local scope to target the class member field directly.", "status": "Targeting Member field", "memory_flow": "Inflow: Read this pointer base register $RCX$. Outflow: Writes value to heap offset base $RCX + 8$ ($$value = 10.0$$)."},
+            {"label": ":: Resolution", "desc": "Using the Scope Resolution operator (::) bypasses both class and local scopes to target global variables.", "status": "Targeting Global field", "memory_flow": "Inflow: Load absolute pointer $0x004B5000$. Outflow: Writes value to global data segment cell ($$value = 30.0$$)."}
+        ];
+        
+        let currentPhase = 0;
+        let isPlaying = false;
+        let playInterval = null;
+        let activeLayer = 'RAM';
+        let speedMultiplier = 1.0;
+        let isGlobalTarget = false;
+
+        // 3D Canvas Context
+        let renderer, camera, scene, animFrameId;
+        const container = document.getElementById('canvas-container');
+
+        // Populate phases stepper
+        const phaseContainer = document.getElementById('phase-container');
+        phases.forEach((p, idx) => {
+            const btn = document.createElement('button');
+            btn.className = `phase-btn text-[11px] font-semibold py-2 px-1 rounded-lg transition-all ${idx === 0 ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`;
+            btn.innerText = p.label;
+            btn.onclick = () => selectPhase(idx);
+            btn.id = `btn-phase-${idx}`;
+            phaseContainer.appendChild(btn);
+        });
+
+        function selectPhase(idx) {
+            currentPhase = idx;
+            isGlobalTarget = (idx === 1);
+            document.querySelectorAll('.phase-btn').forEach((btn, bIdx) => {
+                if (bIdx === idx) {
+                    btn.classList.add('bg-indigo-600', 'text-white');
+                    btn.classList.remove('text-slate-400', 'hover:text-white');
+                } else {
+                    btn.classList.remove('bg-indigo-600', 'text-white');
+                    btn.classList.add('text-slate-400', 'hover:text-white');
+                }
+            });
+            document.getElementById('narrative-text').innerHTML = phases[idx].desc;
+            document.getElementById('narrative-step-lbl').innerText = `Step ${idx + 1} of ${phases.length}`;
+            document.getElementById('canvas-status-indicator').innerText = phases[idx].status;
+            document.getElementById('memory-flow-text').innerHTML = phases[idx].memory_flow;
+            
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('narrative-text'), {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+                renderMathInElement(document.getElementById('memory-flow-text'), {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+            
+            onPhaseUpdate(idx);
+        }
+
+        function selectLayer(layerName) {
+            activeLayer = layerName;
+            document.querySelectorAll('.layer-tab').forEach(tab => {
+                if (tab.innerText.toLowerCase().includes(layerName.toLowerCase())) {
+                    tab.classList.add('bg-indigo-600', 'text-white');
+                    tab.classList.remove('text-slate-400', 'hover:text-white');
+                } else {
+                    tab.classList.remove('bg-indigo-600', 'text-white');
+                    tab.classList.add('text-slate-400', 'hover:text-white');
+                }
+            });
+
+            ['RAM', 'CPU', 'GPU', 'CORRECTOR'].forEach(l => {
+                const card = document.getElementById(`card-${l}`);
+                if (l === layerName) {
+                    card.classList.add('border-indigo-500/80', 'bg-slate-900/80', 'ring-1', 'ring-indigo-500/30');
+                    card.classList.remove('border-slate-900/80', 'bg-slate-950/60');
+                } else {
+                    card.classList.remove('border-indigo-500/80', 'bg-slate-900/80', 'ring-1', 'ring-indigo-500/30');
+                    card.classList.add('border-slate-900/80', 'bg-slate-950/60');
+                }
+            });
+
+            initThreeJS();
+        }
+
+        const btnPlayPause = document.getElementById('btn-play-pause');
+        const playIcon = document.getElementById('play-icon');
+        const playText = document.getElementById('play-text');
+
+        btnPlayPause.onclick = () => {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                playIcon.innerText = "⏸";
+                playText.innerText = "Pause";
+                playInterval = setInterval(() => {
+                    let next = (currentPhase + 1) % phases.length;
+                    selectPhase(next);
+                }, 3000 / speedMultiplier);
+            } else {
+                playIcon.innerText = "▶";
+                playText.innerText = "Auto-Play";
+                clearInterval(playInterval);
+            }
+        };
+
+        document.getElementById('btn-toggle-resolver').onclick = () => {
+            isGlobalTarget = !isGlobalTarget;
+            selectPhase(isGlobalTarget ? 1 : 0);
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            selectPhase(0);
+            selectLayer('RAM');
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+        });
+
+        // WebGL Strict Memory Management and Cleanup
+        function cleanupThreeJS() {
+            if (animFrameId) {
+                cancelAnimationFrame(animFrameId);
+            }
+            if (scene) {
+                scene.traverse(object => {
+                    if (!object.isMesh) return;
+                    if (object.geometry) object.geometry.dispose();
+                    if (object.material) {
+                        if (Array.isArray(object.material)) {
+                            object.material.forEach(material => material.dispose());
+                        } else {
+                            object.material.dispose();
+                        }
+                    }
+                });
+            }
+            const prevCanvas = container.querySelector('canvas');
+            if (prevCanvas) prevCanvas.remove();
+        }
+
+        let objects = [];
+        function initThreeJS() {
+            cleanupThreeJS();
+            
+            const w = container.clientWidth;
+            const h = container.clientHeight || 400;
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x020617); // bg-slate-950
+
+            camera = new THREE.PerspectiveCamera(45, w / h, 1, 1000);
+            camera.position.set(0, 12, 20);
+            camera.lookAt(0, 2, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(window.devicePixelRatio || 1);
+            container.appendChild(renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambient);
+            const directional = new THREE.DirectionalLight(0xeab308, 0.8);
+            directional.position.set(10, 20, 10);
+            scene.add(directional);
+
+            objects = [];
+
+            if (activeLayer === 'RAM') {
+                const gridHelper = new THREE.GridHelper(20, 20, 0xeab308, 0x1e293b);
+                scene.add(gridHelper);
+
+                // Global Variable Sphere (top, amber)
+                const globSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), new THREE.MeshPhongMaterial({ color: 0xf59e0b }));
+                globSphere.position.set(0, 6, 0);
+                scene.add(globSphere);
+                objects.push(globSphere); // objects[0]
+
+                // Member Variable Sphere (middle, indigo)
+                const memSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), new THREE.MeshPhongMaterial({ color: 0x6366f1 }));
+                memSphere.position.set(0, 3.5, 0);
+                scene.add(memSphere);
+                objects.push(memSphere); // objects[1]
+
+                // Local Variable Sphere (bottom, red)
+                const locSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), new THREE.MeshPhongMaterial({ color: 0xef4444 }));
+                locSphere.position.set(0, 1, 0);
+                scene.add(locSphere);
+                objects.push(locSphere); // objects[2]
+
+                // Targeting beam (cylinder line linking)
+                const beamGeo = new THREE.CylinderGeometry(0.1, 0.1, 1, 8);
+                const beamMat = new THREE.MeshBasicMaterial({ color: 0xeab308 });
+                const beam = new THREE.Mesh(beamGeo, beamMat);
+                beam.position.set(0, 2, 0);
+                scene.add(beam);
+                objects.push(beam); // objects[3] is pointer beam
+
+            } else if (activeLayer === 'CPU') {
+                const node = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshPhongMaterial({ color: 0xef4444 }));
+                node.position.set(0, 1.5, 0);
+                scene.add(node);
+                objects.push(node);
+
+            } else if (activeLayer === 'GPU') {
+                const grid = new THREE.GridHelper(20, 10, 0xeab308, 0x0f172a);
+                scene.add(grid);
+
+            } else if (activeLayer === 'CORRECTOR') {
+                const box = new THREE.Mesh(new THREE.BoxGeometry(5, 5, 5), new THREE.MeshBasicMaterial({ color: 0xeab308, wireframe: true }));
+                box.position.set(0, 2.5, 0);
+                scene.add(box);
+                objects.push(box);
+            }
+
+            animate();
+        }
+
+        let clock = new THREE.Clock();
+        function animate() {
+            animFrameId = requestAnimationFrame(animate);
+            const elapsed = clock.getElapsedTime() * speedMultiplier;
+
+            if (activeLayer === 'RAM') {
+                if (objects[0]) objects[0].rotation.y += 0.01;
+                if (objects[1]) objects[1].rotation.y += 0.015;
+                if (objects[2]) objects[2].rotation.y += 0.02;
+
+                if (objects[3]) {
+                    // Update pointing beam height and center based on target selection
+                    if (isGlobalTarget) {
+                        // Targets global sphere at y = 6.0 from local at y = 1.0 (length = 5.0, center y = 3.5)
+                        objects[3].scale.y = 5.0;
+                        objects[3].position.set(0, 3.5, 0);
+                    } else {
+                        // Targets member sphere at y = 3.5 from local at y = 1.0 (length = 2.5, center y = 2.25)
+                        objects[3].scale.y = 2.5;
+                        objects[3].position.set(0, 2.25, 0);
+                    }
+                }
+            } else if (activeLayer === 'CPU') {
+                if (objects[0]) objects[0].rotation.y = elapsed;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function onPhaseUpdate(phaseIdx) {
+            // phase change callback hooks
+        }
+
+        window.addEventListener('resize', () => {
+            if (!renderer || !camera) return;
+            const w = container.clientWidth;
+            const h = container.clientHeight || 400;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        });
+
+    </script>
+</body>
+</html>

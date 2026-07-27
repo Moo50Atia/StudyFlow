@@ -1,0 +1,317 @@
+{
+    "material": "C++ Object-Oriented Programming: Objects and Classes",
+    "source_file": "Unit 2 - Objects and Classes - SP25.pdf",
+    "route": "Computer Science",
+    "domain": "Object-Oriented Programming",
+    "total_chapters": 4,
+    "total_mini_chapters": 9,
+    "total_lessons": 17,
+    "chapters": [
+        {
+            "id": "ch1",
+            "title": "Introduction to Object-Oriented Programming",
+            "mini_chapters": [
+                {
+                    "id": "mc1.1",
+                    "title": "Object-Oriented Concepts",
+                    "lessons": [
+                        {
+                            "id": "L1",
+                            "title": "Procedural vs. Object-Oriented Programming",
+                            "view_name": "Comparison",
+                            "page_start": 1,
+                            "page_end": 2,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Moving to Object Oriented Programing",
+                                    "Procedural Programing",
+                                    "Global data"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "L2",
+                            "title": "Defining Objects: State and Behavior",
+                            "view_name": "Diagram",
+                            "page_start": 3,
+                            "page_end": 3,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "UML – Class Diagram",
+                                    "State: A set of data fields (properties) with their current values.",
+                                    "Behavior: defined by a set of functions."
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mc1.2",
+                    "title": "Class Basics",
+                    "lessons": [
+                        {
+                            "id": "L3",
+                            "title": "Declaring a Class and Creating Objects",
+                            "view_name": "CodeExample",
+                            "page_start": 4,
+                            "page_end": 6,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "How to Declare a Class?",
+                                    "Class Example",
+                                    "Independent"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "L4",
+                            "title": "Scope and Visibility",
+                            "view_name": "Concept",
+                            "page_start": 4,
+                            "page_end": 7,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Access Specifiers / Modifiers",
+                                    "private / public",
+                                    "The Scope of Data fields"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "ch2",
+            "title": "Abstraction and Encapsulation",
+            "mini_chapters": [
+                {
+                    "id": "mc2.1",
+                    "title": "Information Hiding",
+                    "lessons": [
+                        {
+                            "id": "L5",
+                            "title": "Accessors (Getters) and Mutators (Setters)",
+                            "view_name": "Concept",
+                            "page_start": 8,
+                            "page_end": 10,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Abstraction and Encapsulation",
+                                    "Example – Getter (Accessor) and Setter (Mutator)"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "L6",
+                            "title": "Case Study: The TV Class",
+                            "view_name": "CodeExample",
+                            "page_start": 11,
+                            "page_end": 13,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Example – Getter (Accessor) and Setter (Mutator)"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "ch3",
+            "title": "Class Lifecycle and Data Management",
+            "mini_chapters": [
+                {
+                    "id": "mc3.1",
+                    "title": "Static and Constant Members",
+                    "lessons": [
+                        {
+                            "id": "L7",
+                            "title": "Working with Static Members",
+                            "view_name": "CodeExample",
+                            "page_start": 14,
+                            "page_end": 16,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Constant and Static Members",
+                                    "Static Members"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "L8",
+                            "title": "Instance vs. Static Decision Making",
+                            "view_name": "Comparison",
+                            "page_start": 17,
+                            "page_end": 18,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Instance or Static Member Function?",
+                                    "How to decide?"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mc3.2",
+                    "title": "Object Initialization and Destruction",
+                    "lessons": [
+                        {
+                            "id": "L9",
+                            "title": "Constructors and Destructors",
+                            "view_name": "ProcessFlow",
+                            "page_start": 19,
+                            "page_end": 19,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Constructors and Destructors",
+                                    "Destructors"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mc3.3",
+                    "title": "Advanced Initialization",
+                    "lessons": [
+                        {
+                            "id": "L10",
+                            "title": "Initialization Lists and Reference Variables",
+                            "view_name": "CodeExample",
+                            "page_start": 20,
+                            "page_end": 24,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Initializing Member Data Fields",
+                                    "Initialization lists",
+                                    "How to initialize reference variables?"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "L11",
+                            "title": "Constructor Delegation",
+                            "view_name": "ProcessFlow",
+                            "page_start": 21,
+                            "page_end": 23,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Constructor Delegation",
+                                    "Initializing Member Data Fields"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "ch4",
+            "title": "Object Interactions and Relationships",
+            "mini_chapters": [
+                {
+                    "id": "mc4.1",
+                    "title": "Object Collections and Functions",
+                    "lessons": [
+                        {
+                            "id": "L12",
+                            "title": "Passing Objects to Functions",
+                            "view_name": "Concept",
+                            "page_start": 25,
+                            "page_end": 26,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Objects with Functions and Arrays",
+                                    "Passing Objects to Functions"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "L13",
+                            "title": "Arrays of Objects and Inline Functions",
+                            "view_name": "CodeExample",
+                            "page_start": 26,
+                            "page_end": 32,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Array of Objects",
+                                    "Inline functions"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mc4.2",
+                    "title": "Designing Object-Oriented Solutions",
+                    "lessons": [
+                        {
+                            "id": "L14",
+                            "title": "Design Case Study: Library Book Class",
+                            "view_name": "CodeExample",
+                            "page_start": 33,
+                            "page_end": 40,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Introduction to Designing an Object-Oriented Solution",
+                                    "Design a 'Book' class for a library system.",
+                                    "Example"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "L15",
+                            "title": "Principles of Good Class Design",
+                            "view_name": "Concept",
+                            "page_start": 41,
+                            "page_end": 41,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Designing a Good Class"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "mc4.3",
+                    "title": "Class Relationships",
+                    "lessons": [
+                        {
+                            "id": "L16",
+                            "title": "Association, Aggregation, and Composition",
+                            "view_name": "Diagram",
+                            "page_start": 42,
+                            "page_end": 44,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Class Relationships",
+                                    "Aggregation",
+                                    "Composition",
+                                    "Association"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "L17",
+                            "title": "Inheritance and Generalization",
+                            "view_name": "Diagram",
+                            "page_start": 45,
+                            "page_end": 46,
+                            "content_ref": {
+                                "sections_in_source": [
+                                    "Inheritance",
+                                    "Generalization",
+                                    "Class Relationships: Inheritance / Generalization"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

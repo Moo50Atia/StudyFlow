@@ -41,14 +41,16 @@ STAGES = [
     "extract",          # 1-2: PDF Intake + Text Extraction
     "ocr",              # 3: OCR Detection & Processing
     "chunk",            # 4: Text Chunking
-    "route",            # 5: Route Detection
-    "structure",        # 6: Structure Extraction
-    "knowledge_graph",  # 7: Knowledge Graph
-    "questions",        # 8: Question Extraction
-    "sections",         # 9: Section Generation
-    "validate",         # 10: Validation
-    "view_map",         # 11: Dynamic View Mapping
-    "view_prompt",      # 12: Dynamic View Prompt Generation
+    "vectorize",        # 5: Vectorization (Chunk → Embedding)
+    "route",            # 6: Route Detection
+    "structure",        # 7: Structure Extraction
+    "index",            # 8: Knowledge Index Construction
+    "knowledge_graph",  # 9: Knowledge Graph
+    "questions",        # 10: Question Extraction
+    "sections",         # 11: Section Generation
+    "validate",         # 12: Validation
+    "view_map",         # 13: Dynamic View Mapping
+    "view_prompt",      # 14: Dynamic View Prompt Generation
     "manifest",         # Final: Manifest Update
 ]
 
@@ -151,14 +153,16 @@ class Pipeline:
                 logger.info(f"✅ Stage {stage} complete")
                 
                 # HITL Pause Check
-                if stage == "structure" and REQUIRE_HUMAN_APPROVAL_AFTER_STAGE_5:
-                    if stop_after != "structure":  # If it's already meant to stop, don't trigger pause message
-                        logger.warning(
-                            "\n⏸ HITL PAUSE: Pipeline paused after Stage 5 (Structure). "
-                            "Waiting for human review of structure.json. "
-                            "Resume pipeline with: --start-from knowledge_graph"
-                        )
-                        break
+                if stage == "structure" and stop_after != "index":
+                    from Generating.config import REQUIRE_HUMAN_APPROVAL_AFTER_STAGE_5
+                    if REQUIRE_HUMAN_APPROVAL_AFTER_STAGE_5:
+                        if stop_after != "structure":  # If it's already meant to stop, don't trigger pause message
+                            logger.warning(
+                                "\n⏸ HITL PAUSE: Pipeline paused after Stage 5 (Structure). "
+                                "Waiting for human review of structure.json. "
+                                "Resume pipeline with: --start-from knowledge_graph"
+                            )
+                            break
                         
             except Exception as e:
                 logger.error(f"✗ Stage {stage} failed: {e}")
@@ -269,6 +273,69 @@ class Pipeline:
         manager = ChunkManager()
         manifest = manager.chunk_text(text, page_offsets, "source.pdf")
         manager.save_manifest(manifest, str(self.material_dir))
+
+    def _stage_vectorize(self):
+        """Stage 5: Vectorization — convert chunks into embedding vectors."""
+        from Generating.Vectorization.vectorization_manager import (
+            VectorizationManager,
+            _get_provider,
+        )
+        from Generating.config import EMBEDDING_PROVIDER
+
+        # Load chunk manifest
+        chunk_manifest_path = self.material_dir / "chunk_manifest.json"
+        if not chunk_manifest_path.exists():
+            raise FileNotFoundError(
+                f"chunk_manifest.json not found: {chunk_manifest_path}. "
+                "Run the 'chunk' stage first."
+            )
+        with open(chunk_manifest_path, "r", encoding="utf-8") as f:
+            chunk_manifest_data = json.load(f)
+
+        # Load full text for chunk slicing
+        text_path = self.material_dir / "extracted_text.txt"
+        with open(text_path, "r", encoding="utf-8") as f:
+            full_text = f.read()
+
+        provider = _get_provider(EMBEDDING_PROVIDER)
+        manager = VectorizationManager(provider)
+        manifest = manager.vectorize(chunk_manifest_data, full_text)
+        manager.save_vectors(manifest, str(self.material_dir))
+
+    def _stage_index(self):
+        """Stage 6: Indexing — build a knowledge index from vectors."""
+        from Generating.Indexing.indexing_manager import IndexingManager
+
+        # Load vectors
+        vectors_path = self.material_dir / "vectors.json"
+        if not vectors_path.exists():
+            raise FileNotFoundError(
+                f"vectors.json not found: {vectors_path}. "
+                "Run the 'vectorize' stage first."
+            )
+        with open(vectors_path, "r", encoding="utf-8") as f:
+            vector_data = json.load(f)
+
+        # Load chunk manifest (for reference resolution)
+        chunk_manifest_path = self.material_dir / "chunk_manifest.json"
+        with open(chunk_manifest_path, "r", encoding="utf-8") as f:
+            chunk_manifest_data = json.load(f)
+
+        # Load full text (for resolving chunk text from offsets)
+        text_path = self.material_dir / "extracted_text.txt"
+        with open(text_path, "r", encoding="utf-8") as f:
+            full_text = f.read()
+
+        # Load structure data if available
+        structure_data = None
+        struct_path = self.material_dir / "structure.json"
+        if struct_path.exists():
+            with open(struct_path, "r", encoding="utf-8") as f:
+                structure_data = json.load(f)
+
+        manager = IndexingManager()
+        index = manager.build_index(vector_data, chunk_manifest_data, full_text, structure_data)
+        manager.save_index(index, str(self.material_dir))
 
     def _stage_route(self):
         """Stage 5: Route Detection."""
@@ -499,6 +566,8 @@ class Pipeline:
             "extraction_metadata": "extraction_metadata.json",
             "ocr_report": "ocr_report.json",
             "chunk_manifest": "chunk_manifest.json",
+            "vectors": "vectors.json",
+            "knowledge_index": "knowledge_index.json",
             "route_detection": "route_detection.json",
             "material_config": "material_config.json",
             "structure": "structure.json",
@@ -555,6 +624,42 @@ class Pipeline:
             json.dump(manifest, f, indent=2, ensure_ascii=False)
         logger.info(f"Saved master manifest: {manifest_path}")
 
+        # Strict referential integrity check (T019)
+        self._check_referential_integrity()
+
+
+    def _check_referential_integrity(self):
+        """Enforce strict referential integrity between manifest chunks and vectors."""
+        chunk_manifest_path = self.material_dir / "chunk_manifest.json"
+        vectors_path = self.material_dir / "vectors.json"
+        index_path = self.material_dir / "knowledge_index.json"
+
+        if not (chunk_manifest_path.exists() and vectors_path.exists() and index_path.exists()):
+            return
+
+        with open(chunk_manifest_path, "r", encoding="utf-8") as f:
+            chunks = json.load(f).get("chunks", [])
+        with open(vectors_path, "r", encoding="utf-8") as f:
+            vectors = json.load(f).get("vectors", [])
+        with open(index_path, "r", encoding="utf-8") as f:
+            entries = json.load(f).get("entries", [])
+
+        chunk_ids = {c.get("id") for c in chunks}
+        vec_ids = {v.get("chunk_id") for v in vectors}
+        idx_ids = {e.get("chunk_id") for e in entries}
+
+        if chunk_ids != vec_ids:
+            raise RuntimeError(
+                f"Referential Integrity Error: Chunk IDs ({len(chunk_ids)}) "
+                f"do not match Vector Chunk IDs ({len(vec_ids)})"
+            )
+        if chunk_ids != idx_ids:
+            raise RuntimeError(
+                f"Referential Integrity Error: Chunk IDs ({len(chunk_ids)}) "
+                f"do not match Index Chunk IDs ({len(idx_ids)})"
+            )
+        
+        logger.info("✅ Referential integrity verified: 1:1 mapping between chunks, vectors, and index.")
 
 # ── CLI Entry Point ───────────────────────────────────────────────────────────
 
@@ -568,13 +673,21 @@ def main():
 
         parser = argparse.ArgumentParser(description="StudyFlow Generating Pipeline")
         parser.add_argument("--input", "-i", help="Path to source PDF")
-        parser.add_argument("--name", "-n", required=True, help="Material name")
+        parser.add_argument("--name", "-n", required=False, help="Material name")
         parser.add_argument("--stage", "-s", help="Run a specific stage only")
         parser.add_argument("--api-key", help="AI API key")
         parser.add_argument("--provider", default="gemini", help="AI provider")
         parser.add_argument("--model", help="AI model name")
         parser.add_argument(
             "--list-stages", action="store_true", help="List available stages"
+        )
+        parser.add_argument(
+            "--index-test", action="store_true",
+            help="Run only preprocessing (Extract → OCR → Chunk → Vectorize → Index)"
+        )
+        parser.add_argument(
+            "--embedding-provider", default=None,
+            help="Embedding provider (gemini, sentence-transformers, etc.)"
         )
 
         args = parser.parse_args()
@@ -584,6 +697,18 @@ def main():
             for i, stage in enumerate(STAGES, 1):
                 print(f"  {i:2d}. {stage}")
             return
+
+        if args.index_test:
+            if not args.input:
+                print("Error: --index-test requires --input")
+                sys.exit(1)
+            _run_index_test(args)
+            return
+
+        if not args.name:
+            print("Error: --name is required for normal pipeline execution")
+            parser.print_help()
+            sys.exit(1)
 
         pipeline = Pipeline(
             material_name=args.name,
@@ -606,7 +731,7 @@ def main():
     # Click-based CLI (if click is installed)
     @click.command()
     @click.option("--input", "-i", "pdf_path", help="Path to source PDF")
-    @click.option("--name", "-n", "material_name", required=True, help="Material name")
+    @click.option("--name", "-n", "material_name", help="Material name")
     @click.option("--stage", "-s", help="Run a specific stage only")
     @click.option("--api-key", envvar="STUDYFLOW_AI_API_KEY", help="AI API key")
     @click.option("--provider", default="gemini", help="AI provider")
@@ -615,12 +740,42 @@ def main():
     @click.option("--skip", multiple=True, help="Stages to skip")
     @click.option("--start-from", help="Stage to start from")
     @click.option("--stop-after", help="Stage to stop after")
-    def cli(pdf_path, material_name, stage, api_key, provider, model, list_stages, skip, start_from, stop_after):
+    @click.option("--index-test", is_flag=True, help="Run only preprocessing (Extract → OCR → Chunk → Vectorize → Index)")
+    @click.option("--embedding-provider", default=None, help="Embedding provider (gemini, sentence-transformers, etc.)")
+    def cli(pdf_path, material_name, stage, api_key, provider, model, list_stages, skip, start_from, stop_after, index_test, embedding_provider):
         if list_stages:
             click.echo("Available pipeline stages:")
             for i, s in enumerate(STAGES, 1):
                 click.echo(f"  {i:2d}. {s}")
             return
+
+        if index_test:
+            if not pdf_path:
+                click.echo("Error: --index-test requires --input")
+                raise click.Abort()
+            # Construct a fake args object for _run_index_test
+            class Args:
+                input = pdf_path
+                name = material_name
+                api_key_val = api_key
+                provider_val = provider
+                model_val = model
+                embedding_provider_val = embedding_provider
+                start_from_val = start_from
+            
+            args = Args()
+            args.api_key = api_key
+            args.provider = provider
+            args.model = model
+            args.embedding_provider = embedding_provider
+            args.start_from = start_from
+            
+            _run_index_test(args)
+            return
+
+        if not material_name:
+            click.echo("Error: --name is required for normal pipeline execution")
+            raise click.Abort()
 
         pipeline = Pipeline(
             material_name=material_name,
@@ -640,6 +795,108 @@ def main():
             raise click.Abort()
 
     cli()
+
+
+def _run_index_test(args):
+    """
+    Run only the preprocessing pipeline (Extract → Index) and print a summary.
+
+    This is a dedicated test mode for verifying the indexing layer
+    without running the full pipeline.
+    """
+    import time as _time
+    import sys
+
+    start_time = _time.time()
+
+    # Resolve input path (relative or absolute)
+    input_path = Path(args.input)
+    if not input_path.is_absolute():
+        input_path = Path.cwd() / input_path
+
+    if not input_path.exists():
+        print(f"Error: Input file not found: {input_path}")
+        sys.exit(1)
+
+    # Apply embedding provider override if provided
+    if getattr(args, "embedding_provider", None):
+        import Generating.config as cfg
+        cfg.EMBEDDING_PROVIDER = args.embedding_provider
+
+    # Derive material name from filename if not provided
+    material_name = getattr(args, "name", None) or input_path.stem
+
+    pipeline = Pipeline(
+        material_name=material_name,
+        api_key=getattr(args, "api_key", None),
+        ai_provider=getattr(args, "provider", "gemini"),
+        ai_model=getattr(args, "model", None),
+    )
+
+    # Run only preprocessing stages (stop after "index")
+    pipeline.run_full(
+        str(input_path), 
+        start_from=getattr(args, "start_from", None),
+        stop_after="index"
+    )
+
+    elapsed = _time.time() - start_time
+
+    # ── Gather summary metrics ──────────────────────────────────
+    mat_dir = pipeline.material_dir
+
+    total_pages = 0
+    ocr_pages = 0
+    meta_path = mat_dir / "extraction_metadata.json"
+    if meta_path.exists():
+        with open(meta_path, "r") as f:
+            meta = json.load(f)
+        total_pages = meta.get("total_pages", 0)
+        ocr_pages = len(meta.get("ocr_page_numbers", []))
+
+    num_chunks = 0
+    chunk_path = mat_dir / "chunk_manifest.json"
+    if chunk_path.exists():
+        with open(chunk_path, "r") as f:
+            num_chunks = json.load(f).get("total_chunks", 0)
+
+    num_vectors = 0
+    embedding_model = ""
+    vector_dim = 0
+    vectors_path = mat_dir / "vectors.json"
+    if vectors_path.exists():
+        with open(vectors_path, "r") as f:
+            vd = json.load(f)
+        num_vectors = vd.get("total_vectors", 0)
+        embedding_model = vd.get("embedding_model", "")
+        vector_dim = vd.get("vector_dimension", 0)
+
+    index_entries = 0
+    index_size = 0
+    index_path = mat_dir / "knowledge_index.json"
+    if index_path.exists():
+        index_size = index_path.stat().st_size
+        with open(index_path, "r") as f:
+            index_entries = json.load(f).get("total_entries", 0)
+
+    # ── Print summary ───────────────────────────────────────────
+    print(f"\n{'=' * 60}")
+    print(f"  PREPROCESSING AUDIT RESULT: {material_name}")
+    print(f"{'=' * 60}")
+    print(f"  Input file          : {input_path}")
+    print(f"  Total pages         : {total_pages}")
+    print(f"  OCR pages           : {ocr_pages}")
+    print(f"  Number of chunks    : {num_chunks}")
+    print(f"  Number of vectors   : {num_vectors}")
+    print(f"  Embedding model     : {embedding_model}")
+    print(f"  Vector dimension    : {vector_dim}")
+    print(f"  Index entries       : {index_entries}")
+    print(f"  Index size (bytes)  : {index_size}")
+    print(f"  Output directory    : {mat_dir}")
+    print(f"  Total time          : {elapsed:.2f}s")
+    print(f"{'=' * 60}")
+
+    sys.exit(0)
 
 
 if __name__ == "__main__":

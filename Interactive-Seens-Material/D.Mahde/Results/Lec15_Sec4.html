@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constructor Delegation - Interactive Visualization</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Three.js for 3D graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glowing-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glowing-button:hover {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden">
+
+    <!-- Top Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <span class="text-xs font-bold tracking-wider text-indigo-400 uppercase bg-indigo-950/50 px-2.5 py-1 rounded-full border border-indigo-800/50">
+                    Lecture 15 • Section 4
+                </span>
+                <h1 class="text-2xl font-extrabold text-white mt-1.5 flex items-center gap-2">
+                    Constructor Delegation
+                </h1>
+            </div>
+            <p class="text-xs text-slate-400 max-w-md md:text-right">
+                Visualizing constructor delegation to prevent code duplication.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+        <!-- Left Sidebar: Controls & Code -->
+        <section class="lg:col-span-5 flex flex-col gap-5 h-full">
+
+            <!-- Learning Outcome Dashboard Card -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex flex-col gap-3">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-teal-400 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                    Visual Learning Outcome
+                </h2>
+                <div class="text-sm text-slate-300 leading-relaxed font-normal">
+                    Misconception corrected: Constructors can call other constructors. A delegating constructor passes execution flow directly to a target constructor, avoiding duplicate logic.
+                </div>
+            </div>
+
+            <!-- Flow Stepper / Phase Selector -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">Interactive Phase</h2>
+                <div class="grid grid-cols-4 gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800/80" id="phase-container">
+                    <!-- Dynamic tabs populated in JS -->
+                </div>
+
+                <!-- Active Narrative Card -->
+                <div class="mt-4 p-4 bg-slate-900/60 rounded-xl border border-slate-800 min-h-[110px] flex flex-col justify-between">
+                    <p id="narrative-text" class="text-xs text-slate-300 leading-relaxed italic">
+                        Loading...
+                    </p>
+                    <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-800/60">
+                        <span id="narrative-step-lbl" class="text-[10px] font-bold tracking-wider text-indigo-400 uppercase">Step 1</span>
+                        <button id="btn-play-pause" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-bold focus:outline-none">
+                            <span id="play-icon">▶</span> <span id="play-text">Auto-Play</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Memory Flow Tracker (Dynamic) -->
+                <div class="mt-3 p-3 bg-slate-950/80 rounded-xl border border-slate-900">
+                    <h4 class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Memory Flow (Current Moment)
+                    </h4>
+                    <p id="memory-flow-text" class="text-xs text-slate-300 font-mono leading-relaxed">
+                        Loading...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Parameters & Controls Container -->
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex-1 flex flex-col gap-4">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Controls & Code</h2>
+
+                <div class="flex gap-2">
+                    <button id="btn-delegate" class="glowing-button bg-indigo-600 text-xs px-3 py-2 rounded-lg font-bold">Trigger Delegation</button>
+                </div>
+
+                <!-- Code Container -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-900 flex-1 flex flex-col gap-2 min-h-[150px]">
+                    <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">C++ Code Context</h3>
+                    <pre class="text-xs text-indigo-300 overflow-x-auto p-2 bg-slate-900/50 rounded border border-slate-800/50 font-mono" id="code-snippet">class Circle {
+    double radius;
+public:
+    Circle(double r) : radius(r) {} // Target
+    Circle() : Circle(5.0) {} // Delegating!
+};</pre>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Right Visual Scene Display Card -->
+        <section class="lg:col-span-7 flex flex-col gap-4 h-full min-h-[450px]">
+
+            <!-- Graph Visualizer Panel (3D Viewport) -->
+            <div class="glass-panel rounded-3xl p-4 md:p-6 border border-slate-800 flex-1 flex flex-col gap-4 relative overflow-hidden">
+
+                <!-- Dynamic Layer Controller Tabs -->
+                <div class="flex flex-wrap items-center justify-between gap-3 z-10 relative">
+                    <div class="flex bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-[11px] font-bold" id="layer-tabs">
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-white bg-indigo-600 transition-all" onclick="selectLayer('RAM')">RAM Topology</button>
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all" onclick="selectLayer('CPU')">CPU Flow</button>
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all" onclick="selectLayer('GPU')">GPU Layer</button>
+                        <button class="layer-tab px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all" onclick="selectLayer('CORRECTOR')">Corrector</button>
+                    </div>
+                    <div class="text-[10px] bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800 text-slate-400">
+                        Interactive 3D Orbit
+                    </div>
+                </div>
+
+                <!-- Three.js Canvas Container -->
+                <div id="canvas-container" class="relative flex-1 bg-slate-950/80 rounded-2xl border border-slate-900 overflow-hidden cursor-grab active:cursor-grabbing">
+                    <!-- Canvas injected dynamically -->
+                </div>
+
+                <!-- Footer Info -->
+                <div class="flex items-center justify-between text-xs text-slate-400 bg-slate-900/30 p-3 rounded-xl border border-slate-800/50">
+                    <span class="flex items-center gap-1.5 text-slate-300">
+                        <i class="fa-solid fa-circle-info text-indigo-400"></i>
+                        <strong id="proof-label">Visual Proof:</strong>
+                    </span>
+                    <span id="canvas-status-indicator" class="text-indigo-300 font-semibold">Active State</span>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Deep System Architecture & Hardware-Software Bridge -->
+    <section class="max-w-7xl w-full mx-auto px-4 md:px-6 mb-6">
+        <div class="glass-panel rounded-3xl p-6 md:p-8 border border-slate-800 flex flex-col gap-6">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-indigo-400"></i>
+                    Deep System Architecture & Hardware-Software Bridge
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Deconstructing the computer science and hardware layers running this visualization.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- A. Memory Topology (RAM) -->
+                <div id="card-RAM" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-indigo-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-memory"></i>
+                        A. Memory Topology (RAM)
+                    </div>
+                    <p id="ram-desc" class="text-xs text-slate-300 leading-relaxed font-mono bg-slate-900/40 p-3 rounded-lg border border-slate-900">
+                        Stack/Heap: Bypasses double variable initialization. Initial stack pointers map execution parameters before running constructor methods.
+                    </p>
+                </div>
+                
+                <!-- B. CPU & Execution Flow -->
+                <div id="card-CPU" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-rose-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-microchip"></i>
+                        B. CPU & Execution Flow
+                    </div>
+                    <p id="cpu-desc" class="text-xs text-slate-300 leading-relaxed font-normal">
+                        Routines execute jumps: Circle() passes argument $5.0$ and redirects instruction pointers to parameterized Circle(double) offsets.
+                    </p>
+                </div>
+                
+                <!-- C. GPU & VRAM -->
+                <div id="card-GPU" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-teal-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-gamepad"></i>
+                        C. GPU & VRAM
+                    </div>
+                    <p id="gpu-desc" class="text-xs text-slate-300 leading-relaxed font-normal">
+                        Delegating boxes and target boxes are drawn. Activating delegation launches glowing orange connection lines to target boxes.
+                    </p>
+                </div>
+                
+                <!-- D. Misconception Corrector -->
+                <div id="card-CORRECTOR" class="bg-slate-950/60 p-5 rounded-2xl border border-slate-900/80 flex flex-col gap-2.5 transition-all">
+                    <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs uppercase">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        D. Low-Level Corrector
+                    </div>
+                    <p id="corrector-desc" class="text-xs text-slate-300 leading-relaxed font-normal">
+                        Constructor delegation reduces compilation code sizes. Execution redirection lets constructors forward tasks instead of replicating statements.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 mt-6">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
+            <p>© 2026 Interactive C++ Visualizer. All rights reserved.</p>
+            <p>Interactive features: Click/Hover canvas elements, use sliders, trigger phases.</p>
+        </div>
+    </footer>
+
+    <!-- Core Interactive Logic Script -->
+    <script>
+        const phases = [
+            {"label": "Delegation Flow", "desc": "Calling the default constructor transfers execution directly to the parameterized constructor.", "status": "Delegating call stack", "memory_flow": "Inflow: Execute default Circle(). Outflow: Branches to target parameterized constructor ($$Circle() \\to Circle(5.0)$$)."}
+        ];
+        
+        let currentPhase = 0;
+        let isPlaying = false;
+        let playInterval = null;
+        let activeLayer = 'RAM';
+        let speedMultiplier = 1.0;
+        let isDelegating = false;
+        let delProgress = 0.0;
+
+        // 3D Canvas Context
+        let renderer, camera, scene, animFrameId;
+        const container = document.getElementById('canvas-container');
+
+        // Populate phases stepper
+        const phaseContainer = document.getElementById('phase-container');
+        phases.forEach((p, idx) => {
+            const btn = document.createElement('button');
+            btn.className = `phase-btn text-[11px] font-semibold py-2 px-1 rounded-lg transition-all ${idx === 0 ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`;
+            btn.innerText = p.label;
+            btn.onclick = () => selectPhase(idx);
+            btn.id = `btn-phase-${idx}`;
+            phaseContainer.appendChild(btn);
+        });
+
+        function selectPhase(idx) {
+            currentPhase = idx;
+            isDelegating = (idx === 0);
+            document.querySelectorAll('.phase-btn').forEach((btn, bIdx) => {
+                if (bIdx === idx) {
+                    btn.classList.add('bg-indigo-600', 'text-white');
+                    btn.classList.remove('text-slate-400', 'hover:text-white');
+                } else {
+                    btn.classList.remove('bg-indigo-600', 'text-white');
+                    btn.classList.add('text-slate-400', 'hover:text-white');
+                }
+            });
+            document.getElementById('narrative-text').innerHTML = phases[idx].desc;
+            document.getElementById('narrative-step-lbl').innerText = `Step ${idx + 1} of ${phases.length}`;
+            document.getElementById('canvas-status-indicator').innerText = phases[idx].status;
+            document.getElementById('memory-flow-text').innerHTML = phases[idx].memory_flow;
+            
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('narrative-text'), {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+                renderMathInElement(document.getElementById('memory-flow-text'), {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+            
+            onPhaseUpdate(idx);
+        }
+
+        function selectLayer(layerName) {
+            activeLayer = layerName;
+            document.querySelectorAll('.layer-tab').forEach(tab => {
+                if (tab.innerText.toLowerCase().includes(layerName.toLowerCase())) {
+                    tab.classList.add('bg-indigo-600', 'text-white');
+                    tab.classList.remove('text-slate-400', 'hover:text-white');
+                } else {
+                    tab.classList.remove('bg-indigo-600', 'text-white');
+                    tab.classList.add('text-slate-400', 'hover:text-white');
+                }
+            });
+
+            ['RAM', 'CPU', 'GPU', 'CORRECTOR'].forEach(l => {
+                const card = document.getElementById(`card-${l}`);
+                if (l === layerName) {
+                    card.classList.add('border-indigo-500/80', 'bg-slate-900/80', 'ring-1', 'ring-indigo-500/30');
+                    card.classList.remove('border-slate-900/80', 'bg-slate-950/60');
+                } else {
+                    card.classList.remove('border-indigo-500/80', 'bg-slate-900/80', 'ring-1', 'ring-indigo-500/30');
+                    card.classList.add('border-slate-900/80', 'bg-slate-950/60');
+                }
+            });
+
+            initThreeJS();
+        }
+
+        const btnPlayPause = document.getElementById('btn-play-pause');
+        const playIcon = document.getElementById('play-icon');
+        const playText = document.getElementById('play-text');
+
+        btnPlayPause.onclick = () => {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                playIcon.innerText = "⏸";
+                playText.innerText = "Pause";
+                playInterval = setInterval(() => {
+                    let next = (currentPhase + 1) % phases.length;
+                    selectPhase(next);
+                }, 3000 / speedMultiplier);
+            } else {
+                playIcon.innerText = "▶";
+                playText.innerText = "Auto-Play";
+                clearInterval(playInterval);
+            }
+        };
+
+        document.getElementById('btn-delegate').onclick = () => {
+            isDelegating = true;
+            delProgress = 0;
+            triggerDelegation();
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            selectPhase(0);
+            selectLayer('RAM');
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+        });
+
+        // WebGL Strict Memory Management and Cleanup
+        function cleanupThreeJS() {
+            if (animFrameId) {
+                cancelAnimationFrame(animFrameId);
+            }
+            if (scene) {
+                scene.traverse(object => {
+                    if (!object.isMesh) return;
+                    if (object.geometry) object.geometry.dispose();
+                    if (object.material) {
+                        if (Array.isArray(object.material)) {
+                            object.material.forEach(material => material.dispose());
+                        } else {
+                            object.material.dispose();
+                        }
+                    }
+                });
+            }
+            const prevCanvas = container.querySelector('canvas');
+            if (prevCanvas) prevCanvas.remove();
+        }
+
+        let objects = [];
+        let particles = [];
+
+        function initThreeJS() {
+            cleanupThreeJS();
+            
+            const w = container.clientWidth;
+            const h = container.clientHeight || 400;
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x020617); // bg-slate-950
+
+            camera = new THREE.PerspectiveCamera(45, w / h, 1, 1000);
+            camera.position.set(0, 15, 25);
+            camera.lookAt(0, 1.5, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(window.devicePixelRatio || 1);
+            container.appendChild(renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambient);
+            const directional = new THREE.DirectionalLight(0xf59e0b, 0.8);
+            directional.position.set(10, 20, 10);
+            scene.add(directional);
+
+            objects = [];
+            particles = [];
+
+            if (activeLayer === 'RAM') {
+                const gridHelper = new THREE.GridHelper(20, 20, 0xf59e0b, 0x1e293b);
+                scene.add(gridHelper);
+
+                // Delegating constructor block (indigo box)
+                const delGeo = new THREE.BoxGeometry(3, 2, 3);
+                const delMat = new THREE.MeshPhongMaterial({ color: 0x6366f1 });
+                const delMesh = new THREE.Mesh(delGeo, delMat);
+                delMesh.position.set(-5, 1.5, 0);
+                scene.add(delMesh);
+                objects.push(delMesh); // objects[0] is delMesh
+
+                // Target constructor block (green box)
+                const tarGeo = new THREE.BoxGeometry(3, 2, 3);
+                const tarMat = new THREE.MeshPhongMaterial({ color: 0x10b981 });
+                const tarMesh = new THREE.Mesh(tarGeo, tarMat);
+                tarMesh.position.set(5, 1.5, 0);
+                scene.add(tarMesh);
+                objects.push(tarMesh); // objects[1] is tarMesh
+
+            } else if (activeLayer === 'CPU') {
+                const node = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshPhongMaterial({ color: 0xef4444 }));
+                node.position.set(0, 1.5, 0);
+                scene.add(node);
+                objects.push(node);
+
+            } else if (activeLayer === 'GPU') {
+                const grid = new THREE.GridHelper(20, 10, 0xf59e0b, 0x0f172a);
+                scene.add(grid);
+
+            } else if (activeLayer === 'CORRECTOR') {
+                const box = new THREE.Mesh(new THREE.BoxGeometry(5, 5, 5), new THREE.MeshBasicMaterial({ color: 0xf59e0b, wireframe: true }));
+                box.position.set(0, 2.5, 0);
+                scene.add(box);
+                objects.push(box);
+            }
+
+            animate();
+        }
+
+        function triggerDelegation() {
+            if (activeLayer !== 'RAM') return;
+            const pGeo = new THREE.SphereGeometry(0.25, 8, 8);
+            const pMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+            const p = new THREE.Mesh(pGeo, pMat);
+            p.position.set(-5, 1.5, 0);
+            scene.add(p);
+            particles.push({ mesh: p, start: new THREE.Vector3(-5, 1.5, 0), target: new THREE.Vector3(5, 1.5, 0) });
+        }
+
+        let clock = new THREE.Clock();
+        function animate() {
+            animFrameId = requestAnimationFrame(animate);
+            const elapsed = clock.getElapsedTime() * speedMultiplier;
+
+            if (isDelegating && delProgress < 1.0) {
+                delProgress += 0.03 * speedMultiplier;
+            }
+
+            if (activeLayer === 'RAM') {
+                if (objects[0]) objects[0].rotation.y += 0.01;
+                if (objects[1]) {
+                    objects[1].rotation.y -= 0.01;
+                    if (isDelegating && delProgress >= 1.0) {
+                        objects[1].scale.setScalar(1.3);
+                        setTimeout(() => {
+                            if (objects[1]) objects[1].scale.setScalar(1.0);
+                        }, 150);
+                    }
+                }
+
+                // Move delegation particles
+                for(let i=particles.length - 1; i>=0; i--) {
+                    const p = particles[i];
+                    p.mesh.position.x = p.start.x + (p.target.x - p.start.x) * delProgress;
+
+                    if (delProgress >= 1.0) {
+                        scene.remove(p.mesh);
+                        p.mesh.geometry.dispose();
+                        p.mesh.material.dispose();
+                        particles.splice(i, 1);
+                    }
+                }
+            } else if (activeLayer === 'CPU') {
+                if (objects[0]) objects[0].rotation.y = elapsed;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function onPhaseUpdate(phaseIdx) {
+            particles.forEach(p => {
+                scene.remove(p.mesh);
+                p.mesh.geometry.dispose();
+                p.mesh.material.dispose();
+            });
+            particles = [];
+            triggerDelegation();
+        }
+
+        window.addEventListener('resize', () => {
+            if (!renderer || !camera) return;
+            const w = container.clientWidth;
+            const h = container.clientHeight || 400;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+========================================
+PAGE: https://stemdk.netlify.app
+========================================
+Error: HTTPSConnectionPool(host='stemdk.netlify.app', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='stemdk.netlify.app', port=443) at 0x193c2facc20>, 'Connection to stemdk.netlify.app timed out. (connect timeout=15)'))
+
+========================================
+PAGE: https://stemdk.netlify.app/about
+========================================
+Error: HTTPSConnectionPool(host='stemdk.netlify.app', port=443): Max retries exceeded with url: /about (Caused by ConnectTimeoutError(<HTTPSConnection(host='stemdk.netlify.app', port=443) at 0x193c2f79f90>, 'Connection to stemdk.netlify.app timed out. (connect timeout=15)'))
+
+========================================
+PAGE: https://stemdk.netlify.app/contact
+========================================
+Error: HTTPSConnectionPool(host='stemdk.netlify.app', port=443): Max retries exceeded with url: /contact (Caused by ConnectTimeoutError(<HTTPSConnection(host='stemdk.netlify.app', port=443) at 0x193c2f7a990>, 'Connection to stemdk.netlify.app timed out. (connect timeout=15)'))
+
+========================================
+PAGE: https://stemdk.netlify.app/team
+========================================
+Error: HTTPSConnectionPool(host='stemdk.netlify.app', port=443): Max retries exceeded with url: /team (Caused by ConnectTimeoutError(<HTTPSConnection(host='stemdk.netlify.app', port=443) at 0x193c2f7aad0>, 'Connection to stemdk.netlify.app timed out. (connect timeout=15)'))
+

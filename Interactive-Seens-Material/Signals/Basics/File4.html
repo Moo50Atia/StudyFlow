@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microscopic Resistance & Scattering</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050510;
+            color: white;
+            font-family: sans-serif;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .pointer-events-auto {
+            pointer-events: auto;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #f97316;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        .math-font {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+        }
+
+        #graph-canvas {
+            width: 100%;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-btn {
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn.active {
+            background: #3b82f6;
+            border-color: #60a5fa;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div id="ui-layer">
+        <!-- Top Info -->
+        <div class="glass-panel max-w-2xl">
+            <h1 class="text-3xl font-bold mb-2 text-white">Resistance: Atomic Scattering</h1>
+            <p class="text-gray-300 leading-relaxed text-sm">
+                <span class="text-orange-400 font-semibold">Visual Learning Outcome:</span>
+                Resistance is not a malicious power drain or artificial error. It is the inevitable macroscopic result
+                of microscopic turbulent charge transport.
+                As electrons drift forward, they experience structural scattering off vibrating crystal lattice ions,
+                decreasing net throughput while transferring kinetic energy into localized thermal vibration (heat).
+            </p>
+        </div>
+
+        <div class="flex justify-between items-end w-full">
+            <!-- Bottom Left: Controls -->
+            <div class="glass-panel max-w-sm pointer-events-auto w-full">
+                <div class="mb-6">
+                    <h2 class="text-sm uppercase tracking-widest text-gray-400 mb-3">Lattice Material (Density)</h2>
+                    <div class="flex gap-2">
+                        <button id="mat-copper"
+                            class="toggle-btn active flex-1 py-2 px-4 rounded border border-gray-600 bg-gray-800 text-sm font-semibold">Copper
+                            (Low R)</button>
+                        <button id="mat-iron"
+                            class="toggle-btn flex-1 py-2 px-4 rounded border border-gray-600 bg-gray-800 text-sm font-semibold">Tungsten
+                            (High R)</button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-end mb-2">
+                        <h2 class="text-sm uppercase tracking-widest text-gray-400">Temperature</h2>
+                        <div class="text-orange-400 font-mono text-sm" id="temp-value">300K</div>
+                    </div>
+                    <input type="range" id="temp-slider" min="0" max="100" value="20">
+                    <p class="text-xs text-gray-500 mt-2">Increases physical vibration amplitude of lattice ions,
+                        causing more electron collisions.</p>
+                </div>
+            </div>
+
+            <!-- Bottom Right: Stats & Graph -->
+            <div class="glass-panel max-w-md pointer-events-auto w-full ml-4">
+                <div class="flex justify-between items-center mb-2">
+                    <div>
+                        <div class="text-gray-400 text-xs uppercase tracking-widest">Net Drift Velocity (<span
+                                class="math-font">v<sub>d</sub></span>)</div>
+                        <div class="text-2xl font-mono text-blue-400" id="drift-display">0.00 m/s</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-gray-400 text-xs uppercase tracking-widest">Thermal Power</div>
+                        <div class="text-2xl text-orange-400 math-font tracking-wide">
+                            P = I<sup>2</sup>R
+                        </div>
+                    </div>
+                </div>
+
+                <canvas id="graph-canvas" width="400" height="100"></canvas>
+                <div class="text-center text-xs text-gray-500 mt-1">Real-time Heat Dissipation ($P$) vs Time</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Simulation Configuration ---
+        const CONFIG = {
+            tubeRadius: 8,
+            tubeLength: 60,
+            electronCount: 80,
+            eFieldForce: 0.15, // Forward acceleration
+            maxSpeed: 1.5,
+            latticeSize: 2.5,
+            collisionRadiusSq: 4.5, // (IonRadius + ElectronRadius)^2 optimized
+            heatWavePoolSize: 50
+        };
+
+        // State variables
+        let temperature = 0.2; // 0 to 1
+        let isHighDensity = false; // false = Copper, true = Tungsten
+        let currentDriftVelocity = 0;
+        let instantPowerHeat = 0;
+
+        // UI Elements
+        const tempSlider = document.getElementById('temp-slider');
+        const tempValueDisplay = document.getElementById('temp-value');
+        const btnCopper = document.getElementById('mat-copper');
+        const btnIron = document.getElementById('mat-iron');
+        const driftDisplay = document.getElementById('drift-display');
+
+        // Graph Setup
+        const graphCanvas = document.getElementById('graph-canvas');
+        const gCtx = graphCanvas.getContext('2d');
+        const powerHistory = new Array(100).fill(0);
+
+        // --- Three.js Setup ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050510, 0.015);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
+        camera.position.set(0, 15, 45);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setClearColor(0x050510, 1);
+        container.appendChild(renderer.domElement);
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0x3b82f6, 1, 100);
+        pointLight.position.set(-20, 10, 10);
+        scene.add(pointLight);
+        const pointLight2 = new THREE.PointLight(0xf97316, 0.8, 100);
+        pointLight2.position.set(20, -10, 10);
+        scene.add(pointLight2);
+
+        // --- Scene Objects ---
+
+        // 1. 3D Wire Tube Wireframe
+        const tubeGeo = new THREE.CylinderGeometry(CONFIG.tubeRadius, CONFIG.tubeRadius, CONFIG.tubeLength, 16, 10, true);
+        tubeGeo.rotateZ(Math.PI / 2); // Lay flat along X axis
+        const tubeMat = new THREE.MeshBasicMaterial({
+            color: 0x475569,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.15
+        });
+        const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
+        scene.add(tubeMesh);
+
+        // Grid helpers for context
+        const grid = new THREE.GridHelper(100, 20, 0x1e293b, 0x1e293b);
+        grid.position.y = -CONFIG.tubeRadius - 2;
+        scene.add(grid);
+
+        // 2. Crystal Lattice Ions
+        let ions = [];
+        const ionGeo = new THREE.SphereGeometry(CONFIG.latticeSize / 2, 16, 16);
+        const ionMat = new THREE.MeshPhongMaterial({
+            color: 0x991b1b,
+            emissive: 0x450a0a,
+            shininess: 100
+        });
+
+        function buildLattice() {
+            // Remove old
+            ions.forEach(ion => scene.remove(ion.mesh));
+            ions = [];
+
+            // Spacing depends on material density
+            const spacingX = isHighDensity ? 6 : 10;
+            const spacingYZ = isHighDensity ? 5 : 7;
+
+            for (let x = -CONFIG.tubeLength / 2 + spacingX / 2; x < CONFIG.tubeLength / 2; x += spacingX) {
+                for (let y = -CONFIG.tubeRadius + 2; y < CONFIG.tubeRadius; y += spacingYZ) {
+                    for (let z = -CONFIG.tubeRadius + 2; z < CONFIG.tubeRadius; z += spacingYZ) {
+                        // Keep roughly inside the cylinder
+                        if (y * y + z * z < (CONFIG.tubeRadius - 1.5) ** 2) {
+                            const mesh = new THREE.Mesh(ionGeo, ionMat);
+                            mesh.position.set(x, y, z);
+                            scene.add(mesh);
+
+                            ions.push({
+                                mesh: mesh,
+                                baseX: x,
+                                baseY: y,
+                                baseZ: z,
+                                phase: Math.random() * Math.PI * 2, // Random vibration phase
+                                freq: 10 + Math.random() * 10
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        buildLattice();
+
+        // 3. Drifting Electrons
+        const electrons = [];
+        const electronGeo = new THREE.SphereGeometry(0.4, 8, 8);
+        const electronMat = new THREE.MeshPhongMaterial({
+            color: 0x60a5fa,
+            emissive: 0x2563eb,
+            emissiveIntensity: 0.8
+        });
+
+        for (let i = 0; i < CONFIG.electronCount; i++) {
+            const mesh = new THREE.Mesh(electronGeo, electronMat);
+
+            // Random start position inside tube
+            const r = Math.random() * (CONFIG.tubeRadius - 1);
+            const theta = Math.random() * Math.PI * 2;
+            const x = (Math.random() - 0.5) * CONFIG.tubeLength;
+            mesh.position.set(x, r * Math.cos(theta), r * Math.sin(theta));
+
+            scene.add(mesh);
+            electrons.push({
+                mesh: mesh,
+                vx: Math.random() * 0.5,
+                vy: (Math.random() - 0.5) * 0.2,
+                vz: (Math.random() - 0.5) * 0.2
+            });
+        }
+
+        // 4. Alpha-blended Orange Thermal Heat Waves (Object Pool)
+        const heatWaves = [];
+        const heatGeo = new THREE.SphereGeometry(1, 16, 16);
+        const heatMat = new THREE.MeshBasicMaterial({
+            color: 0xf97316,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        for (let i = 0; i < CONFIG.heatWavePoolSize; i++) {
+            const mesh = new THREE.Mesh(heatGeo, heatMat.clone());
+            mesh.visible = false;
+            scene.add(mesh);
+            heatWaves.push({ mesh: mesh, life: 0 });
+        }
+
+        function spawnHeatWave(position) {
+            instantPowerHeat += 1.5; // Spike power graph
+
+            // Find inactive wave
+            for (let i = 0; i < heatWaves.length; i++) {
+                if (heatWaves[i].life <= 0) {
+                    heatWaves[i].mesh.position.copy(position);
+                    heatWaves[i].mesh.visible = true;
+                    heatWaves[i].mesh.scale.set(1, 1, 1);
+                    heatWaves[i].mesh.material.opacity = 0.8;
+                    heatWaves[i].life = 1.0;
+                    break;
+                }
+            }
+        }
+
+        // --- Interactions ---
+
+        tempSlider.addEventListener('input', (e) => {
+            temperature = e.target.value / 100;
+            // Convert to a pseudo-Kelvin scale for visual flavor (300K to 1300K)
+            const k = Math.floor(300 + temperature * 1000);
+            tempValueDisplay.textContent = k + 'K';
+        });
+
+        btnCopper.addEventListener('click', () => {
+            isHighDensity = false;
+            btnCopper.classList.add('active');
+            btnIron.classList.remove('active');
+            buildLattice();
+        });
+
+        btnIron.addEventListener('click', () => {
+            isHighDensity = true;
+            btnIron.classList.add('active');
+            btnCopper.classList.remove('active');
+            buildLattice();
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Add subtle mouse rotation to tube
+        let targetRotX = 0;
+        let targetRotY = 0;
+        document.addEventListener('mousemove', (e) => {
+            targetRotY = (e.clientX - window.innerWidth / 2) * 0.001;
+            targetRotX = (e.clientY - window.innerHeight / 2) * 0.001;
+        });
+
+        // --- Graphing Logic ---
+        function updateGraph() {
+            // Calculate Resistance R (pseudo) based on density and temp
+            const R = (isHighDensity ? 2.0 : 1.0) * (1 + temperature * 2);
+            // I is proportional to drift velocity
+            const I = currentDriftVelocity;
+            // P = I^2 * R + instant collision spikes
+            let P = (I * I * R * 5) + instantPowerHeat;
+
+            // Decay instant heat
+            instantPowerHeat *= 0.8;
+
+            powerHistory.push(P);
+            powerHistory.shift();
+
+            // Draw
+            gCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            gCtx.beginPath();
+            gCtx.strokeStyle = '#f97316';
+            gCtx.lineWidth = 2;
+
+            const maxP = 20; // Scale max
+            const dx = graphCanvas.width / (powerHistory.length - 1);
+
+            for (let i = 0; i < powerHistory.length; i++) {
+                const x = i * dx;
+                const h = Math.min(powerHistory[i] / maxP, 1) * graphCanvas.height;
+                const y = graphCanvas.height - h;
+
+                if (i === 0) gCtx.moveTo(x, y);
+                else gCtx.lineTo(x, y);
+            }
+            gCtx.stroke();
+
+            // Fill area
+            gCtx.lineTo(graphCanvas.width, graphCanvas.height);
+            gCtx.lineTo(0, graphCanvas.height);
+            gCtx.fillStyle = 'rgba(249, 115, 22, 0.1)';
+            gCtx.fill();
+        }
+
+        // --- Animation Loop ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const dt = Math.min(clock.getDelta(), 0.1); // clamp dt
+            const time = clock.getElapsedTime();
+
+            // Subtle scene rotation
+            scene.rotation.x += (targetRotX - scene.rotation.x) * 0.1;
+            scene.rotation.y += (targetRotY - scene.rotation.y) * 0.1;
+
+            // 1. Animate Lattice Ions (Vibration)
+            // Amplitude depends on temperature
+            const vibAmp = 0.1 + (temperature * 1.5);
+            ions.forEach(ion => {
+                ion.mesh.position.x = ion.baseX + Math.sin(time * ion.freq + ion.phase) * vibAmp;
+                ion.mesh.position.y = ion.baseY + Math.cos(time * ion.freq * 0.8 + ion.phase) * vibAmp;
+                ion.mesh.position.z = ion.baseZ + Math.sin(time * ion.freq * 1.2 + ion.phase) * vibAmp;
+            });
+
+            // 2. Animate Electrons & Collisions
+            let totalDriftX = 0;
+
+            electrons.forEach(el => {
+                // Apply Electric Field Force (acceleration along +X)
+                el.vx += CONFIG.eFieldForce * dt * 60;
+
+                // Dampen y/z movement slightly to keep them flowing forward
+                el.vy *= 0.95;
+                el.vz *= 0.95;
+
+                // Move
+                el.mesh.position.x += el.vx * dt * 10;
+                el.mesh.position.y += el.vy * dt * 10;
+                el.mesh.position.z += el.vz * dt * 10;
+
+                // Restrict to tube boundary
+                const distFromCenter = Math.sqrt(el.mesh.position.y ** 2 + el.mesh.position.z ** 2);
+                if (distFromCenter > CONFIG.tubeRadius - 1) {
+                    // Bounce off wall
+                    const normalY = -el.mesh.position.y / distFromCenter;
+                    const normalZ = -el.mesh.position.z / distFromCenter;
+                    el.vy += normalY * 0.5;
+                    el.vz += normalZ * 0.5;
+                }
+
+                // Check Collisions with vibrating Ions
+                for (let i = 0; i < ions.length; i++) {
+                    const ion = ions[i];
+                    // Fast distance check (squared)
+                    const dx = el.mesh.position.x - ion.mesh.position.x;
+                    const dy = el.mesh.position.y - ion.mesh.position.y;
+                    const dz = el.mesh.position.z - ion.mesh.position.z;
+                    const distSq = dx * dx + dy * dy + dz * dz;
+
+                    if (distSq < CONFIG.collisionRadiusSq) {
+                        // SCATTERING COLLISION!
+                        // 1. Lose forward momentum (fade net drift velocity down)
+                        el.vx = -el.vx * 0.3; // bounce back slightly
+
+                        // 2. Deflect randomly
+                        const scatterForce = 1.0 + temperature;
+                        el.vy += (Math.random() - 0.5) * scatterForce;
+                        el.vz += (Math.random() - 0.5) * scatterForce;
+
+                        // 3. Spawn heat wave (transfer kinetic to thermal)
+                        spawnHeatWave(el.mesh.position);
+
+                        // Push slightly outside to prevent double-collision sticking
+                        el.mesh.position.x += dx * 0.5;
+                        break; // Only collide with one ion per frame
+                    }
+                }
+
+                // Limit max speed
+                const speedSq = el.vx * el.vx + el.vy * el.vy + el.vz * el.vz;
+                if (speedSq > CONFIG.maxSpeed ** 2) {
+                    const speed = Math.sqrt(speedSq);
+                    el.vx = (el.vx / speed) * CONFIG.maxSpeed;
+                    el.vy = (el.vy / speed) * CONFIG.maxSpeed;
+                    el.vz = (el.vz / speed) * CONFIG.maxSpeed;
+                }
+
+                // Wrap around if exiting right side of tube
+                if (el.mesh.position.x > CONFIG.tubeLength / 2) {
+                    el.mesh.position.x = -CONFIG.tubeLength / 2;
+                    // Keep existing velocity to represent continuous flow, or reset if desired.
+                }
+
+                totalDriftX += el.vx;
+            });
+
+            // Update average drift stats
+            const avgDrift = Math.max(0, totalDriftX / CONFIG.electronCount);
+            // Smooth the display value
+            currentDriftVelocity += (avgDrift - currentDriftVelocity) * 0.1;
+            driftDisplay.textContent = (currentDriftVelocity * 10).toFixed(2) + ' mm/s';
+
+            // 3. Animate Heat Waves
+            heatWaves.forEach(hw => {
+                if (hw.life > 0) {
+                    hw.life -= dt * 2.0; // fade out speed
+
+                    // Expand and fade
+                    const scale = 1 + (1 - hw.life) * 3; // grow up to 4x size
+                    hw.mesh.scale.set(scale, scale, scale);
+                    hw.mesh.material.opacity = hw.life * 0.8;
+
+                    if (hw.life <= 0) {
+                        hw.mesh.visible = false;
+                    }
+                }
+            });
+
+            updateGraph();
+
+            renderer.render(scene, camera);
+        }
+
+        // Start
+        animate();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lec 10 Sec 2 — The == Comparison Barrier</title>
+  
+  <!-- CDNs: Three.js, OrbitControls, KaTeX, Inter Font -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS Design Tokens & Glassmorphism Styles -->
+  <style>
+    :root {
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-size-body: 16px;
+      --font-size-caption: 14px;
+      --font-size-heading: 24px;
+      --font-size-title: 32px;
+      --line-height-body: 1.6;
+      --line-height-heading: 1.2;
+
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+
+      --radius-button: 14px;
+      --radius-card: 20px;
+      --radius-dialog: 24px;
+      --radius-badge: 999px;
+
+      --glass-bg: rgba(15, 18, 30, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-blur: 24px;
+      --glass-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+
+      --color-learning: #3b82f6;     /* Blue */
+      --color-success: #22c55e;      /* Green */
+      --color-attention: #f59e0b;    /* Orange */
+      --color-creative: #a855f7;     /* Purple */
+      --color-danger: #ef4444;       /* Red */
+      --color-focus: #eab308;        /* Yellow */
+      --color-programming: #06b6d4;  /* Cyan */
+
+      --layer-software: var(--color-learning);
+      --layer-ram: var(--color-creative);
+      --layer-cpu: var(--color-programming);
+      --layer-gpu: var(--color-success);
+      --layer-corrector: var(--color-danger);
+
+      --z-canvas: 0;
+      --z-interactive: 5;
+      --z-panel: 10;
+      --z-dialog: 20;
+      --z-alert: 30;
+      --z-tooltip: 40;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-body);
+      color: #f1f5f9;
+      background-color: #020617;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: var(--z-canvas);
+    }
+
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--glass-shadow);
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    header.glass-panel {
+      position: fixed;
+      top: var(--space-md);
+      left: var(--space-md);
+      right: var(--space-md);
+      height: 70px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-lg);
+    }
+
+    .header-title-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-breadcrumb {
+      font-size: var(--font-size-caption);
+      color: #94a3b8;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 180ms ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
+
+    .tab-bar.glass-panel {
+      position: fixed;
+      bottom: var(--space-md);
+      left: 50%;
+      transform: translateX(-50%);
+      height: 60px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-xs);
+      border-radius: var(--radius-button);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: calc(var(--radius-button) - 4px);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 250ms ease;
+    }
+
+    .tab-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+      border-bottom: 2px solid var(--layer-color, var(--color-learning));
+    }
+
+    .details-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      right: var(--space-md);
+      bottom: 90px;
+      width: 380px;
+      z-index: var(--z-panel);
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-lg);
+      overflow-y: auto;
+      max-width: calc(100vw - var(--space-lg) * 2);
+    }
+
+    .details-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .details-content {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .details-content p {
+      margin-bottom: var(--space-md);
+    }
+
+    .details-content code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: var(--color-programming);
+    }
+
+    .controls-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      left: var(--space-md);
+      width: 320px;
+      z-index: var(--z-panel);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .controls-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: var(--space-xs);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .control-label {
+      font-size: 14px;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: var(--radius-badge);
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .control-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-programming);
+      border: 2px solid #ffffff;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    #nav-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: var(--z-dialog);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 300ms ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #nav-drawer.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer-content.glass-panel {
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: var(--space-xl);
+      position: relative;
+    }
+
+    .drawer-close {
+      position: absolute;
+      top: var(--space-lg);
+      right: var(--space-lg);
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .drawer-close:hover {
+      color: #ffffff;
+    }
+
+    .drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .scene-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-button);
+      padding: var(--space-md);
+      text-decoration: none;
+      color: #cbd5e1;
+      transition: all 200ms ease;
+    }
+
+    .scene-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--color-programming);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      .details-panel.glass-panel, .controls-panel.glass-panel {
+        position: static;
+        width: 100%;
+        margin-top: var(--space-md);
+        bottom: auto;
+        height: auto;
+      }
+      .tab-bar.glass-panel {
+        position: static;
+        transform: none;
+        width: 100%;
+        margin-top: var(--space-md);
+        display: flex;
+        justify-content: space-around;
+        height: auto;
+        padding: var(--space-xs);
+      }
+      header.glass-panel {
+        position: static;
+        height: auto;
+        padding: var(--space-md);
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+      #mobile-layout-wrap {
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-md);
+        margin-top: 80px;
+        position: relative;
+        z-index: var(--z-panel);
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="canvas-container"></div>
+  
+  <div id="mobile-layout-wrap">
+    <header class="glass-panel">
+      <div class="header-title-section">
+        <span class="header-breadcrumb">Lecture 10 · Section 2</span>
+        <h1 class="header-title" id="scene-title">The == Comparison Barrier</h1>
+      </div>
+      <div class="header-nav">
+        <a class="nav-btn" href="lec10-sec1.html" id="prev-btn">← Prev</a>
+        <button class="nav-btn" id="menu-btn" aria-label="Open Navigation Hub">☰ Index</button>
+        <a class="nav-btn" href="index.html" id="next-btn">End →</a>
+      </div>
+    </header>
+
+    <section class="controls-panel glass-panel" aria-label="Scene Controls">
+      <h2 class="controls-title">Interactive Panel</h2>
+      <div class="control-group">
+        <div class="control-label">
+          <span>Operator Overload Status</span>
+          <span id="overload-val" style="color: var(--color-danger); font-weight: bold;">Missing (Default Error)</span>
+        </div>
+        <input type="range" class="control-slider" id="overload-slider" min="0" max="1" step="1" value="0" aria-label="Toggle operator overload status">
+      </div>
+      <div class="control-group">
+        <button class="nav-btn" id="trigger-btn" style="width: 100%; justify-content: center; font-weight: bold; background: rgba(239,68,68,0.2); border-color: var(--color-danger)">
+          Trigger Comparison Test
+        </button>
+      </div>
+    </section>
+
+    <main class="details-panel glass-panel" aria-label="Explanation Panel">
+      <h2 class="details-title" id="panel-layer-name">THE SOFTWARE LAYER</h2>
+      <div class="details-content" id="panel-dynamic-content"></div>
+    </main>
+
+    <nav class="tab-bar glass-panel" aria-label="Visual Layers Selection">
+      <button class="tab-btn active" data-tab="0" style="--layer-color: var(--layer-software)">Software</button>
+      <button class="tab-btn" data-tab="1" style="--layer-color: var(--layer-ram)">RAM Map</button>
+      <button class="tab-btn" data-tab="2" style="--layer-color: var(--layer-cpu)">CPU / RIP</button>
+      <button class="tab-btn" data-tab="3" style="--layer-color: var(--layer-gpu)">GPU FX</button>
+      <button class="tab-btn" data-tab="4" style="--layer-color: var(--layer-corrector)">Corrector</button>
+    </nav>
+  </div>
+
+  <div id="nav-drawer" role="dialog" aria-modal="true" aria-label="Interactive Navigation Grid">
+    <div class="drawer-content glass-panel">
+      <button class="drawer-close" id="drawer-close-btn" aria-label="Close index hub">×</button>
+      <h2 class="header-title" style="margin-bottom: var(--space-md);">All Visual Scenes</h2>
+      <div class="drawer-grid" id="drawer-scenes-grid">
+        <a class="scene-card" href="lec8-sec1.html">
+          <div style="font-size:12px;color:var(--color-programming)">Lec 8 · Sec 1</div>
+          <div style="font-weight:bold;color:#fff;margin:4px 0">Out-of-Order Declarations</div>
+        </a>
+        <a class="scene-card" href="lec8-sec2.html">
+          <div style="font-size:12px;color:var(--color-programming)">Lec 8 · Sec 2</div>
+          <div style="font-weight:bold;color:#fff;margin:4px 0">Local Stack Lifetimes</div>
+        </a>
+        <a class="scene-card" href="lec8-sec3.html">
+          <div style="font-size:12px;color:var(--color-programming)">Lec 8 · Sec 3</div>
+          <div style="font-weight:bold;color:#fff;margin:4px 0">Variable Shadowing Mask</div>
+        </a>
+        <a class="scene-card" href="lec8-sec4.html">
+          <div style="font-size:12px;color:var(--color-programming)">Lec 8 · Sec 4</div>
+          <div style="font-weight:bold;color:#fff;margin:4px 0">Explicit Scoping Operators</div>
+        </a>
+        <a class="scene-card" href="lec9-sec1.html">
+          <div style="font-size:12px;color:var(--color-programming)">Lec 9 · Sec 1</div>
+          <div style="font-weight:bold;color:#fff;margin:4px 0">PascalCase Class Formatting</div>
+        </a>
+        <a class="scene-card" href="lec9-sec2.html">
+          <div style="font-size:12px;color:var(--color-programming)">Lec 9 · Sec 2</div>
+          <div style="font-weight:bold;color:#fff;margin:4px 0">Standard Library Type Folders</div>
+        </a>
+        <a class="scene-card" href="lec10-sec1.html">
+          <div style="font-size:12px;color:var(--color-programming)">Lec 10 · Sec 1</div>
+          <div style="font-weight:bold;color:#fff;margin:4px 0">Object Assignment Duplicate</div>
+        </a>
+        <a class="scene-card" href="lec10-sec2.html">
+          <div style="font-size:12px;color:var(--color-programming)">Lec 10 · Sec 2</div>
+          <div style="font-weight:bold;color:#fff;margin:4px 0">The == Comparison Barrier</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class BaseGenerator {
+      constructor(scene) {
+        this.scene = scene;
+        this.meshes = [];
+        this.materials = [];
+        this.geometries = [];
+        this.activeLayer = 0;
+      }
+      create() {}
+      update(delta, speed) {}
+      transitionLayer(tabIndex) {
+        this.activeLayer = tabIndex;
+      }
+      handleInteraction(controlId, value) {}
+      dispose() {
+        this.meshes.forEach(mesh => this.scene.remove(mesh));
+        this.geometries.forEach(geo => geo.dispose());
+        this.materials.forEach(mat => mat.dispose());
+        this.meshes = [];
+        this.geometries = [];
+        this.materials = [];
+      }
+      smoothTransitionColor(material, targetHex, duration = 600) {
+        const startColor = material.color.clone();
+        const targetColor = new THREE.Color(targetHex);
+        const startTime = performance.now();
+        const animate = () => {
+          const elapsed = performance.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = progress < 0.5 
+            ? 2 * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+          material.color.lerpColors(startColor, targetColor, ease);
+          if (progress < 1) requestAnimationFrame(animate);
+        };
+        requestAnimationFrame(animate);
+      }
+    }
+
+    class ComparisonGenerator extends BaseGenerator {
+      create() {
+        this.isOverloaded = 0; // 0 = Missing (Error), 1 = Overloaded (Success)
+        this.state = 'idle'; // idle, comparing, reset
+        this.time = 0;
+
+        // Central Comparison Gate
+        const gateGeo = new THREE.RingGeometry(0.8, 1.0, 32);
+        this.gateMat = new THREE.MeshBasicMaterial({
+          color: 0xef4444,
+          transparent: true,
+          opacity: 0.8,
+          side: THREE.DoubleSide
+        });
+        this.comparisonGate = new THREE.Mesh(gateGeo, this.gateMat);
+        this.comparisonGate.rotation.y = Math.PI / 6;
+        this.scene.add(this.comparisonGate);
+        this.meshes.push(this.comparisonGate);
+        this.geometries.push(gateGeo);
+        this.materials.push(this.gateMat);
+
+        // Object A (Left)
+        const boxGeo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+        this.boxMatA = new THREE.MeshPhysicalMaterial({
+          color: 0x3b82f6,
+          roughness: 0.2,
+          transparent: true,
+          opacity: 0.9
+        });
+        this.objA = new THREE.Mesh(boxGeo, this.boxMatA);
+        this.objA.position.set(-3.0, 0, 0);
+        this.scene.add(this.objA);
+        this.meshes.push(this.objA);
+        this.geometries.push(boxGeo);
+        this.materials.push(this.boxMatA);
+
+        // Object B (Right)
+        this.boxMatB = new THREE.MeshPhysicalMaterial({
+          color: 0x06b6d4,
+          roughness: 0.2,
+          transparent: true,
+          opacity: 0.9
+        });
+        this.objB = new THREE.Mesh(boxGeo, this.boxMatB);
+        this.objB.position.set(3.0, 0, 0);
+        this.scene.add(this.objB);
+        this.meshes.push(this.objB);
+        this.materials.push(this.boxMatB);
+
+        // Alert Indicator Mesh (Flashes on Error)
+        const alertGeo = new THREE.ConeGeometry(0.4, 0.8, 4);
+        this.alertMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+        this.alertMesh = new THREE.Mesh(alertGeo, this.alertMat);
+        this.alertMesh.position.set(0, 1.5, 0);
+        this.alertMesh.visible = false;
+        this.scene.add(this.alertMesh);
+        this.meshes.push(this.alertMesh);
+        this.geometries.push(alertGeo);
+        this.materials.push(this.alertMat);
+
+        // Success Indicator Mesh (Flashes on Success)
+        const okGeo = new THREE.TorusGeometry(0.3, 0.08, 16, 100);
+        this.okMat = new THREE.MeshBasicMaterial({ color: 0x22c55e });
+        this.okMesh = new THREE.Mesh(okGeo, this.okMat);
+        this.okMesh.position.set(0, 1.5, 0);
+        this.okMesh.visible = false;
+        this.scene.add(this.okMesh);
+        this.meshes.push(this.okMesh);
+        this.geometries.push(okGeo);
+        this.materials.push(this.okMat);
+
+        // Grid
+        const gridHelper = new THREE.GridHelper(20, 20, 0x475569, 0x334155);
+        gridHelper.position.y = -1.5;
+        this.scene.add(gridHelper);
+        this.grid = gridHelper;
+      }
+
+      update(delta, speed) {
+        if (this.state === 'comparing') {
+          this.time += delta * speed * 1.2;
+
+          if (this.time < 0.5) {
+            // Slide towards gate
+            const t = this.time / 0.5;
+            this.objA.position.x = THREE.MathUtils.lerp(-3.0, -0.65, t);
+            this.objB.position.x = THREE.MathUtils.lerp(3.0, 0.65, t);
+          } else if (this.time < 0.75) {
+            // Impact moment
+            const t = (this.time - 0.5) / 0.25;
+            if (this.isOverloaded === 0) {
+              // Bounce back slightly and shake
+              const shake = Math.sin(this.time * 50) * 0.1;
+              this.objA.position.x = -0.65 + shake;
+              this.objB.position.x = 0.65 + shake;
+              this.gateMat.color.setHex(0xef4444);
+              this.alertMesh.visible = true;
+              this.alertMesh.rotation.y += delta * 5;
+            } else {
+              // Stand still and gate glows green
+              this.objA.position.x = -0.65;
+              this.objB.position.x = 0.65;
+              this.gateMat.color.setHex(0x22c55e);
+              this.okMesh.visible = true;
+              this.okMesh.rotation.y += delta * 5;
+            }
+          } else if (this.time < 1.3) {
+            // Reset position
+            const t = (this.time - 0.75) / 0.55;
+            this.objA.position.x = THREE.MathUtils.lerp(-0.65, -3.0, t);
+            this.objB.position.x = THREE.MathUtils.lerp(0.65, 3.0, t);
+            this.alertMesh.visible = false;
+            this.okMesh.visible = false;
+          } else {
+            this.state = 'idle';
+            this.time = 0;
+            // Restore default gate color
+            this.gateMat.color.setHex(this.isOverloaded === 0 ? 0xef4444 : 0x22c55e);
+          }
+        }
+      }
+
+      transitionLayer(tabIndex) {
+        super.transitionLayer(tabIndex);
+        switch (tabIndex) {
+          case 0:
+            this.smoothTransitionColor(this.boxMatA, '#3b82f6');
+            this.smoothTransitionColor(this.boxMatB, '#06b6d4');
+            break;
+          case 1:
+            this.smoothTransitionColor(this.boxMatA, '#a855f7');
+            this.smoothTransitionColor(this.boxMatB, '#c084fc');
+            break;
+          case 2:
+            this.smoothTransitionColor(this.boxMatA, '#0ea5e9');
+            this.smoothTransitionColor(this.boxMatB, '#38bdf8');
+            break;
+          case 3:
+            this.smoothTransitionColor(this.boxMatA, '#22c55e');
+            this.smoothTransitionColor(this.boxMatB, '#4ade80');
+            break;
+          case 4:
+            this.smoothTransitionColor(this.boxMatA, '#ef4444');
+            this.smoothTransitionColor(this.boxMatB, '#f87171');
+            break;
+        }
+      }
+
+      handleInteraction(controlId, value) {
+        if (controlId === 'overload') {
+          this.isOverloaded = value;
+          const label = document.getElementById('overload-val');
+          const btn = document.getElementById('trigger-btn');
+          if (value === 0) {
+            label.innerText = "Missing (Default Error)";
+            label.style.color = "var(--color-danger)";
+            this.gateMat.color.setHex(0xef4444);
+            btn.style.borderColor = "var(--color-danger)";
+            btn.style.background = "rgba(239,68,68,0.2)";
+          } else {
+            label.innerText = "Overloaded (Custom Success)";
+            label.style.color = "var(--color-success)";
+            this.gateMat.color.setHex(0x22c55e);
+            btn.style.borderColor = "var(--color-success)";
+            btn.style.background = "rgba(34,197,94,0.2)";
+          }
+        } else if (controlId === 'trigger') {
+          if (this.state === 'idle') {
+            this.state = 'comparing';
+            this.time = 0;
+          }
+        }
+      }
+
+      dispose() {
+        super.dispose();
+        if (this.grid) this.scene.remove(this.grid);
+      }
+    }
+
+    class SceneManager {
+      constructor(container) {
+        this.container = container;
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x020617);
+        this.scene.fog = new THREE.FogExp2(0x020617, 0.015);
+
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.container.appendChild(this.renderer.domElement);
+
+        this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 100);
+        this.camera.position.set(0, 2, 7.5);
+
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+
+        this.lights = new LightingManager(this.scene);
+        this.generator = new ComparisonGenerator(this.scene);
+        this.clock = new THREE.Clock();
+        this.animationFrameId = null;
+
+        this.onResize = this.onResize.bind(this);
+        window.addEventListener('resize', this.onResize);
+      }
+
+      init() {
+        this.lights.createStandardRig();
+        this.generator.create();
+        this.animate();
+      }
+
+      onResize() {
+        this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+      }
+
+      animate() {
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+        const delta = this.clock.getDelta();
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reducedMotion) {
+          this.generator.update(delta, window.app.speedMultiplier);
+        }
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+      }
+
+      dispose() {
+        cancelAnimationFrame(this.animationFrameId);
+        window.removeEventListener('resize', this.onResize);
+        this.generator.dispose();
+        this.lights.dispose();
+        this.controls.dispose();
+        this.renderer.dispose();
+        this.renderer.domElement.remove();
+      }
+    }
+
+    class LightingManager {
+      constructor(scene) {
+        this.scene = scene;
+        this.lights = [];
+      }
+      createStandardRig() {
+        const ambient = new THREE.AmbientLight(0xffffff, 0.2);
+        this.scene.add(ambient);
+        this.lights.push(ambient);
+
+        const key = new THREE.DirectionalLight(0xffffff, 0.85);
+        key.position.set(5, 8, 5);
+        this.scene.add(key);
+        this.lights.push(key);
+      }
+      dispose() {
+        this.lights.forEach(light => this.scene.remove(light));
+        this.lights = [];
+      }
+    }
+
+    class ApplicationManager {
+      constructor() {
+        this.speedMultiplier = 1.0;
+        this.sceneConfig = {
+          id: "lec10-sec2",
+          title: "The == Comparison Barrier",
+          layers: [
+            {
+              name: "THE SOFTWARE LAYER",
+              content: `<p>In C++, checking equality of complex objects using the default <code>==</code> operator is prohibited.</p>
+              <p>In this interactive exhibit, Object A and Object B move to collide at a comparison gate.
+              If the operator overload key is missing, they bounce off the gate, triggering a red warning sign. If overloaded, they pass validation checks successfully.</p>`
+            },
+            {
+              name: "THE MEMORY TOPOLOGY (RAM) LAYER",
+              content: `<p><strong>Raw Bit Layout Comparison:</strong> Memory addresses of separate object blocks are always different. Without an overloaded operator, the compiler refuses to automatically generate field-by-field memory comparison instructions.</p>
+              <p>Because class memory may contain padding bytes or pointers:
+              $$\\text{Size}_{padded} > \\text{Size}_{members}$$
+              A raw bit comparison would lead to inaccurate results or security issues, which is why C++ blocks this at the compiler level.</p>`
+            },
+            {
+              name: "THE CPU & REGISTERS LAYER",
+              content: `<p>If comparison syntax <code>a == b</code> is parsed, the compiler checks the namespace declarations for:
+              $$\\texttt{bool operator==(const ClassName&, const ClassName&)}$$
+              If missing, compilation fails immediately during semantic analysis. No registers or ALU logic are run on the CPU since binary generation is aborted.</p>`
+            },
+            {
+              name: "THE GPU / VRAM LAYER",
+              content: `<p>Object collision vectors are processed on the CPU. The compiler's check results update the color buffer (red/green) and triggers shaking vertex displacement shaders for error conditions in VRAM.</p>`
+            },
+            {
+              name: "UNDER-THE-HOOD CORRECTOR",
+              content: `<p><strong>Misconception Shattered:</strong> Students frequently assume that if assignment (<code>=</code>) works out-of-the-box (which it does, performing shallow member-wise copy), then equality checking (<code>==</code>) must also work out-of-the-box. C++ does NOT automatically generate comparison operators for custom types. Developers must explicitly define the comparison criteria.</p>`
+            }
+          ]
+        };
+      }
+
+      init() {
+        const canvasContainer = document.getElementById('canvas-container');
+        this.sceneManager = new SceneManager(canvasContainer);
+        this.sceneManager.init();
+        this.initEventListeners();
+        this.switchTab(0);
+        
+        window.addEventListener('beforeunload', () => {
+          this.sceneManager.dispose();
+        });
+      }
+
+      initEventListeners() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tabIdx = parseInt(btn.dataset.tab);
+            this.switchTab(tabIdx);
+          });
+        });
+
+        const slider = document.getElementById('speed-slider');
+        const speedVal = document.getElementById('speed-val');
+        if (slider) {
+          slider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            this.speedMultiplier = val;
+            speedVal.innerText = val.toFixed(1) + 'x';
+          });
+        }
+
+        const overloadSlider = document.getElementById('overload-slider');
+        if (overloadSlider) {
+          overloadSlider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            this.sceneManager.generator.handleInteraction('overload', val);
+          });
+        }
+
+        const triggerBtn = document.getElementById('trigger-btn');
+        if (triggerBtn) {
+          triggerBtn.addEventListener('click', () => {
+            this.sceneManager.generator.handleInteraction('trigger', null);
+          });
+        }
+
+        const menuBtn = document.getElementById('menu-btn');
+        const drawer = document.getElementById('nav-drawer');
+        const drawerClose = document.getElementById('drawer-close-btn');
+
+        if (menuBtn && drawer) {
+          menuBtn.addEventListener('click', () => drawer.classList.add('open'));
+        }
+        if (drawerClose && drawer) {
+          drawerClose.addEventListener('click', () => drawer.classList.remove('open'));
+        }
+
+        window.addEventListener('keydown', (e) => {
+          if (e.key >= '1' && e.key <= '5') {
+            const tabIdx = parseInt(e.key) - 1;
+            const btn = document.querySelector(`.tab-btn[data-tab="${tabIdx}"]`);
+            if (btn) btn.click();
+          }
+        });
+      }
+
+      switchTab(tabIdx) {
+        const layer = this.sceneConfig.layers[tabIdx];
+        document.getElementById('panel-layer-name').innerText = layer.name;
+        const contentContainer = document.getElementById('panel-dynamic-content');
+        contentContainer.innerHTML = layer.content;
+        if (window.renderMathInElement) {
+          renderMathInElement(contentContainer, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false }
+            ]
+          });
+        }
+        this.sceneManager.generator.transitionLayer(tabIdx);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.app = new ApplicationManager();
+      window.app.init();
+    });
+  </script>
+</body>
+</html>

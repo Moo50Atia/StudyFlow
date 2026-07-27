@@ -41,7 +41,7 @@ The orchestrator MUST execute in one of two modes, determined at launch:
 
 ---
 
-## 4. Pipeline Lifecycle
+### 4. Pipeline Lifecycle
 
 ```
 [ PDF Upload ] ──► Stage 1-2: Extract Text ──► Stage 3: OCR Detection
@@ -49,12 +49,17 @@ The orchestrator MUST execute in one of two modes, determined at launch:
    ┌───────────────────────────────────────────────┘
    ▼
 Stage 4: Chunk Text ──► Stage 5: Route Detection ──► Stage 6: Structure Mapping
-                                                          │
+                                                           │
           ┌───────────────────────────────────────────────┘
-          ├──────────► [ HIL Pause: Professor Review & Node Edit ]
+          ├──────────► [ HIL Pause 1: Professor Review & Structure Edit ]
           ▼
-Stage 7: Knowledge Graph ──► Stage 8: Question Ingest ──► Stage 9: Section Rewrite
-                                                              │
+Stage 7A: Knowledge Graph ──► Stage 7B: Knowledge Assets ──► Stage 7C: Hybrid Indexing
+                                                                    │
+          ┌─────────────────────────────────────────────────────────┘
+          ├──────────► [ HIL Pause 2: Professor Asset & Index Audit ]
+          ▼
+Stage 8: Question Ingest ──► Stage 9: Section Rewrite (KIE-Augmented)
+                                                               │
           ┌───────────────────────────────────────────────────┘
           ▼
 Stage 10: Validation ──► Stage 11: View Mapping ──► Stage 12: Scene Prompt Compile
@@ -122,16 +127,49 @@ Stage 10: Validation ──► Stage 11: View Mapping ──► Stage 12: Scene 
 * **Validation:** Asserts `page_start` <= `page_end` for every lesson node.
 * **Expected Logs:** Total chapters extracted, lesson mappings count.
 
-### Stage 7: Knowledge Graph Construction (`knowledge_graph`)
-* **Purpose:** Maps logical learning dependencies.
-* **Responsibilities:** Builds a conceptual dependency map, linking formulas, terms, and sections.
+### Stage 7A: Relationship Extraction & Graph Derivation (`knowledge_relationships`)
+* **Purpose:** Extract explicit typed relationships between concepts and derive the Knowledge Graph.
+* **Responsibilities:** Analyzes text chunks to map typed directional relationships (`DependsOn`, `Explains`, `References`, `UsesFormula`, `Generalizes`, `Specializes`, `AlternativeExplanation`, etc.) and dynamically builds the Knowledge Graph.
 * **Input:** `structure.json`, `extracted_text.txt`.
-* **Output:** `knowledge_graph.json`.
+* **Output:** `relationships.json`, `knowledge_graph.json`.
 * **Dependencies:** AI Client.
-* **Success Conditions:** Key terms and formulas are linked to lesson node IDs.
-* **Failure Conditions:** Circular dependencies found in graph nodes.
-* **Validation:** Asserts no isolated nodes without links.
-* **Expected Logs:** Total nodes and edges created.
+* **Success Conditions:** Typed relationships extracted and graph derived without orphaned circular locks.
+* **Failure Conditions:** Circular prerequisite locks found in relationship matrix.
+* **Validation:** Asserts graph nodes map to valid relationship declarations.
+* **Expected Logs:** Total relationships extracted by type, graph density metrics.
+
+### Stage 7B: Asset & Fragment Decomposition (`knowledge_assets`)
+* **Purpose:** Extract canonical Knowledge Assets and decompose them into Knowledge Fragments.
+* **Responsibilities:** Extracts typed Knowledge Assets (Definitions, Laws, Equations, Analogies, Cases) and splits them into atomic Knowledge Fragments (100–300 tokens) for vector embedding and BM25 indexing. See [21_KnowledgeIntelligenceSpecification.md](file:///d:/projects/laravel_projects/college_project/Conversations/21_KnowledgeIntelligenceSpecification.md).
+* **Input:** `extracted_text.txt`, `chunk_manifest.json`, `relationships.json`.
+* **Output:** `knowledge_assets.json`, `knowledge_fragments.json`.
+* **Dependencies:** AI Client, Knowledge Asset Schema (`KA-SCHEMA-2`), Knowledge Fragment Schema (`KF-SCHEMA-1`).
+* **Success Conditions:** Assets and Fragments pass JSON schema validation with 100% provenance tracking.
+* **Failure Conditions:** Fragments missing character offsets or parent asset UUIDs.
+* **Validation:** Asserts 100% of fragments carry valid `embedding_checksum` placeholders.
+* **Expected Logs:** Total assets and fragments extracted.
+
+### Stage 7C: Hybrid Indexing & Registries Build (`knowledge_index`)
+* **Purpose:** Compute vector embeddings, build search indices, and record Registries for KIE.
+* **Responsibilities:** Computes dense vector embeddings for Knowledge Fragments, generates sparse BM25 indices, and writes `embedding_registry.json` and `index_registry.json`.
+* **Input:** `knowledge_assets.json`, `knowledge_fragments.json`, `knowledge_graph.json`.
+* **Output:** `vector_index.bin`, `bm25_index.json`, `embedding_registry.json`, `index_registry.json`.
+* **Dependencies:** Embedding Client, BM25 Indexer Engine.
+* **Success Conditions:** Multi-representation indices and registries built and saved to material artifact directory.
+* **Failure Conditions:** Vector count mismatch against total PUBLISHED fragments.
+* **Validation:** Asserts checksums in `index_registry.json` match generated index files.
+* **Expected Logs:** Embedding generation latency, index size in MB.
+
+### Stage 7D: Asynchronous Background Queue Dispatch (`background_dispatch`)
+* **Purpose:** Dispatch long-running synthesis jobs to asynchronous background workers.
+* **Responsibilities:** Pushes background jobs (`EmbeddingWorker`, `PodcastWorker`, `FlashcardWorker`, `ValidationWorker`) to Laravel Queue workers for background synthesis and pre-caching.
+* **Input:** `knowledge_assets.json`, `index_registry.json`.
+* **Output:** `queue_dispatch_manifest.json`.
+* **Dependencies:** Laravel Queue Worker Subsystem.
+* **Success Conditions:** Asynchronous jobs successfully queued with status `DISPATCHED`.
+* **Failure Conditions:** Queue connection timeout or job payload failure.
+* **Validation:** Asserts job UUIDs recorded in queue dispatch manifest.
+* **Expected Logs:** Total jobs queued by worker type.
 
 ### Stage 8: Question Extraction (`questions`)
 * **Purpose:** Extract practice check questions.
@@ -145,9 +183,15 @@ Stage 10: Validation ──► Stage 11: View Mapping ──► Stage 12: Scene 
 * **Expected Logs:** Total questions parsed.
 
 ### Stage 9: Section Generation (`sections`)
-* **Purpose:** Restructure lesson contents into detailed, localized sections.
-* **Responsibilities:** Rewrites content into visual explanations, core concepts, concept checks, and **Egyptian Arabic analogies**.
-* **Input:** `structure.json`, `extracted_text.txt`, `knowledge_graph.json`, `questions.json`.
+* **Purpose:** Restructure lesson contents into detailed, localized sections using KIE Knowledge Assets.
+* **Responsibilities:** Queries the Knowledge Intelligence Engine to rewrite content into visual explanations, core concepts, concept checks, and **Egyptian Arabic analogies** using canonical Knowledge Assets.
+* **Input:** `structure.json`, `knowledge_assets.json`, `knowledge_graph.json`, `questions.json`.
+* **Output:** `sections.json`.
+* **Dependencies:** KIE Retrieval Orchestrator, AI Client, Route templates.
+* **Success Conditions:** Complete pedagogical re-writes generated for all lessons using verified assets.
+* **Failure Conditions:** Crucial textbook details omitted or un-anchored concepts introduced.
+* **Validation:** Asserts `arabic_explanation` is populated for every section and backed by KIE asset provenance.
+* **Expected Logs:** Sections generated per lesson, KIE asset retrieval counts.dge_graph.json`, `questions.json`.
 * **Output:** `sections.json`.
 * **Dependencies:** AI Client, Route templates.
 * **Success Conditions:** Complete pedagogical re-writes generated for all lessons.

@@ -1,0 +1,69 @@
+{
+  "ContentForFunding": {
+    "Universities": {
+      "Why": "Partnerships",
+      "Priority": "Critical",
+      "Category_For_Company": ["Research Project"],
+      "Entities": [
+        {
+          "Name": "Cairo University",
+          "Category": "Universities",
+          "Category_For_Company": ["Research Project"],
+          "Priority": "Critical",
+          "Country": "Egypt",
+          "City": "Giza",
+          "Official_Website": "https://cu.edu.eg",
+          "Official_Email": "info@cu.edu.eg",
+          "LinkedIn": "https://linkedin.com/school/cairo-university",
+          "Phone": "+20235676105",
+          "Description": "Cairo University description detailing research partnership options."
+        },
+        {
+          "Name": "cairo university",
+          "Category": "Universities",
+          "Category_For_Company": ["Research Project"],
+          "Priority": "Critical",
+          "Country": "Egypt",
+          "City": "Giza",
+          "Official_Website": "http://www.CU.edu.eg/",
+          "Official_Email": "info2@cu.edu.eg",
+          "LinkedIn": "https://linkedin.com/school/cairo-university-2",
+          "Phone": "+20235676106",
+          "Description": "Cairo University duplicate detailing research partnership options."
+        },
+        {
+          "Name": "Corp",
+          "Category": "Universities",
+          "Category_For_Company": ["Research Project"],
+          "Priority": "Critical",
+          "Country": "Egypt",
+          "City": "Giza",
+          "Official_Website": "https://corp-domain.eg",
+          "Official_Email": "info@corp.eg",
+          "LinkedIn": "https://linkedin.com/school/corp-linkedin",
+          "Phone": "+20235676107",
+          "Description": "This name normalizes to empty."
+        },
+        {
+          "Name": "Company",
+          "Category": "Universities",
+          "Category_For_Company": ["Research Project"],
+          "Priority": "Critical",
+          "Country": "Egypt",
+          "City": "Giza",
+          "Official_Website": "https://company-domain.eg",
+          "Official_Email": "info@company.eg",
+          "LinkedIn": "https://linkedin.com/school/company-linkedin",
+          "Phone": "+20235676108",
+          "Description": "This name also normalizes to empty."
+        }
+      ]
+    },
+    "Government": {
+      "Why": "Grants",
+      "Priority": "Critical",
+      "Structure": {},
+      "Entities": []
+    }
+  }
+}

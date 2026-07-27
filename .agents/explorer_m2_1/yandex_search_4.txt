@@ -1,0 +1,8 @@
+Please confirm that you are not a robot
+We're sorry, but it looks like requests sent from your device are automated.   Why might this happen?
+I'm not a robot 
+Press to continue
+Yandex SmartCaptcha
+If you have any problems, please use the feedback form
+If you need to automatically set Search queries, use Yandex Search API v2
+9051542484131429133:1784145940

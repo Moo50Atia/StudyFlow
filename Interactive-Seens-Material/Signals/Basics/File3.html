@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structural Capacitance Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050a0f;
+            color: white;
+            font-family: sans-serif;
+            user-select: none;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .interactive {
+            pointer-events: auto;
+        }
+
+        /* Math Equation Styling */
+        .math-eq {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 1.8rem;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8em;
+            margin: 0 0.2rem;
+        }
+
+        .fraction>span {
+            padding: 0 0.1rem;
+        }
+
+        .fraction .numerator {
+            border-bottom: 2px solid white;
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: rgba(10, 15, 25, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #00ffff;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 10px #00ffff;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #334155;
+            border-radius: 2px;
+        }
+
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 3D Scene Container -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay Layer -->
+    <div id="ui-layer">
+
+        <!-- Top Section: Info & Math -->
+        <div class="flex justify-between items-start w-full">
+            <div class="glass-panel max-w-xl">
+                <h1 class="text-3xl font-bold text-cyan-400 mb-2 tracking-wide">Geometric Capacitance</h1>
+                <p class="text-sm text-gray-300 leading-relaxed mb-4">
+                    This visualization corrects a common misconception: Capacitance is <strong
+                        class="text-white">not</strong> determined by the instantaneous charge ($Q$) or applied voltage
+                    ($V$). Instead, it is a <span class="font-bold text-cyan-300">purely structural, geometric
+                        property</span> of a component.
+                </p>
+                <div
+                    class="bg-black/50 p-4 rounded-lg border border-gray-700 flex items-center justify-center mb-2 shadow-inner">
+                    <div class="math-eq text-yellow-300">
+                        C =
+                        <div class="fraction">
+                            <span class="numerator">κ ε<sub class="text-[0.6em]">0</sub> A</span>
+                            <span>d</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 text-center uppercase tracking-widest">A = Area (Constant) | d =
+                    Distance | κ = Dielectric</p>
+            </div>
+
+            <!-- Capacitance Gauge -->
+            <div class="glass-panel flex flex-col items-center justify-end h-64 w-24">
+                <div class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-3 text-center">
+                    Capacity<br><span class="text-[10px] normal-case font-normal">(C)</span></div>
+                <div
+                    class="w-10 flex-grow bg-gray-900 rounded-full overflow-hidden border border-gray-700 relative shadow-inner">
+                    <div id="capacityBar"
+                        class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-emerald-600 to-emerald-300 transition-all duration-100 shadow-[0_0_15px_rgba(52,211,153,0.8)]"
+                        style="height: 10%;"></div>
+                </div>
+                <div id="capacityVal"
+                    class="mt-3 text-sm font-mono text-emerald-300 font-bold bg-black/50 px-2 py-1 rounded">1.0 C₀</div>
+            </div>
+        </div>
+
+        <!-- Bottom Section: Controls -->
+        <div class="flex justify-center items-end w-full mb-4">
+            <div class="glass-panel w-full max-w-3xl flex gap-8 interactive">
+
+                <!-- Distance Slider -->
+                <div class="flex-1">
+                    <label class="flex justify-between text-sm font-bold text-gray-300 mb-2 tracking-wide uppercase">
+                        <span>Plate Distance (d)</span>
+                        <span id="dLabel" class="text-cyan-400 font-mono">10.0 mm</span>
+                    </label>
+                    <input type="range" id="distanceSlider" min="2" max="10" step="0.1" value="10">
+                    <p class="text-[10px] text-gray-500 mt-2">Decreasing structural distance exponentially increases the
+                        density of charge storage planes.</p>
+                </div>
+
+                <!-- Dielectric Slider -->
+                <div class="flex-1">
+                    <label class="flex justify-between text-sm font-bold text-gray-300 mb-2 tracking-wide uppercase">
+                        <span>Dielectric Insertion (κ)</span>
+                        <span id="kLabel" class="text-emerald-400 font-mono">0%</span>
+                    </label>
+                    <input type="range" id="dielectricSlider" min="0" max="1" step="0.01" value="0">
+                    <p class="text-[10px] text-gray-500 mt-2">Gliding a dielectric block into the gap structurally
+                        polarizes the vacuum, multiplying capacitance.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. THREE.JS SCENE SETUP
+        // ==========================================
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050a0f, 0.015);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 15, 35);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Lighting for Metallic look
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        dirLight.position.set(10, 20, 10);
+        scene.add(dirLight);
+        const pointLight = new THREE.PointLight(0x00ffff, 0.5, 50);
+        pointLight.position.set(0, 0, 0);
+        scene.add(pointLight);
+
+        // ==========================================
+        // 2. GEOMETRY & MATERIALS
+        // ==========================================
+        const plateSize = 20;
+        const plateThickness = 0.5;
+
+        // Metallic Plates
+        const plateGeo = new THREE.BoxGeometry(plateSize, plateThickness, plateSize);
+        const plateMat = new THREE.MeshStandardMaterial({
+            color: 0xaaaaaa,
+            metalness: 1.0,
+            roughness: 0.2,
+            envMapIntensity: 1.0
+        });
+
+        const topPlate = new THREE.Mesh(plateGeo, plateMat);
+        const bottomPlate = new THREE.Mesh(plateGeo, plateMat);
+        scene.add(topPlate);
+        scene.add(bottomPlate);
+
+        // Dielectric Block (Glass-like)
+        const dielectricGeo = new THREE.BoxGeometry(1, 1, plateSize);
+        // Using PhysicalMaterial for glass transmission effect
+        const dielectricMat = new THREE.MeshPhysicalMaterial({
+            color: 0x44ff88,
+            metalness: 0.1,
+            roughness: 0.1,
+            transmission: 0.8, // glass-like
+            opacity: 1,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        const dielectricBlock = new THREE.Mesh(dielectricGeo, dielectricMat);
+        scene.add(dielectricBlock);
+
+        // ==========================================
+        // 3. CHARGE SPHERES (Instanced Meshes)
+        // ==========================================
+        // Using InstancedMesh for performance to render hundreds of charges
+        const maxCharges = 400; // 20x20 grid max
+        const chargeGeo = new THREE.SphereGeometry(0.25, 16, 16);
+
+        // Positive charges (Red)
+        const posMat = new THREE.MeshBasicMaterial({ color: 0xff3333 });
+        const posCharges = new THREE.InstancedMesh(chargeGeo, posMat, maxCharges);
+        scene.add(posCharges);
+
+        // Negative charges (Blue)
+        const negMat = new THREE.MeshBasicMaterial({ color: 0x3388ff });
+        const negCharges = new THREE.InstancedMesh(chargeGeo, negMat, maxCharges);
+        scene.add(negCharges);
+
+        // ==========================================
+        // 4. ELECTRIC FIELD VECTORS (Instanced Lines)
+        // ==========================================
+        const eFieldGroup = new THREE.Group();
+        scene.add(eFieldGroup);
+
+        const maxLines = 200;
+        const lines = [];
+        const lineGeo = new THREE.CylinderGeometry(0.05, 0.05, 1, 8);
+        const lineMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+
+        for (let i = 0; i < maxLines; i++) {
+            const line = new THREE.Mesh(lineGeo, lineMat);
+            eFieldGroup.add(line);
+            lines.push(line);
+        }
+
+        // ==========================================
+        // 5. INTERACTIVE LOGIC & PHYSICS MAPPING
+        // ==========================================
+        const distanceSlider = document.getElementById('distanceSlider');
+        const dielectricSlider = document.getElementById('dielectricSlider');
+        const dLabel = document.getElementById('dLabel');
+        const kLabel = document.getElementById('kLabel');
+        const capacityBar = document.getElementById('capacityBar');
+        const capacityVal = document.getElementById('capacityVal');
+
+        let currentD = parseFloat(distanceSlider.value);
+        let currentK = parseFloat(dielectricSlider.value); // 0 to 1 scale for insertion
+
+        const DIELECTRIC_CONSTANT = 5.0; // The multiplier kappa when fully inserted
+
+        function updateScene() {
+            // Read inputs
+            currentD = parseFloat(distanceSlider.value);
+            currentK = parseFloat(dielectricSlider.value);
+
+            // Update UI Labels
+            dLabel.innerText = `${currentD.toFixed(1)} mm`;
+            kLabel.innerText = `${Math.round(currentK * 100)}%`;
+
+            // Calculate Capacitance: C is proportional to A/d. 
+            // Dielectric insertion linearly blends between air (k=1) and material (k=5)
+            // Normalized Base Capacitance = 1 / d (scaled for our sliders where min d=2, max d=10)
+            // Let's establish a base C0 when d=10, k=0 (insertion=0%)
+            const baseC = 10 / currentD;
+            const effectiveKappa = 1 + (currentK * (DIELECTRIC_CONSTANT - 1));
+            const totalCapacitance = baseC * effectiveKappa;
+
+            // Update Gauge (Max theoretical is d=2, k=1 -> baseC=5 * 5 = 25)
+            const maxC = 25;
+            let barPercentage = (totalCapacitance / maxC) * 100;
+            capacityBar.style.height = `${barPercentage}%`;
+            capacityVal.innerText = `${totalCapacitance.toFixed(1)} C₀`;
+
+            // Visual Update: Plates
+            topPlate.position.y = currentD / 2;
+            bottomPlate.position.y = -currentD / 2;
+
+            // Visual Update: Dielectric Block
+            if (currentK > 0) {
+                dielectricBlock.visible = true;
+                const insertedWidth = plateSize * currentK;
+                // Scale width based on insertion
+                dielectricBlock.scale.set(insertedWidth, currentD - plateThickness - 0.2, 1);
+                // Slide in from the left (-X) to center
+                dielectricBlock.position.x = (-plateSize / 2) + (insertedWidth / 2);
+                dielectricBlock.position.y = 0;
+            } else {
+                dielectricBlock.visible = false;
+            }
+
+            // Visual Update: Charge Packing Density (Amount of spheres)
+            // We map totalCapacitance (1 to 25) to maxCharges (0 to 400)
+            const activeCharges = Math.min(maxCharges, Math.max(16, Math.floor((totalCapacitance / maxC) * maxCharges)));
+
+            const dummy = new THREE.Object3D();
+            let chargeCount = 0;
+
+            // Grid layout for charges
+            const gridSize = Math.ceil(Math.sqrt(activeCharges));
+            const spacing = plateSize / gridSize;
+
+            for (let i = 0; i < maxCharges; i++) {
+                if (i < activeCharges) {
+                    const row = Math.floor(i / gridSize);
+                    const col = i % gridSize;
+                    // Distribute across the plate area with slight random jitter for organic feel
+                    const x = (-plateSize / 2 + spacing / 2) + (col * spacing) + (Math.random() * 0.2 - 0.1);
+                    const z = (-plateSize / 2 + spacing / 2) + (row * spacing) + (Math.random() * 0.2 - 0.1);
+
+                    // Position Top (+)
+                    dummy.position.set(x, currentD / 2 + plateThickness / 2 + 0.15, z);
+                    dummy.scale.set(1, 1, 1);
+                    dummy.updateMatrix();
+                    posCharges.setMatrixAt(i, dummy.matrix);
+
+                    // Position Bottom (-)
+                    dummy.position.set(x, -currentD / 2 - plateThickness / 2 - 0.15, z);
+                    dummy.updateMatrix();
+                    negCharges.setMatrixAt(i, dummy.matrix);
+                } else {
+                    // Hide unused instances
+                    dummy.scale.set(0, 0, 0);
+                    dummy.updateMatrix();
+                    posCharges.setMatrixAt(i, dummy.matrix);
+                    negCharges.setMatrixAt(i, dummy.matrix);
+                }
+            }
+            posCharges.instanceMatrix.needsUpdate = true;
+            negCharges.instanceMatrix.needsUpdate = true;
+
+            // Visual Update: E-Field Vectors
+            const activeLines = Math.min(maxLines, Math.max(10, Math.floor((totalCapacitance / maxC) * maxLines)));
+            const lineGridSize = Math.ceil(Math.sqrt(activeLines));
+            const lineSpacing = plateSize / lineGridSize;
+
+            let lineCount = 0;
+            for (let i = 0; i < maxLines; i++) {
+                if (i < activeLines) {
+                    const row = Math.floor(i / lineGridSize);
+                    const col = i % lineGridSize;
+
+                    const x = (-plateSize / 2 + lineSpacing / 2) + (col * lineSpacing);
+                    const z = (-plateSize / 2 + lineSpacing / 2) + (row * lineSpacing);
+
+                    // Determine if this line goes through the dielectric
+                    const isInsideDielectric = (x <= dielectricBlock.position.x + dielectricBlock.scale.x / 2) && currentK > 0;
+
+                    lines[i].visible = true;
+                    lines[i].position.set(x, 0, z);
+                    // Scale cylinder height to match distance between plates
+                    lines[i].scale.set(1, currentD - plateThickness, 1);
+
+                    // Change color/brightness if passing through dielectric
+                    if (isInsideDielectric) {
+                        lines[i].material.color.setHex(0x44ff88); // Greenish inside dielectric
+                        lines[i].material.opacity = 0.8;
+                    } else {
+                        lines[i].material.color.setHex(0x00ffff); // Cyan outside
+                        lines[i].material.opacity = 0.4;
+                    }
+                } else {
+                    lines[i].visible = false;
+                }
+            }
+        }
+
+        // Event Listeners for interactive sliders
+        distanceSlider.addEventListener('input', updateScene);
+        dielectricSlider.addEventListener('input', updateScene);
+
+        // Interactive Camera Rotation based on Mouse
+        let mouseX = 0, mouseY = 0;
+        let targetRotX = 0, targetRotY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            // Only rotate if hovering over the canvas area, not the UI controls
+            if (event.target.tagName !== 'INPUT') {
+                mouseX = (event.clientX - windowHalfX);
+                mouseY = (event.clientY - windowHalfY);
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Initialize scene state
+        updateScene();
+
+        // Animation Loop
+        const sceneGroup = new THREE.Group();
+        sceneGroup.add(topPlate);
+        sceneGroup.add(bottomPlate);
+        sceneGroup.add(dielectricBlock);
+        sceneGroup.add(posCharges);
+        sceneGroup.add(negCharges);
+        sceneGroup.add(eFieldGroup);
+        scene.add(sceneGroup);
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Smooth subtle scene rotation mapping to mouse
+            targetRotY = mouseX * 0.001;
+            targetRotX = mouseY * 0.001;
+
+            sceneGroup.rotation.y += (targetRotY - sceneGroup.rotation.y) * 0.05;
+            sceneGroup.rotation.x += (targetRotX - sceneGroup.rotation.x) * 0.05;
+
+            // Limit X rotation so we don't flip upside down
+            sceneGroup.rotation.x = Math.max(-0.5, Math.min(0.5, sceneGroup.rotation.x));
+
+            // Slowly animate E-field vectors moving vertically to simulate energy flow/tension
+            const time = Date.now() * 0.001;
+            lines.forEach((line, index) => {
+                if (line.visible) {
+                    // Pulsating opacity effect
+                    const pulse = Math.sin(time * 5 + index) * 0.2 + 0.8;
+                    // base opacity is set in updateScene based on location
+                    const baseOp = line.material.color.getHex() === 0x44ff88 ? 0.8 : 0.4;
+                    line.material.opacity = baseOp * pulse;
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>

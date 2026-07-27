@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lec 2 Sec 3 — Encapsulation Barriers</title>
+  
+  <!-- CDNs: Three.js, OrbitControls, KaTeX, Inter Font -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS Design Tokens & Glassmorphism Styles -->
+  <style>
+    :root {
+      /* Typography */
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-size-body: 16px;
+      --font-size-caption: 14px;
+      --font-size-heading: 24px;
+      --font-size-title: 32px;
+      --line-height-body: 1.6;
+      --line-height-heading: 1.2;
+
+      /* Spacing Scale */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+
+      /* Border Radius */
+      --radius-button: 14px;
+      --radius-card: 20px;
+      --radius-dialog: 24px;
+      --radius-badge: 999px;
+
+      /* Glassmorphism Design System (VisionOS Style) */
+      --glass-bg: rgba(15, 18, 30, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-blur: 24px;
+      --glass-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+
+      /* Semantic Colors */
+      --color-learning: #3b82f6;     /* Blue */
+      --color-success: #22c55e;      /* Green */
+      --color-attention: #f59e0b;    /* Orange */
+      --color-creative: #a855f7;     /* Purple */
+      --color-danger: #ef4444;       /* Red */
+      --color-focus: #eab308;        /* Yellow */
+      --color-programming: #06b6d4;  /* Cyan */
+
+      /* Z-Index Layers */
+      --z-canvas: 0;
+      --z-interactive: 5;
+      --z-panel: 10;
+      --z-dialog: 20;
+      --z-alert: 30;
+      --z-tooltip: 40;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-body);
+      color: #f1f5f9;
+      background-color: #020617;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: var(--z-canvas);
+    }
+
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--glass-shadow);
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    header.glass-panel {
+      position: fixed;
+      top: var(--space-md);
+      left: var(--space-md);
+      right: var(--space-md);
+      height: 70px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-lg);
+    }
+
+    .header-title-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-breadcrumb {
+      font-size: var(--font-size-caption);
+      color: #94a3b8;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 180ms ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
+
+    .tab-bar.glass-panel {
+      position: fixed;
+      bottom: var(--space-md);
+      left: 50%;
+      transform: translateX(-50%);
+      height: 60px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-xs);
+      border-radius: var(--radius-button);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: calc(var(--radius-button) - 4px);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 250ms ease;
+    }
+
+    .tab-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+      border-bottom: 2px solid var(--layer-color, var(--color-learning));
+    }
+
+    .details-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      right: var(--space-md);
+      bottom: 90px;
+      width: 380px;
+      z-index: var(--z-panel);
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-lg);
+      overflow-y: auto;
+      max-width: calc(100vw - var(--space-lg) * 2);
+    }
+
+    .details-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .details-content {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .details-content p {
+      margin-bottom: var(--space-md);
+    }
+
+    .details-content code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+      color: #e2e8f0;
+    }
+
+    .controls-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      left: var(--space-md);
+      width: 320px;
+      z-index: var(--z-panel);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .controls-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: var(--space-xs);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .control-label {
+      font-size: 14px;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: var(--radius-badge);
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .control-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-programming);
+      border: 2px solid #ffffff;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .control-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .interactive-btn {
+      background: var(--color-learning);
+      border: none;
+      color: white;
+      padding: 10px 12px;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 150ms ease;
+      text-align: center;
+    }
+
+    .interactive-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    #nav-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: var(--z-dialog);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 300ms ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #nav-drawer.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer-content.glass-panel {
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: var(--space-xl);
+      position: relative;
+    }
+
+    .drawer-close {
+      position: absolute;
+      top: var(--space-lg);
+      right: var(--space-lg);
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .drawer-close:hover {
+      color: #ffffff;
+    }
+
+    .drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .scene-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-button);
+      padding: var(--space-md);
+      text-decoration: none;
+      color: #cbd5e1;
+      transition: all 200ms ease;
+    }
+
+    .scene-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--color-programming);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      .details-panel.glass-panel, .controls-panel.glass-panel {
+        position: static;
+        width: 100%;
+        margin-top: var(--space-md);
+        bottom: auto;
+        height: auto;
+      }
+      .tab-bar.glass-panel {
+        position: static;
+        transform: none;
+        width: 100%;
+        margin-top: var(--space-md);
+        display: flex;
+        justify-content: space-around;
+        height: auto;
+        padding: var(--space-xs);
+      }
+      header.glass-panel {
+        position: static;
+        height: auto;
+        padding: var(--space-md);
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+      #mobile-layout-wrap {
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-md);
+        margin-top: 80px;
+        position: relative;
+        z-index: var(--z-panel);
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="canvas-container"></div>
+  
+  <div id="mobile-layout-wrap">
+    
+    <header class="glass-panel">
+      <div class="header-title-section">
+        <span class="header-breadcrumb">Lecture 2 · Section 3</span>
+        <h1 class="header-title" id="scene-title">Encapsulation Barriers</h1>
+      </div>
+      <div class="header-nav">
+        <a class="nav-btn" href="lec2-sec2.html" id="prev-btn">← Prev</a>
+        <button class="nav-btn" id="menu-btn" aria-label="Open Navigation Hub">Index Hub ☰</button>
+        <a class="nav-btn" href="lec3-sec1.html" id="next-btn">Next →</a>
+      </div>
+    </header>
+
+    <section class="controls-panel glass-panel" aria-label="Scene Controls">
+      <h2 class="controls-title">Access Signals</h2>
+      
+      <div class="control-group">
+        <div class="control-label">
+          <span>Signal Speed</span>
+          <span id="speed-val">1.0x</span>
+        </div>
+        <input type="range" class="control-slider" id="speed-slider" min="0.2" max="2.5" step="0.1" value="1.0" aria-label="Adjust signal speed">
+      </div>
+
+      <div class="control-group" style="margin-top: 10px; gap: 8px;">
+        <button class="interactive-btn" id="auth-btn">Authorized Public Access</button>
+        <button class="interactive-btn" id="unauth-btn" style="background-color: var(--color-danger);">Unauthorized Direct Access</button>
+      </div>
+    </section>
+
+    <main class="details-panel glass-panel" aria-label="Explanation Panel">
+      <h2 class="details-title" id="panel-layer-name">THE SOFTWARE LAYER</h2>
+      <div class="details-content" id="panel-dynamic-content">
+        <!-- Loaded dynamically -->
+      </div>
+    </main>
+
+    <nav class="tab-bar glass-panel" aria-label="Visual Layers Selection">
+      <button class="tab-btn active" data-tab="0" style="--layer-color: var(--color-learning)">Software</button>
+      <button class="tab-btn" data-tab="1" style="--layer-color: var(--color-creative)">RAM Map</button>
+      <button class="tab-btn" data-tab="2" style="--layer-color: var(--color-programming)">CPU / RIP</button>
+      <button class="tab-btn" data-tab="3" style="--layer-color: var(--color-success)">GPU FX</button>
+      <button class="tab-btn" data-tab="4" style="--layer-color: var(--color-danger)">Corrector</button>
+    </nav>
+    
+  </div>
+
+  <div id="nav-drawer" role="dialog" aria-modal="true" aria-label="Interactive Navigation Grid">
+    <div class="drawer-content glass-panel">
+      <button class="drawer-close" id="drawer-close-btn" aria-label="Close index hub">×</button>
+      <h2 class="header-title" style="margin-bottom: var(--space-md); text-align: center;">All Visual Scenes</h2>
+      <div class="drawer-grid" id="drawer-scenes-grid">
+        <!-- Loaded dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ----------------------------------------------------
+    // BASE 3D CONTENT GENERATOR (ABSTRACT)
+    // ----------------------------------------------------
+    class BaseGenerator {
+      constructor(scene) {
+        this.scene = scene;
+        this.meshes = [];
+        this.materials = [];
+        this.geometries = [];
+        this.activeLayer = 0;
+      }
+
+      create() {}
+      update(delta, speed) {}
+      
+      transitionLayer(tabIndex) {
+        this.activeLayer = tabIndex;
+      }
+
+      handleInteraction(controlId, value) {}
+
+      dispose() {
+        this.meshes.forEach(mesh => this.scene.remove(mesh));
+        this.geometries.forEach(geo => geo.dispose());
+        this.materials.forEach(mat => mat.dispose());
+        this.meshes = [];
+        this.geometries = [];
+        this.materials = [];
+      }
+
+      smoothTransitionColor(material, targetHex, duration = 600) {
+        const startColor = material.color.clone();
+        const targetColor = new THREE.Color(targetHex);
+        const startTime = performance.now();
+
+        const animate = () => {
+          const elapsed = performance.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = progress < 0.5 
+            ? 2 * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+          material.color.lerpColors(startColor, targetColor, ease);
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+        requestAnimationFrame(animate);
+      }
+
+      createTextTexture(text, bgColor = 'rgba(0,0,0,0)', textColor = '#ffffff', fontSize = 32) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (bgColor !== 'rgba(0,0,0,0)') {
+          ctx.fillStyle = bgColor;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        ctx.font = `bold ${fontSize}px 'Inter', sans-serif`;
+        ctx.fillStyle = textColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+        
+        const texture = new THREE.CanvasTexture(canvas);
+        return texture;
+      }
+    }
+
+    // ----------------------------------------------------
+    // LEC 2 SEC 3 GENERATOR (ENCAPSULATION BARRIERS)
+    // ----------------------------------------------------
+    class EncapsulationGenerator extends BaseGenerator {
+      constructor(scene) {
+        super(scene);
+        this.time = 0;
+        this.packets = [];
+        this.shieldRipple = 0;
+      }
+
+      create() {
+        // 1. Central private data core
+        const coreGeo = new THREE.DodecahedronGeometry(0.6, 1);
+        const coreMat = new THREE.MeshPhysicalMaterial({
+          color: 0x3b82f6,
+          metalness: 0.1,
+          roughness: 0.2,
+          emissive: 0x1d4ed8,
+          emissiveIntensity: 0.3
+        });
+        this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        this.scene.add(this.coreMesh);
+        this.meshes.push(this.coreMesh);
+        this.geometries.push(coreGeo);
+        this.materials.push(coreMat);
+
+        // 2. Encapsulation bubble shield
+        const shieldGeo = new THREE.SphereGeometry(1.6, 32, 32);
+        this.shieldMat = new THREE.MeshPhysicalMaterial({
+          color: 0x06b6d4,
+          transparent: true,
+          opacity: 0.25,
+          transmission: 0.8,
+          roughness: 0.1,
+          thickness: 1.0,
+          side: THREE.DoubleSide
+        });
+        this.shieldMesh = new THREE.Mesh(shieldGeo, this.shieldMat);
+        this.scene.add(this.shieldMesh);
+        this.meshes.push(this.shieldMesh);
+        this.geometries.push(shieldGeo);
+        this.materials.push(this.shieldMat);
+
+        // 3. Predefined gateways (Portals on the shield)
+        const gateGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 16);
+        const gatePositions = [
+          { pos: new THREE.Vector3(0, 1.6, 0), label: "get()" },
+          { pos: new THREE.Vector3(1.4, -0.8, 0), label: "set()" }
+        ];
+
+        this.gateways = [];
+        gatePositions.forEach((g, idx) => {
+          const gateMat = new THREE.MeshBasicMaterial({
+            color: 0x22c55e,
+            transparent: true,
+            opacity: 0.6
+          });
+          const m = new THREE.Mesh(gateGeo, gateMat);
+          m.position.copy(g.pos);
+          
+          // orient cylinder to point out from sphere
+          if (idx === 0) {
+            m.rotation.x = 0;
+          } else {
+            m.rotation.z = -Math.PI / 3;
+          }
+          this.scene.add(m);
+          this.meshes.push(m);
+          this.materials.push(gateMat);
+          this.gateways.push(m);
+
+          // Add label billboard
+          const tagTex = this.createTextTexture(g.label, 'rgba(15,18,30,0.85)', '#ffffff', 32);
+          const tagGeo = new THREE.PlaneGeometry(0.8, 0.3);
+          const tagMat = new THREE.MeshBasicMaterial({
+            map: tagTex,
+            transparent: true,
+            side: THREE.DoubleSide
+          });
+          const tagMesh = new THREE.Mesh(tagGeo, tagMat);
+          tagMesh.position.copy(g.pos).add(g.pos.clone().normalize().multiplyScalar(0.3));
+          this.scene.add(tagMesh);
+          this.meshes.push(tagMesh);
+          this.geometries.push(tagGeo);
+          this.materials.push(tagMat);
+        });
+        this.geometries.push(gateGeo);
+      }
+
+      update(delta, speed) {
+        this.time += delta * speed;
+
+        // spin core
+        this.coreMesh.rotation.y += delta * 0.4;
+        this.coreMesh.rotation.z += delta * 0.2;
+
+        // pulse shield based on ripple flag
+        if (this.shieldRipple > 0) {
+          const pulseScale = 1.0 + Math.sin(this.time * 25) * 0.05 * this.shieldRipple;
+          this.shieldMesh.scale.set(pulseScale, pulseScale, pulseScale);
+          this.shieldRipple -= delta * 1.5;
+        } else {
+          this.shieldMesh.scale.set(1, 1, 1);
+        }
+
+        // process access packets
+        for (let i = this.packets.length - 1; i >= 0; i--) {
+          const p = this.packets[i];
+          p.age += delta * speed;
+          const t = Math.min(p.age / p.lifetime, 1);
+
+          if (p.isAuth) {
+            // Authorized follows bezier path to gateway, then into core
+            if (t < 0.5) {
+              const subT = t / 0.5;
+              p.mesh.position.lerpVectors(p.start, p.gatePos, subT);
+            } else {
+              const subT = (t - 0.5) / 0.5;
+              p.mesh.position.lerpVectors(p.gatePos, new THREE.Vector3(0,0,0), subT);
+            }
+
+            if (t >= 1) {
+              this.scene.remove(p.mesh);
+              p.mesh.geometry.dispose();
+              p.mesh.material.dispose();
+              this.packets.splice(i, 1);
+              
+              // Flash core green
+              this.flashCore(0x22c55e);
+            }
+          } else {
+            // Unauthorized moves straight to core, hits shield at t = 0.5, bounces back and dissolves
+            if (t < 0.5) {
+              const subT = t / 0.5;
+              p.mesh.position.lerpVectors(p.start, p.hitPoint, subT);
+            } else {
+              const subT = (t - 0.5) / 0.5;
+              p.mesh.position.lerpVectors(p.hitPoint, p.bouncePoint, subT);
+              p.mesh.material.opacity = 1.0 - subT;
+            }
+
+            if (t >= 0.5 && !p.hasHit) {
+              p.hasHit = true;
+              this.shieldRipple = 1.0;
+              this.shieldMesh.material.color.setHex(0xef4444);
+              setTimeout(() => {
+                this.shieldMesh.material.color.setHex(this.activeLayer === 3 ? 0x22c55e : 0x06b6d4);
+              }, 200);
+            }
+
+            if (t >= 1) {
+              this.scene.remove(p.mesh);
+              p.mesh.geometry.dispose();
+              p.mesh.material.dispose();
+              this.packets.splice(i, 1);
+            }
+          }
+        }
+      }
+
+      flashCore(hex) {
+        const originalColor = this.coreMesh.material.color.clone();
+        this.coreMesh.material.color.setHex(hex);
+        setTimeout(() => {
+          this.coreMesh.material.color.copy(originalColor);
+        }, 200);
+      }
+
+      spawnRequest(isAuth) {
+        const pGeo = new THREE.SphereGeometry(0.1, 8, 8);
+        const pMat = new THREE.MeshBasicMaterial({
+          color: isAuth ? 0x22c55e : 0xef4444,
+          transparent: true
+        });
+        const mesh = new THREE.Mesh(pGeo, pMat);
+
+        const start = new THREE.Vector3(-3.5, 0.5, 1.5);
+        mesh.position.copy(start);
+        this.scene.add(mesh);
+
+        if (isAuth) {
+          // target the get() gateway at top
+          this.packets.push({
+            mesh: mesh,
+            isAuth: true,
+            start: start,
+            gatePos: new THREE.Vector3(0, 1.6, 0),
+            age: 0,
+            lifetime: 1.2
+          });
+        } else {
+          // direct hit to bubble (then bounce back)
+          const target = new THREE.Vector3(0, 0, 0);
+          const dir = target.clone().sub(start).normalize();
+          const hitPoint = start.clone().add(dir.clone().multiplyScalar(2.1)); // hits shield at radius 1.6
+          const bounceDir = new THREE.Vector3(-0.4, 0.8, 0.4).normalize();
+          const bouncePoint = hitPoint.clone().add(bounceDir.multiplyScalar(1.0));
+
+          this.packets.push({
+            mesh: mesh,
+            isAuth: false,
+            start: start,
+            hitPoint: hitPoint,
+            bouncePoint: bouncePoint,
+            hasHit: false,
+            age: 0,
+            lifetime: 1.2
+          });
+        }
+      }
+
+      transitionLayer(tabIndex) {
+        super.transitionLayer(tabIndex);
+
+        this.shieldMesh.visible = true;
+        this.shieldMesh.material.wireframe = false;
+        
+        switch (tabIndex) {
+          case 0: // Software (Semi-trans shield)
+            this.shieldMesh.material.opacity = 0.25;
+            this.smoothTransitionColor(this.shieldMesh.material, '#06b6d4');
+            break;
+
+          case 1: // RAM Map (Shield represented as dotted compile constraint, mesh wireframe)
+            this.shieldMesh.material.wireframe = true;
+            this.shieldMesh.material.opacity = 0.15;
+            this.smoothTransitionColor(this.shieldMesh.material, '#a855f7');
+            break;
+
+          case 2: // CPU
+            this.shieldMesh.material.opacity = 0.1;
+            break;
+
+          case 3: // GPU FX
+            this.shieldMesh.material.wireframe = true;
+            this.shieldMesh.material.opacity = 0.3;
+            this.smoothTransitionColor(this.shieldMesh.material, '#22c55e');
+            break;
+
+          case 4: // Corrector (Alert state shield highlight)
+            this.shieldMesh.material.opacity = 0.35;
+            this.smoothTransitionColor(this.shieldMesh.material, '#ef4444');
+            break;
+        }
+      }
+
+      handleInteraction(controlId, value) {
+        if (controlId === 'auth') {
+          this.spawnRequest(true);
+        } else if (controlId === 'unauth') {
+          this.spawnRequest(false);
+        }
+      }
+    }
+
+    // ----------------------------------------------------
+    // THREE.JS SCENE MANAGEMENT LAYER
+    // ----------------------------------------------------
+    class SceneManager {
+      constructor(container) {
+        this.container = container;
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x020617);
+        this.scene.fog = new THREE.FogExp2(0x020617, 0.015);
+
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.container.appendChild(this.renderer.domElement);
+
+        this.camera = new THREE.PerspectiveCamera(
+          45,
+          this.container.clientWidth / this.container.clientHeight,
+          0.1,
+          100
+        );
+        this.camera.position.set(0, 1.2, 7.5);
+
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+
+        this.lights = new LightingManager(this.scene);
+        this.generator = new EncapsulationGenerator(this.scene);
+
+        this.clock = new THREE.Clock();
+        this.animationFrameId = null;
+
+        this.onResize = this.onResize.bind(this);
+        window.addEventListener('resize', this.onResize);
+      }
+
+      init() {
+        this.lights.createStandardRig();
+        this.generator.create();
+        this.animate();
+      }
+
+      onResize() {
+        this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+      }
+
+      animate() {
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+        const delta = this.clock.getDelta();
+        
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reducedMotion) {
+          this.generator.update(delta, window.app.speedMultiplier);
+        }
+        
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+      }
+
+      dispose() {
+        cancelAnimationFrame(this.animationFrameId);
+        window.removeEventListener('resize', this.onResize);
+        this.generator.dispose();
+        this.lights.dispose();
+        this.controls.dispose();
+        this.renderer.dispose();
+        this.renderer.domElement.remove();
+      }
+    }
+
+    class LightingManager {
+      constructor(scene) {
+        this.scene = scene;
+        this.lights = [];
+      }
+
+      createStandardRig() {
+        const ambient = new THREE.AmbientLight(0xffffff, 0.25);
+        this.scene.add(ambient);
+        this.lights.push(ambient);
+
+        const key = new THREE.DirectionalLight(0xffffff, 0.85);
+        key.position.set(5, 8, 5);
+        this.scene.add(key);
+        this.lights.push(key);
+
+        const fill = new THREE.DirectionalLight(0x06b6d4, 0.35);
+        fill.position.set(-5, 4, -5);
+        this.scene.add(fill);
+        this.lights.push(fill);
+      }
+
+      dispose() {
+        this.lights.forEach(light => this.scene.remove(light));
+        this.lights = [];
+      }
+    }
+
+    // ----------------------------------------------------
+    // APPLICATION & INTERACTION CONTROLLER
+    // ----------------------------------------------------
+    class ApplicationManager {
+      constructor() {
+        this.speedMultiplier = 1.0;
+        this.sceneConfig = {
+          id: "lec2-sec3",
+          title: "Encapsulation Barriers",
+          layers: [
+            {
+              name: "THE SOFTWARE LAYER",
+              content: `
+                <p>Encapsulation locks variables inside a protective boundary. A central glowing data core represents private properties enclosed in a semi-transparent defensive shield.</p>
+                <p>Predefined gateways (portals labeled <code>get()</code> and <code>set()</code>) regulate mutations. Direct requests hit the barrier and bounce off, while authorized gateway requests pass through to the core.</p>
+              `
+            },
+            {
+              name: "THE MEMORY TOPOLOGY (RAM) LAYER",
+              content: `
+                <p>In hardware memory, access boundaries do not exist at the electrical/binary level. The member variables sit at standard offsets in Heap RAM blocks.</p>
+                <p><em>RAM Map Principle:</em> Access modifiers (<code>private</code>, <code>public</code>) are strictly compile-time constraints checked by the C++ parser. Physical RAM chips have no built-in restrictions against reading or writing to private addresses.</p>
+              `
+            },
+            {
+              name: "THE CPU & REGISTERS LAYER",
+              content: `
+                <p>Direct unauthorized access to private variables fails compile-time check, creating no CPU machine code. Authorized access compiles into <code>call</code> instructions branching the Instruction Pointer ($RIP$) to the public getters/setters in the text segment.</p>
+                <p>The getter validates bounds in registers before copying state values onto the stack.</p>
+              `
+            },
+            {
+              name: "THE GPU / VRAM LAYER",
+              content: `
+                <p>The protective shield is rendered using 3D alpha blending techniques. Direct requests bounce off the shield, animating vector pathways inside the GPU vertex buffers.</p>
+              `
+            },
+            {
+              name: "UNDER-THE-HOOD CORRECTOR",
+              content: `
+                <div style="border-left: 4px solid var(--color-danger); padding-left: 10px; background: rgba(239, 68, 68, 0.08); padding-top: 8px; padding-bottom: 8px; border-radius: 4px;">
+                  <strong style="color:var(--color-danger)">Misconception Shattered:</strong>
+                  <p>Students believe "private variables" are physically encrypted or locked inside separate hardware segments in RAM. In raw machine assembly, any line of code can mutate any address if it calculates the correct pointer offset. Encapsulation is a compiler-enforced contract, not a physical hardware wall.</p>
+                </div>
+              `
+            }
+          ]
+        };
+      }
+
+      init() {
+        const canvasContainer = document.getElementById('canvas-container');
+        this.sceneManager = new SceneManager(canvasContainer);
+        this.sceneManager.init();
+
+        this.initEventListeners();
+        this.initDrawerGrid();
+        this.switchTab(0);
+        
+        window.addEventListener('beforeunload', () => {
+          this.sceneManager.dispose();
+        });
+      }
+
+      initEventListeners() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const tabIdx = parseInt(btn.dataset.tab);
+            this.switchTab(tabIdx);
+          });
+        });
+
+        const slider = document.getElementById('speed-slider');
+        const speedVal = document.getElementById('speed-val');
+        if (slider) {
+          slider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            this.speedMultiplier = val;
+            speedVal.innerText = val.toFixed(1) + 'x';
+          });
+        }
+
+        document.getElementById('auth-btn').addEventListener('click', () => {
+          this.sceneManager.generator.handleInteraction('auth');
+        });
+
+        document.getElementById('unauth-btn').addEventListener('click', () => {
+          this.sceneManager.generator.handleInteraction('unauth');
+        });
+
+        const menuBtn = document.getElementById('menu-btn');
+        const drawer = document.getElementById('nav-drawer');
+        const drawerClose = document.getElementById('drawer-close-btn');
+
+        if (menuBtn && drawer) {
+          menuBtn.addEventListener('click', () => drawer.classList.add('open'));
+        }
+        if (drawerClose && drawer) {
+          drawerClose.addEventListener('click', () => drawer.classList.remove('open'));
+        }
+
+        window.addEventListener('keydown', (e) => {
+          if (e.key >= '1' && e.key <= '5') {
+            const tabIdx = parseInt(e.key) - 1;
+            const btn = document.querySelector(`.tab-btn[data-tab="${tabIdx}"]`);
+            if (btn) btn.click();
+          }
+        });
+      }
+
+      switchTab(tabIdx) {
+        const layer = this.sceneConfig.layers[tabIdx];
+        document.getElementById('panel-layer-name').innerText = layer.name;
+        
+        const contentContainer = document.getElementById('panel-dynamic-content');
+        contentContainer.innerHTML = layer.content;
+
+        if (window.renderMathInElement) {
+          renderMathInElement(contentContainer, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false }
+            ]
+          });
+        }
+
+        this.sceneManager.generator.transitionLayer(tabIdx);
+      }
+
+      initDrawerGrid() {
+        const grid = document.getElementById('drawer-scenes-grid');
+        const items = [
+          { name: "Procedural Execution Flow", path: "lec1-sec1.html", lec: "Lec 1 · Sec 1" },
+          { name: "Shared Global Scope", path: "lec1-sec2.html", lec: "Lec 1 · Sec 2" },
+          { name: "Decentralized Object Networks", path: "lec2-sec1.html", lec: "Lec 2 · Sec 1" },
+          { name: "Object Identity & State", path: "lec2-sec2.html", lec: "Lec 2 · Sec 2" },
+          { name: "Encapsulation Barriers", path: "lec2-sec3.html", lec: "Lec 2 · Sec 3" },
+          { name: "State & Representation", path: "lec3-sec1.html", lec: "Lec 3 · Sec 1" },
+          { name: "Object Behavior & Methods", path: "lec3-sec2.html", lec: "Lec 3 · Sec 2" },
+          { name: "Class Blueprint vs. Instances", path: "lec3-sec3.html", lec: "Lec 3 · Sec 3" }
+        ];
+
+        grid.innerHTML = items.map(item => `
+          <a class="scene-card" href="${item.path}">
+            <div style="font-size: 12px; color: #94a3b8;">${item.lec}</div>
+            <div style="font-weight: 600; color: #fff;">${item.name}</div>
+          </a>
+        `).join('');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.app = new ApplicationManager();
+      window.app.init();
+    });
+  </script>
+</body>
+</html>

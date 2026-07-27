@@ -1,0 +1,675 @@
+{
+  "material": "OOP Test7",
+  "source_file": "source.pdf",
+  "route": "Computer Science",
+  "domain": "Object-Oriented Programming (C++)",
+  "total_chapters": 1,
+  "total_mini_chapters": 8,
+  "total_lessons": 38,
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "Objects and Classes",
+      "mini_chapters": [
+        {
+          "id": "mc1.1",
+          "title": "Introduction to Object-Oriented Programming Concepts",
+          "lessons": [
+            {
+              "id": "L1.1.1",
+              "title": "Procedural Programming Overview",
+              "view_name": "ProceduralProgramming_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Procedural Programing"
+                ]
+              }
+            },
+            {
+              "id": "L1.1.2",
+              "title": "Object-Oriented Programming Introduction",
+              "view_name": "OOP_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Object Oriented Programing"
+                ]
+              }
+            },
+            {
+              "id": "L1.1.3",
+              "title": "Procedural vs. Object-Oriented Programming Comparison",
+              "view_name": "ProgrammingParadigms_ComparisonTable",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Procedural Programing and Object-Oriented Programing"
+                ]
+              }
+            },
+            {
+              "id": "L1.1.4",
+              "title": "Core Principles of Object-Oriented Programming",
+              "view_name": "OOPPrinciples_ConceptList",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Object-Oriented Programming"
+                ]
+              }
+            },
+            {
+              "id": "L1.1.5",
+              "title": "Object-Oriented Programming Terminology",
+              "view_name": "OOPTerminology_DefinitionList",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Object-Oriented Programming Terminology"
+                ]
+              }
+            },
+            {
+              "id": "L1.1.6",
+              "title": "UML Class Diagram Basics",
+              "view_name": "UMLClassDiagram_VisualExplanation",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "UML – Class Diagram"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.2",
+          "title": "Class Declaration and Object Usage",
+          "lessons": [
+            {
+              "id": "L1.2.1",
+              "title": "Declaring a Class in C++",
+              "view_name": "ClassDeclaration_Syntax",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "How to Declare a Class?"
+                ]
+              }
+            },
+            {
+              "id": "L1.2.2",
+              "title": "Class Example: Circle",
+              "view_name": "CircleClass_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Example"
+                ]
+              }
+            },
+            {
+              "id": "L1.2.3",
+              "title": "Scope of Data Fields in a Class",
+              "view_name": "DataFieldScope_Diagram",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Data fields"
+                ]
+              }
+            },
+            {
+              "id": "L1.2.4",
+              "title": "Scope of Local Variables and Name Hiding",
+              "view_name": "VariableScope_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Local Variables"
+                ]
+              }
+            },
+            {
+              "id": "L1.2.5",
+              "title": "Naming Conventions for Objects and Classes",
+              "view_name": "NamingConventions_GuidelineList",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Naming Objects and Classes"
+                ]
+              }
+            },
+            {
+              "id": "L1.2.6",
+              "title": "Memberwise Copy with Assignment Operator",
+              "view_name": "MemberwiseCopy_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Memberwise Copy"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.3",
+          "title": "Abstraction and Encapsulation",
+          "lessons": [
+            {
+              "id": "L1.3.1",
+              "title": "Class Abstraction and Encapsulation Concepts",
+              "view_name": "AbstractionEncapsulation_Definition",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Abstraction and Encapsulation",
+                  "Class Abstraction and Encapsulation"
+                ]
+              }
+            },
+            {
+              "id": "L1.3.2",
+              "title": "Data Field Encapsulation and Accessors/Mutators",
+              "view_name": "DataEncapsulation_BestPractice",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Data Field Encapsulation"
+                ]
+              }
+            },
+            {
+              "id": "L1.3.3",
+              "title": "TV Class Example: Getters and Setters",
+              "view_name": "TVClass_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.4",
+          "title": "Constant and Static Members",
+          "lessons": [
+            {
+              "id": "L1.4.1",
+              "title": "Constant Members and Functions",
+              "view_name": "ConstMembers_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constant Members"
+                ]
+              }
+            },
+            {
+              "id": "L1.4.2",
+              "title": "Static Member Variables",
+              "view_name": "StaticVariables_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Member Variables"
+                ]
+              }
+            },
+            {
+              "id": "L1.4.3",
+              "title": "Static Member Functions",
+              "view_name": "StaticFunctions_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Member Functions"
+                ]
+              }
+            },
+            {
+              "id": "L1.4.4",
+              "title": "Grade Class Example with Static Members",
+              "view_name": "GradeClass_StaticMemberDemo",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Members"
+                ]
+              }
+            },
+            {
+              "id": "L1.4.5",
+              "title": "Deciding Between Instance and Static Members",
+              "view_name": "MemberType_DecisionFlow",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Instance or Static Member Function?"
+                ]
+              }
+            },
+            {
+              "id": "L1.4.6",
+              "title": "Application Configuration with Static Members",
+              "view_name": "AppConfig_StaticMemberUse",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Members"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.5",
+          "title": "Constructors and Destructors",
+          "lessons": [
+            {
+              "id": "L1.5.1",
+              "title": "Constructors: Definition and Overloading",
+              "view_name": "Constructors_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constructors"
+                ]
+              }
+            },
+            {
+              "id": "L1.5.2",
+              "title": "Constructor Best Practices and Default Constructors",
+              "view_name": "Constructor_ProblemSolution",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "What is wrong with this code?"
+                ]
+              }
+            },
+            {
+              "id": "L1.5.3",
+              "title": "Constructors and Static Members Interaction",
+              "view_name": "ConstructorStatic_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constructors & Static Members"
+                ]
+              }
+            },
+            {
+              "id": "L1.5.4",
+              "title": "Destructors: Definition and Usage",
+              "view_name": "Destructors_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Destructors"
+                ]
+              }
+            },
+            {
+              "id": "L1.5.5",
+              "title": "Anonymous Objects",
+              "view_name": "AnonymousObject_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Anonymous Object"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.6",
+          "title": "Initializing Member Data Fields",
+          "lessons": [
+            {
+              "id": "L1.6.1",
+              "title": "Default Member Initializers",
+              "view_name": "MemberInitialization_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields"
+                ]
+              }
+            },
+            {
+              "id": "L1.6.2",
+              "title": "Constructor Initialization Lists",
+              "view_name": "InitializerList_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields"
+                ]
+              }
+            },
+            {
+              "id": "L1.6.3",
+              "title": "Constructor Delegation",
+              "view_name": "ConstructorDelegation_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields"
+                ]
+              }
+            },
+            {
+              "id": "L1.6.4",
+              "title": "Initializing Reference Member Variables",
+              "view_name": "ReferenceMember_Initialization",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.7",
+          "title": "Objects with Functions and Arrays",
+          "lessons": [
+            {
+              "id": "L1.7.1",
+              "title": "Passing Objects to Functions",
+              "view_name": "ObjectPassing_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Passing Objects to Functions"
+                ]
+              }
+            },
+            {
+              "id": "L1.7.2",
+              "title": "Arrays of Objects",
+              "view_name": "ObjectArray_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Array of Objects"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.8",
+          "title": "Designing an Object-Oriented Solution",
+          "lessons": [
+            {
+              "id": "L1.8.1",
+              "title": "Book Class Design Example",
+              "view_name": "BookClass_DesignExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example"
+                ]
+              }
+            },
+            {
+              "id": "L1.8.2",
+              "title": "Principles of Good Class Design",
+              "view_name": "ClassDesign_PrincipleList",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Introduction to Designing an Object-Oriented Solution",
+                  "Designing a Good Class"
+                ]
+              }
+            },
+            {
+              "id": "L1.8.3",
+              "title": "Overview of Class Relationships",
+              "view_name": "ClassRelationships_Diagram",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships"
+                ]
+              }
+            },
+            {
+              "id": "L1.8.4",
+              "title": "Aggregation and Composition Relationships",
+              "view_name": "AggregationComposition_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Aggregation / Composition"
+                ]
+              }
+            },
+            {
+              "id": "L1.8.5",
+              "title": "Association Relationships",
+              "view_name": "Association_UMLDiagram",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Association"
+                ]
+              }
+            },
+            {
+              "id": "L1.8.6",
+              "title": "Inheritance and Generalization Relationships",
+              "view_name": "Inheritance_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test7/assets/page_25_fig_1.png",
+                "OOP Test7/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Inheritance / Generalization"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

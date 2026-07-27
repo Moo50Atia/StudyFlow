@@ -1,0 +1,30 @@
+{
+  "ContentForFunding": {
+    "Universities": {
+      "Why": "Partnerships",
+      "Priority": "Critical",
+      "Category_For_Company": ["Research Project"],
+      "Entities": [
+        {
+          "Name": "Cairo University",
+          "Category": "Universities",
+          "Category_For_Company": ["Research Project"],
+          "Priority": "Critical",
+          "Country": "Egypt",
+          "City": "Giza",
+          "Official_Website": "https://cu.edu.eg",
+          "Official_Email": "info@cu.edu.eg",
+          "LinkedIn": " ",
+          "Phone": " ",
+          "Description": "Cairo University description detailing research partnership options."
+        }
+      ]
+    },
+    "Government": {
+      "Why": "Grants",
+      "Priority": "Critical",
+      "Structure": {},
+      "Entities": []
+    }
+  }
+}

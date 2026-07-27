@@ -1,0 +1,945 @@
+{
+  "material": "OOP Test8",
+  "source_file": "source.pdf",
+  "route": "Computer Science",
+  "domain": "Computer Programming Fundamentals",
+  "total_chapters": 1,
+  "total_mini_chapters": 8,
+  "total_lessons": 32,
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "Objects and Classes",
+      "mini_chapters": [
+        {
+          "id": "mc1.1",
+          "title": "Introduction to Object-Oriented Programming",
+          "lessons": [
+            {
+              "id": "L1",
+              "title": "Moving to Object-Oriented Programming",
+              "view_name": "OOPTransition_Concept",
+              "page_start": 4,
+              "page_end": 4,
+              "visual_assets": [
+                "OOP Test8/assets/page_4_fig_1.png",
+                "OOP Test8/assets/page_4_fig_2.png",
+                "OOP Test8/assets/page_4_fig_3.png",
+                "OOP Test8/assets/page_4_fig_4.png",
+                "OOP Test8/assets/page_4_fig_5.png",
+                "OOP Test8/assets/page_4_fig_6.png",
+                "OOP Test8/assets/page_4_fig_7.png",
+                "OOP Test8/assets/page_4_fig_8.png",
+                "OOP Test8/assets/page_4_fig_9.png",
+                "OOP Test8/assets/page_4_fig_10.png",
+                "OOP Test8/assets/page_4_fig_11.png",
+                "OOP Test8/assets/page_4_fig_12.png",
+                "OOP Test8/assets/page_4_fig_13.png",
+                "OOP Test8/assets/page_4_fig_14.png",
+                "OOP Test8/assets/page_4_fig_15.png",
+                "OOP Test8/assets/page_4_fig_17.png",
+                "OOP Test8/assets/page_4_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Moving to Object Oriented Programing"
+                ]
+              }
+            },
+            {
+              "id": "L2",
+              "title": "Procedural Programming",
+              "view_name": "ProceduralProgramming_CodeDiagram",
+              "page_start": 5,
+              "page_end": 6,
+              "visual_assets": [
+                "OOP Test8/assets/page_5_fig_1.png",
+                "OOP Test8/assets/page_6_fig_1.png",
+                "OOP Test8/assets/page_6_fig_2.png",
+                "OOP Test8/assets/page_6_fig_3.png",
+                "OOP Test8/assets/page_6_fig_4.png",
+                "OOP Test8/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Procedural Programing"
+                ]
+              }
+            },
+            {
+              "id": "L3",
+              "title": "Object-Oriented Programming Concepts",
+              "view_name": "OOPConcepts_CodeDiagram",
+              "page_start": 7,
+              "page_end": 11,
+              "visual_assets": [
+                "OOP Test8/assets/page_7_fig_1.png",
+                "OOP Test8/assets/page_7_fig_2.png",
+                "OOP Test8/assets/page_7_fig_3.png",
+                "OOP Test8/assets/page_7_fig_4.png",
+                "OOP Test8/assets/page_7_fig_5.png",
+                "OOP Test8/assets/page_7_fig_6.png",
+                "OOP Test8/assets/page_7_fig_7.png",
+                "OOP Test8/assets/page_7_fig_8.png",
+                "OOP Test8/assets/page_7_fig_9.png",
+                "OOP Test8/assets/page_7_fig_10.png",
+                "OOP Test8/assets/page_7_fig_11.png",
+                "OOP Test8/assets/page_7_fig_12.png",
+                "OOP Test8/assets/page_7_fig_13.png",
+                "OOP Test8/assets/page_7_fig_14.png",
+                "OOP Test8/assets/page_7_fig_15.png",
+                "OOP Test8/assets/page_8_fig_1.png",
+                "OOP Test8/assets/page_8_fig_2.png",
+                "OOP Test8/assets/page_8_fig_3.png",
+                "OOP Test8/assets/page_8_fig_4.png",
+                "OOP Test8/assets/page_8_fig_5.png",
+                "OOP Test8/assets/page_8_fig_6.png",
+                "OOP Test8/assets/page_8_fig_7.png",
+                "OOP Test8/assets/page_8_fig_8.png",
+                "OOP Test8/assets/page_8_fig_9.png",
+                "OOP Test8/assets/page_8_fig_10.png",
+                "OOP Test8/assets/page_8_fig_11.png",
+                "OOP Test8/assets/page_8_fig_12.png",
+                "OOP Test8/assets/page_8_fig_13.png",
+                "OOP Test8/assets/page_8_fig_14.png",
+                "OOP Test8/assets/page_8_fig_15.png",
+                "OOP Test8/assets/page_8_fig_16.png",
+                "OOP Test8/assets/page_9_fig_1.png",
+                "OOP Test8/assets/page_10_fig_1.png",
+                "OOP Test8/assets/page_10_fig_2.png",
+                "OOP Test8/assets/page_10_fig_3.png",
+                "OOP Test8/assets/page_10_fig_4.png",
+                "OOP Test8/assets/page_10_fig_5.png",
+                "OOP Test8/assets/page_11_fig_1.png",
+                "OOP Test8/assets/page_11_fig_2.png",
+                "OOP Test8/assets/page_11_fig_3.png",
+                "OOP Test8/assets/page_11_fig_4.png",
+                "OOP Test8/assets/page_11_fig_5.png",
+                "OOP Test8/assets/page_11_fig_6.png",
+                "OOP Test8/assets/page_11_fig_7.png",
+                "OOP Test8/assets/page_11_fig_8.png",
+                "OOP Test8/assets/page_11_fig_9.png",
+                "OOP Test8/assets/page_11_fig_10.png",
+                "OOP Test8/assets/page_11_fig_11.png",
+                "OOP Test8/assets/page_11_fig_12.png",
+                "OOP Test8/assets/page_11_fig_13.png",
+                "OOP Test8/assets/page_11_fig_14.png",
+                "OOP Test8/assets/page_11_fig_15.png",
+                "OOP Test8/assets/page_11_fig_16.png",
+                "OOP Test8/assets/page_11_fig_17.png",
+                "OOP Test8/assets/page_11_fig_18.png",
+                "OOP Test8/assets/page_11_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Object Oriented Programing",
+                  "Procedural Programing and Object-Oriented Programing",
+                  "Object-Oriented Programming"
+                ]
+              }
+            },
+            {
+              "id": "L4",
+              "title": "Object-Oriented Programming Terminology",
+              "view_name": "OOPTerminology_Concept",
+              "page_start": 12,
+              "page_end": 12,
+              "visual_assets": [
+                "OOP Test8/assets/page_12_fig_1.png",
+                "OOP Test8/assets/page_12_fig_2.png",
+                "OOP Test8/assets/page_12_fig_3.png",
+                "OOP Test8/assets/page_12_fig_4.png",
+                "OOP Test8/assets/page_12_fig_5.png",
+                "OOP Test8/assets/page_12_fig_6.png",
+                "OOP Test8/assets/page_12_fig_7.png",
+                "OOP Test8/assets/page_12_fig_8.png",
+                "OOP Test8/assets/page_12_fig_9.png",
+                "OOP Test8/assets/page_12_fig_10.png",
+                "OOP Test8/assets/page_12_fig_11.png",
+                "OOP Test8/assets/page_12_fig_12.png",
+                "OOP Test8/assets/page_12_fig_13.png",
+                "OOP Test8/assets/page_12_fig_14.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Object-Oriented Programming Terminology"
+                ]
+              }
+            },
+            {
+              "id": "L5",
+              "title": "UML Class Diagram",
+              "view_name": "UMLClassDiagram_Diagram",
+              "page_start": 13,
+              "page_end": 14,
+              "visual_assets": [
+                "OOP Test8/assets/page_13_fig_1.png",
+                "OOP Test8/assets/page_13_fig_2.png",
+                "OOP Test8/assets/page_13_fig_3.png",
+                "OOP Test8/assets/page_14_fig_1.png",
+                "OOP Test8/assets/page_14_fig_2.png",
+                "OOP Test8/assets/page_14_fig_3.png",
+                "OOP Test8/assets/page_14_fig_4.png",
+                "OOP Test8/assets/page_14_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "UML – Class Diagram"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.2",
+          "title": "Class Declaration and Object Basics",
+          "lessons": [
+            {
+              "id": "L6",
+              "title": "How to Declare a Class",
+              "view_name": "ClassDeclaration_Concept",
+              "page_start": 15,
+              "page_end": 15,
+              "visual_assets": [
+                "OOP Test8/assets/page_15_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "How to Declare a Class?"
+                ]
+              }
+            },
+            {
+              "id": "L7",
+              "title": "Class Declaration Example",
+              "view_name": "ClassDeclaration_CodeExample",
+              "page_start": 16,
+              "page_end": 20,
+              "visual_assets": [
+                "OOP Test8/assets/page_16_fig_1.png",
+                "OOP Test8/assets/page_17_fig_1.png",
+                "OOP Test8/assets/page_18_fig_1.png",
+                "OOP Test8/assets/page_18_fig_2.png",
+                "OOP Test8/assets/page_18_fig_3.png",
+                "OOP Test8/assets/page_19_fig_1.png",
+                "OOP Test8/assets/page_19_fig_2.png",
+                "OOP Test8/assets/page_19_fig_3.png",
+                "OOP Test8/assets/page_20_fig_1.png",
+                "OOP Test8/assets/page_20_fig_2.png",
+                "OOP Test8/assets/page_20_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Example"
+                ]
+              }
+            },
+            {
+              "id": "L8",
+              "title": "The Scope of Data Fields",
+              "view_name": "DataFieldScope_CodeExample",
+              "page_start": 21,
+              "page_end": 25,
+              "visual_assets": [
+                "OOP Test8/assets/page_21_fig_1.png",
+                "OOP Test8/assets/page_21_fig_2.png",
+                "OOP Test8/assets/page_21_fig_4.png",
+                "OOP Test8/assets/page_21_fig_5.png",
+                "OOP Test8/assets/page_21_fig_6.png",
+                "OOP Test8/assets/page_21_fig_7.png",
+                "OOP Test8/assets/page_21_fig_8.png",
+                "OOP Test8/assets/page_21_fig_9.png",
+                "OOP Test8/assets/page_21_fig_10.png",
+                "OOP Test8/assets/page_21_fig_11.png",
+                "OOP Test8/assets/page_21_fig_12.png",
+                "OOP Test8/assets/page_21_fig_13.png",
+                "OOP Test8/assets/page_21_fig_14.png",
+                "OOP Test8/assets/page_21_fig_15.png",
+                "OOP Test8/assets/page_21_fig_16.png",
+                "OOP Test8/assets/page_21_fig_17.png",
+                "OOP Test8/assets/page_21_fig_18.png",
+                "OOP Test8/assets/page_21_fig_19.png",
+                "OOP Test8/assets/page_21_fig_20.png",
+                "OOP Test8/assets/page_21_fig_21.png",
+                "OOP Test8/assets/page_21_fig_22.png",
+                "OOP Test8/assets/page_21_fig_23.png",
+                "OOP Test8/assets/page_21_fig_24.png",
+                "OOP Test8/assets/page_21_fig_25.png",
+                "OOP Test8/assets/page_21_fig_26.png",
+                "OOP Test8/assets/page_21_fig_27.png",
+                "OOP Test8/assets/page_21_fig_28.png",
+                "OOP Test8/assets/page_21_fig_29.png",
+                "OOP Test8/assets/page_21_fig_30.png",
+                "OOP Test8/assets/page_21_fig_31.png",
+                "OOP Test8/assets/page_21_fig_32.png",
+                "OOP Test8/assets/page_21_fig_33.png",
+                "OOP Test8/assets/page_21_fig_34.png",
+                "OOP Test8/assets/page_21_fig_35.png",
+                "OOP Test8/assets/page_21_fig_36.png",
+                "OOP Test8/assets/page_21_fig_37.png",
+                "OOP Test8/assets/page_21_fig_38.png",
+                "OOP Test8/assets/page_21_fig_39.png",
+                "OOP Test8/assets/page_21_fig_40.png",
+                "OOP Test8/assets/page_21_fig_41.png",
+                "OOP Test8/assets/page_21_fig_42.png",
+                "OOP Test8/assets/page_21_fig_43.png",
+                "OOP Test8/assets/page_21_fig_44.png",
+                "OOP Test8/assets/page_21_fig_45.png",
+                "OOP Test8/assets/page_21_fig_46.png",
+                "OOP Test8/assets/page_21_fig_47.png",
+                "OOP Test8/assets/page_21_fig_48.png",
+                "OOP Test8/assets/page_21_fig_49.png",
+                "OOP Test8/assets/page_21_fig_50.png",
+                "OOP Test8/assets/page_21_fig_51.png",
+                "OOP Test8/assets/page_21_fig_52.png",
+                "OOP Test8/assets/page_21_fig_53.png",
+                "OOP Test8/assets/page_21_fig_54.png",
+                "OOP Test8/assets/page_21_fig_55.png",
+                "OOP Test8/assets/page_21_fig_56.png",
+                "OOP Test8/assets/page_21_fig_57.png",
+                "OOP Test8/assets/page_21_fig_58.png",
+                "OOP Test8/assets/page_21_fig_59.png",
+                "OOP Test8/assets/page_21_fig_60.png",
+                "OOP Test8/assets/page_21_fig_61.png",
+                "OOP Test8/assets/page_21_fig_62.png",
+                "OOP Test8/assets/page_21_fig_63.png",
+                "OOP Test8/assets/page_21_fig_64.png",
+                "OOP Test8/assets/page_21_fig_65.png",
+                "OOP Test8/assets/page_21_fig_66.png",
+                "OOP Test8/assets/page_21_fig_67.png",
+                "OOP Test8/assets/page_21_fig_68.png",
+                "OOP Test8/assets/page_21_fig_69.png",
+                "OOP Test8/assets/page_21_fig_70.png",
+                "OOP Test8/assets/page_21_fig_71.png",
+                "OOP Test8/assets/page_21_fig_72.png",
+                "OOP Test8/assets/page_21_fig_73.png",
+                "OOP Test8/assets/page_21_fig_74.png",
+                "OOP Test8/assets/page_21_fig_75.png",
+                "OOP Test8/assets/page_21_fig_76.png",
+                "OOP Test8/assets/page_21_fig_77.png",
+                "OOP Test8/assets/page_21_fig_78.png",
+                "OOP Test8/assets/page_21_fig_79.png",
+                "OOP Test8/assets/page_22_fig_1.png",
+                "OOP Test8/assets/page_22_fig_2.png",
+                "OOP Test8/assets/page_22_fig_3.png",
+                "OOP Test8/assets/page_22_fig_4.png",
+                "OOP Test8/assets/page_22_fig_5.png",
+                "OOP Test8/assets/page_23_fig_1.png",
+                "OOP Test8/assets/page_23_fig_2.png",
+                "OOP Test8/assets/page_23_fig_3.png",
+                "OOP Test8/assets/page_23_fig_4.png",
+                "OOP Test8/assets/page_23_fig_5.png",
+                "OOP Test8/assets/page_23_fig_6.png",
+                "OOP Test8/assets/page_23_fig_7.png",
+                "OOP Test8/assets/page_24_fig_1.png",
+                "OOP Test8/assets/page_24_fig_2.png",
+                "OOP Test8/assets/page_25_fig_1.png",
+                "OOP Test8/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Data fields",
+                  "The Scope of Local Variables"
+                ]
+              }
+            },
+            {
+              "id": "L9",
+              "title": "Naming Objects and Classes",
+              "view_name": "NamingConventions_Concept",
+              "page_start": 26,
+              "page_end": 26,
+              "visual_assets": [
+                "OOP Test8/assets/page_26_fig_1.png",
+                "OOP Test8/assets/page_26_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Naming Objects and Classes"
+                ]
+              }
+            },
+            {
+              "id": "L10",
+              "title": "Memberwise Copy",
+              "view_name": "MemberwiseCopy_CodeExample",
+              "page_start": 27,
+              "page_end": 27,
+              "visual_assets": [
+                "OOP Test8/assets/page_27_fig_1.png",
+                "OOP Test8/assets/page_27_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Memberwise Copy"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.3",
+          "title": "Abstraction and Encapsulation",
+          "lessons": [
+            {
+              "id": "L11",
+              "title": "Class Abstraction and Encapsulation Concepts",
+              "view_name": "AbstractionEncapsulation_Concept",
+              "page_start": 29,
+              "page_end": 29,
+              "visual_assets": [
+                "OOP Test8/assets/page_29_fig_1.png",
+                "OOP Test8/assets/page_29_fig_2.png",
+                "OOP Test8/assets/page_29_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Abstraction and Encapsulation"
+                ]
+              }
+            },
+            {
+              "id": "L12",
+              "title": "Data Field Encapsulation",
+              "view_name": "DataEncapsulation_Concept",
+              "page_start": 30,
+              "page_end": 30,
+              "visual_assets": [
+                "OOP Test8/assets/page_30_fig_1.png",
+                "OOP Test8/assets/page_30_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Data Field Encapsulation"
+                ]
+              }
+            },
+            {
+              "id": "L13",
+              "title": "Getter and Setter Example",
+              "view_name": "GetterSetter_CodeExample",
+              "page_start": 31,
+              "page_end": 38,
+              "visual_assets": [
+                "OOP Test8/assets/page_31_fig_1.png",
+                "OOP Test8/assets/page_31_fig_2.png",
+                "OOP Test8/assets/page_32_fig_1.png",
+                "OOP Test8/assets/page_32_fig_2.png",
+                "OOP Test8/assets/page_32_fig_3.png",
+                "OOP Test8/assets/page_32_fig_4.png",
+                "OOP Test8/assets/page_32_fig_5.png",
+                "OOP Test8/assets/page_32_fig_6.png",
+                "OOP Test8/assets/page_32_fig_7.png",
+                "OOP Test8/assets/page_33_fig_1.png",
+                "OOP Test8/assets/page_33_fig_2.png",
+                "OOP Test8/assets/page_34_fig_1.png",
+                "OOP Test8/assets/page_35_fig_1.png",
+                "OOP Test8/assets/page_35_fig_2.png",
+                "OOP Test8/assets/page_35_fig_3.png",
+                "OOP Test8/assets/page_35_fig_4.png",
+                "OOP Test8/assets/page_35_fig_5.png",
+                "OOP Test8/assets/page_35_fig_6.png",
+                "OOP Test8/assets/page_35_fig_7.png",
+                "OOP Test8/assets/page_36_fig_1.png",
+                "OOP Test8/assets/page_36_fig_2.png",
+                "OOP Test8/assets/page_36_fig_3.png",
+                "OOP Test8/assets/page_36_fig_4.png",
+                "OOP Test8/assets/page_36_fig_5.png",
+                "OOP Test8/assets/page_36_fig_6.png",
+                "OOP Test8/assets/page_37_fig_1.png",
+                "OOP Test8/assets/page_38_fig_1.png",
+                "OOP Test8/assets/page_38_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.4",
+          "title": "Constant and Static Members",
+          "lessons": [
+            {
+              "id": "L14",
+              "title": "Constant Members",
+              "view_name": "ConstantMembers_CodeExample",
+              "page_start": 40,
+              "page_end": 44,
+              "visual_assets": [
+                "OOP Test8/assets/page_40_fig_1.png",
+                "OOP Test8/assets/page_41_fig_1.png",
+                "OOP Test8/assets/page_42_fig_1.png",
+                "OOP Test8/assets/page_43_fig_1.png",
+                "OOP Test8/assets/page_44_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constant Members"
+                ]
+              }
+            },
+            {
+              "id": "L15",
+              "title": "Static Member Variables",
+              "view_name": "StaticVariables_CodeExample",
+              "page_start": 45,
+              "page_end": 46,
+              "visual_assets": [
+                "OOP Test8/assets/page_45_fig_1.png",
+                "OOP Test8/assets/page_46_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Member Variables"
+                ]
+              }
+            },
+            {
+              "id": "L16",
+              "title": "Static Member Functions",
+              "view_name": "StaticFunctions_CodeExample",
+              "page_start": 47,
+              "page_end": 51,
+              "visual_assets": [
+                "OOP Test8/assets/page_47_fig_1.png",
+                "OOP Test8/assets/page_47_fig_2.png",
+                "OOP Test8/assets/page_47_fig_3.png",
+                "OOP Test8/assets/page_47_fig_4.png",
+                "OOP Test8/assets/page_48_fig_1.png",
+                "OOP Test8/assets/page_48_fig_2.png",
+                "OOP Test8/assets/page_48_fig_3.png",
+                "OOP Test8/assets/page_49_fig_1.png",
+                "OOP Test8/assets/page_50_fig_1.png",
+                "OOP Test8/assets/page_51_fig_1.png",
+                "OOP Test8/assets/page_51_fig_2.png",
+                "OOP Test8/assets/page_51_fig_3.png",
+                "OOP Test8/assets/page_51_fig_4.png",
+                "OOP Test8/assets/page_51_fig_5.png",
+                "OOP Test8/assets/page_51_fig_6.png",
+                "OOP Test8/assets/page_51_fig_7.png",
+                "OOP Test8/assets/page_51_fig_8.png",
+                "OOP Test8/assets/page_51_fig_9.png",
+                "OOP Test8/assets/page_51_fig_10.png",
+                "OOP Test8/assets/page_51_fig_11.png",
+                "OOP Test8/assets/page_51_fig_12.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Member Functions",
+                  "Static Members"
+                ]
+              }
+            },
+            {
+              "id": "L17",
+              "title": "Instance vs. Static Member Function Decision",
+              "view_name": "StaticInstanceDecision_Concept",
+              "page_start": 52,
+              "page_end": 53,
+              "visual_assets": [
+                "OOP Test8/assets/page_52_fig_1.png",
+                "OOP Test8/assets/page_52_fig_2.png",
+                "OOP Test8/assets/page_52_fig_3.png",
+                "OOP Test8/assets/page_52_fig_4.png",
+                "OOP Test8/assets/page_53_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Instance or Static Member Function?"
+                ]
+              }
+            },
+            {
+              "id": "L18",
+              "title": "Static Members Application Example",
+              "view_name": "StaticMembers_CodeExample",
+              "page_start": 54,
+              "page_end": 54,
+              "visual_assets": [
+                "OOP Test8/assets/page_54_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Members"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.5",
+          "title": "Constructors and Destructors",
+          "lessons": [
+            {
+              "id": "L19",
+              "title": "Constructors",
+              "view_name": "Constructors_CodeExample",
+              "page_start": 56,
+              "page_end": 61,
+              "visual_assets": [
+                "OOP Test8/assets/page_56_fig_1.png",
+                "OOP Test8/assets/page_56_fig_2.png",
+                "OOP Test8/assets/page_56_fig_3.png",
+                "OOP Test8/assets/page_56_fig_4.png",
+                "OOP Test8/assets/page_56_fig_5.png",
+                "OOP Test8/assets/page_56_fig_6.png",
+                "OOP Test8/assets/page_56_fig_7.png",
+                "OOP Test8/assets/page_56_fig_8.png",
+                "OOP Test8/assets/page_56_fig_9.png",
+                "OOP Test8/assets/page_56_fig_10.png",
+                "OOP Test8/assets/page_56_fig_11.png",
+                "OOP Test8/assets/page_57_fig_1.png",
+                "OOP Test8/assets/page_57_fig_2.png",
+                "OOP Test8/assets/page_57_fig_3.png",
+                "OOP Test8/assets/page_57_fig_4.png",
+                "OOP Test8/assets/page_58_fig_1.png",
+                "OOP Test8/assets/page_58_fig_2.png",
+                "OOP Test8/assets/page_58_fig_3.png",
+                "OOP Test8/assets/page_59_fig_1.png",
+                "OOP Test8/assets/page_60_fig_1.png",
+                "OOP Test8/assets/page_60_fig_2.png",
+                "OOP Test8/assets/page_60_fig_3.png",
+                "OOP Test8/assets/page_60_fig_4.png",
+                "OOP Test8/assets/page_61_fig_1.png",
+                "OOP Test8/assets/page_61_fig_2.png",
+                "OOP Test8/assets/page_61_fig_3.png",
+                "OOP Test8/assets/page_61_fig_4.png",
+                "OOP Test8/assets/page_61_fig_5.png",
+                "OOP Test8/assets/page_61_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constructors",
+                  "What is wrong with this code?"
+                ]
+              }
+            },
+            {
+              "id": "L20",
+              "title": "Constructors and Static Members",
+              "view_name": "ConstructorsStatic_CodeExample",
+              "page_start": 62,
+              "page_end": 64,
+              "visual_assets": [
+                "OOP Test8/assets/page_62_fig_1.png",
+                "OOP Test8/assets/page_62_fig_2.png",
+                "OOP Test8/assets/page_62_fig_3.png",
+                "OOP Test8/assets/page_62_fig_4.png",
+                "OOP Test8/assets/page_62_fig_5.png",
+                "OOP Test8/assets/page_62_fig_6.png",
+                "OOP Test8/assets/page_63_fig_1.png",
+                "OOP Test8/assets/page_63_fig_2.png",
+                "OOP Test8/assets/page_63_fig_3.png",
+                "OOP Test8/assets/page_63_fig_4.png",
+                "OOP Test8/assets/page_63_fig_5.png",
+                "OOP Test8/assets/page_63_fig_6.png",
+                "OOP Test8/assets/page_64_fig_1.png",
+                "OOP Test8/assets/page_64_fig_2.png",
+                "OOP Test8/assets/page_64_fig_3.png",
+                "OOP Test8/assets/page_64_fig_4.png",
+                "OOP Test8/assets/page_64_fig_5.png",
+                "OOP Test8/assets/page_64_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constructors & Static Members"
+                ]
+              }
+            },
+            {
+              "id": "L21",
+              "title": "Destructors",
+              "view_name": "Destructors_CodeExample",
+              "page_start": 65,
+              "page_end": 68,
+              "visual_assets": [
+                "OOP Test8/assets/page_65_fig_1.png",
+                "OOP Test8/assets/page_65_fig_2.png",
+                "OOP Test8/assets/page_65_fig_3.png",
+                "OOP Test8/assets/page_65_fig_4.png",
+                "OOP Test8/assets/page_65_fig_5.png",
+                "OOP Test8/assets/page_65_fig_6.png",
+                "OOP Test8/assets/page_65_fig_7.png",
+                "OOP Test8/assets/page_66_fig_1.png",
+                "OOP Test8/assets/page_66_fig_2.png",
+                "OOP Test8/assets/page_67_fig_1.png",
+                "OOP Test8/assets/page_67_fig_2.png",
+                "OOP Test8/assets/page_68_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Destructors"
+                ]
+              }
+            },
+            {
+              "id": "L22",
+              "title": "Anonymous Objects",
+              "view_name": "AnonymousObjects_CodeExample",
+              "page_start": 69,
+              "page_end": 69,
+              "visual_assets": [
+                "OOP Test8/assets/page_69_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Anonymous Object"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.6",
+          "title": "Initializing Member Data Fields",
+          "lessons": [
+            {
+              "id": "L23",
+              "title": "Member Data Field Initialization Techniques",
+              "view_name": "DataFieldInitialization_CodeExample",
+              "page_start": 71,
+              "page_end": 79,
+              "visual_assets": [
+                "OOP Test8/assets/page_71_fig_1.png",
+                "OOP Test8/assets/page_71_fig_2.png",
+                "OOP Test8/assets/page_71_fig_3.png",
+                "OOP Test8/assets/page_71_fig_4.png",
+                "OOP Test8/assets/page_72_fig_1.png",
+                "OOP Test8/assets/page_72_fig_2.png",
+                "OOP Test8/assets/page_73_fig_1.png",
+                "OOP Test8/assets/page_73_fig_2.png",
+                "OOP Test8/assets/page_73_fig_3.png",
+                "OOP Test8/assets/page_73_fig_4.png",
+                "OOP Test8/assets/page_74_fig_1.png",
+                "OOP Test8/assets/page_74_fig_2.png",
+                "OOP Test8/assets/page_74_fig_3.png",
+                "OOP Test8/assets/page_74_fig_4.png",
+                "OOP Test8/assets/page_75_fig_1.png",
+                "OOP Test8/assets/page_76_fig_1.png",
+                "OOP Test8/assets/page_77_fig_1.png",
+                "OOP Test8/assets/page_78_fig_1.png",
+                "OOP Test8/assets/page_79_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.7",
+          "title": "Objects with Functions and Arrays",
+          "lessons": [
+            {
+              "id": "L24",
+              "title": "Passing Objects to Functions",
+              "view_name": "ObjectPassing_CodeExample",
+              "page_start": 81,
+              "page_end": 84,
+              "visual_assets": [
+                "OOP Test8/assets/page_81_fig_1.png",
+                "OOP Test8/assets/page_81_fig_2.png",
+                "OOP Test8/assets/page_81_fig_3.png",
+                "OOP Test8/assets/page_81_fig_4.png",
+                "OOP Test8/assets/page_81_fig_5.png",
+                "OOP Test8/assets/page_82_fig_1.png",
+                "OOP Test8/assets/page_83_fig_1.png",
+                "OOP Test8/assets/page_84_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Passing Objects to Functions"
+                ]
+              }
+            },
+            {
+              "id": "L25",
+              "title": "Array of Objects",
+              "view_name": "ObjectArray_CodeExample",
+              "page_start": 85,
+              "page_end": 90,
+              "visual_assets": [
+                "OOP Test8/assets/page_85_fig_1.png",
+                "OOP Test8/assets/page_85_fig_2.png",
+                "OOP Test8/assets/page_85_fig_3.png",
+                "OOP Test8/assets/page_86_fig_1.png",
+                "OOP Test8/assets/page_86_fig_2.png",
+                "OOP Test8/assets/page_87_fig_1.png",
+                "OOP Test8/assets/page_87_fig_4.png",
+                "OOP Test8/assets/page_87_fig_5.png",
+                "OOP Test8/assets/page_88_fig_1.png",
+                "OOP Test8/assets/page_88_fig_4.png",
+                "OOP Test8/assets/page_88_fig_5.png",
+                "OOP Test8/assets/page_89_fig_1.png",
+                "OOP Test8/assets/page_89_fig_4.png",
+                "OOP Test8/assets/page_90_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Array of Objects"
+                ]
+              }
+            },
+            {
+              "id": "L26",
+              "title": "Book Class Design Example",
+              "view_name": "BookClass_DesignCodeExample",
+              "page_start": 91,
+              "page_end": 95,
+              "visual_assets": [
+                "OOP Test8/assets/page_91_fig_1.png",
+                "OOP Test8/assets/page_92_fig_1.png",
+                "OOP Test8/assets/page_93_fig_1.png",
+                "OOP Test8/assets/page_94_fig_1.png",
+                "OOP Test8/assets/page_95_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc1.8",
+          "title": "Designing Object-Oriented Solutions",
+          "lessons": [
+            {
+              "id": "L27",
+              "title": "Principles of Good Class Design",
+              "view_name": "ClassDesign_Principles",
+              "page_start": 97,
+              "page_end": 97,
+              "visual_assets": [
+                "OOP Test8/assets/page_97_fig_1.png",
+                "OOP Test8/assets/page_97_fig_2.png",
+                "OOP Test8/assets/page_97_fig_3.png",
+                "OOP Test8/assets/page_97_fig_4.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Designing a Good Class"
+                ]
+              }
+            },
+            {
+              "id": "L28",
+              "title": "Class Relationships Overview",
+              "view_name": "ClassRelationships_Diagram",
+              "page_start": 98,
+              "page_end": 99,
+              "visual_assets": [
+                "OOP Test8/assets/page_98_fig_1.png",
+                "OOP Test8/assets/page_98_fig_4.png",
+                "OOP Test8/assets/page_98_fig_5.png",
+                "OOP Test8/assets/page_98_fig_6.png",
+                "OOP Test8/assets/page_99_fig_1.png",
+                "OOP Test8/assets/page_99_fig_4.png",
+                "OOP Test8/assets/page_99_fig_5.png",
+                "OOP Test8/assets/page_99_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships"
+                ]
+              }
+            },
+            {
+              "id": "L29",
+              "title": "Aggregation and Composition Relationships",
+              "view_name": "AggregationComposition_Diagram",
+              "page_start": 100,
+              "page_end": 100,
+              "visual_assets": [
+                "OOP Test8/assets/page_100_fig_1.png",
+                "OOP Test8/assets/page_100_fig_2.png",
+                "OOP Test8/assets/page_100_fig_3.png",
+                "OOP Test8/assets/page_100_fig_4.png",
+                "OOP Test8/assets/page_100_fig_5.png",
+                "OOP Test8/assets/page_100_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Aggregation / Composition"
+                ]
+              }
+            },
+            {
+              "id": "L30",
+              "title": "Association Relationships",
+              "view_name": "Association_Diagram",
+              "page_start": 101,
+              "page_end": 101,
+              "visual_assets": [
+                "OOP Test8/assets/page_101_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Association"
+                ]
+              }
+            },
+            {
+              "id": "L31",
+              "title": "Aggregation and Composition Detailed Examples",
+              "view_name": "AggregationComposition_CodeExample",
+              "page_start": 102,
+              "page_end": 103,
+              "visual_assets": [
+                "OOP Test8/assets/page_102_fig_1.png",
+                "OOP Test8/assets/page_103_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Aggregation / Composition"
+                ]
+              }
+            },
+            {
+              "id": "L32",
+              "title": "Inheritance and Generalization Relationships",
+              "view_name": "InheritanceGeneralization_CodeDiagram",
+              "page_start": 104,
+              "page_end": 107,
+              "visual_assets": [
+                "OOP Test8/assets/page_104_fig_1.png",
+                "OOP Test8/assets/page_104_fig_2.png",
+                "OOP Test8/assets/page_104_fig_3.png",
+                "OOP Test8/assets/page_104_fig_4.png",
+                "OOP Test8/assets/page_105_fig_1.png",
+                "OOP Test8/assets/page_106_fig_1.png",
+                "OOP Test8/assets/page_106_fig_2.png",
+                "OOP Test8/assets/page_106_fig_3.png",
+                "OOP Test8/assets/page_106_fig_4.png",
+                "OOP Test8/assets/page_106_fig_5.png",
+                "OOP Test8/assets/page_106_fig_6.png",
+                "OOP Test8/assets/page_106_fig_7.png",
+                "OOP Test8/assets/page_106_fig_8.png",
+                "OOP Test8/assets/page_106_fig_9.png",
+                "OOP Test8/assets/page_106_fig_10.png",
+                "OOP Test8/assets/page_106_fig_11.png",
+                "OOP Test8/assets/page_106_fig_12.png",
+                "OOP Test8/assets/page_106_fig_13.png",
+                "OOP Test8/assets/page_106_fig_14.png",
+                "OOP Test8/assets/page_106_fig_16.png",
+                "OOP Test8/assets/page_106_fig_17.png",
+                "OOP Test8/assets/page_107_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Inheritance / Generalization"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

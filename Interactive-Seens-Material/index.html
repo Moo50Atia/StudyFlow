@@ -1,0 +1,3233 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Object-Oriented Programming: 3D Visual Simulator</title>
+    
+    <!-- CDNs: Tailwind, Google Fonts, Lucide Icons, KaTeX, Three.js -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- Tailwind Config for Theme Tokens -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#090A0F',
+                        glass: 'rgba(17, 19, 28, 0.45)',
+                        learning: '#00A8FF',
+                        ai: '#A020F0',
+                        success: '#00E676',
+                        error: '#FF3D00',
+                        attention: '#FFD600',
+                    },
+                    fontFamily: {
+                        display: ['Outfit', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for Glassmorphism & Core Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090A0F;
+            color: #E2E8F0;
+            overflow-x: hidden;
+        }
+        
+        /* VisionOS Glass Effect */
+        .glass-panel {
+            background: rgba(17, 19, 28, 0.45);
+            backdrop-filter: blur(20px) saturate(185%);
+            -webkit-backdrop-filter: blur(20px) saturate(185%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-panel-interactive {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-panel-interactive:hover {
+            background: rgba(25, 28, 40, 0.6);
+            border-color: rgba(0, 168, 255, 0.3);
+            box-shadow: 0 12px 40px 0 rgba(0, 168, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Outline focus rings for WCAG accessibility */
+        *:focus-visible {
+            outline: 2px solid #00A8FF !important;
+            outline-offset: 2px !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090A0F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 168, 255, 0.4);
+        }
+
+        /* Smooth tab styling */
+        .tab-btn {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, #00A8FF, #A020F0);
+            border-radius: 99px;
+        }
+
+        /* Pulse indicators */
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        .pulse-element {
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col overflow-hidden">
+
+    <!-- Header Navigation -->
+    <header class="glass-panel z-30 px-6 py-4 flex items-center justify-between border-b border-white/5">
+        <div class="flex items-center space-x-3">
+            <!-- Universal Sidebar Toggle -->
+            <button id="universal-sidebar-toggle" aria-label="Toggle Lecture List" class="w-9 h-9 mr-1 rounded-xl glass-panel flex items-center justify-center hover:bg-white/5 text-slate-300 active:scale-95 transition-all">
+                <i data-lucide="menu" class="w-4 h-4"></i>
+            </button>
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-learning to-ai flex items-center justify-center shadow-lg shadow-learning/25">
+                <i data-lucide="terminal" class="text-white w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="font-display font-bold text-lg tracking-tight text-white flex items-center space-x-2">
+                    <span>C++ OOP 3D Visual Simulator</span>
+                    <span class="text-xs bg-learning/20 text-learning px-2 py-0.5 rounded-full font-mono font-medium">r128</span>
+                </h1>
+                <p class="text-xs text-slate-400">Interactive Conceptual Metaphors & Memory Topology</p>
+            </div>
+        </div>
+        
+        <!-- Controls & Utility Indicators -->
+        <div class="flex items-center space-x-4">
+            <!-- Frame Rate Counter -->
+            <div class="hidden sm:flex items-center space-x-2 text-xs font-mono bg-black/40 px-3 py-1.5 rounded-lg border border-white/5">
+                <span class="w-2 h-2 rounded-full bg-success animate-ping"></span>
+                <span class="text-slate-300" id="fps-counter">60 FPS</span>
+            </div>
+            <!-- Help/Info Trigger -->
+            <button id="info-trigger" aria-label="Simulator Guide" class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center hover:bg-white/5 text-slate-300">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Viewport Layout -->
+    <main class="flex-1 flex overflow-hidden relative">
+        
+        <!-- Sidebar Navigation: Lecture / Section selection -->
+        <nav aria-label="Lecture Index" class="w-80 glass-panel border border-white/10 flex flex-col h-[calc(100vh-8.5rem)] z-30 transition-transform duration-300 absolute left-4 top-24 rounded-3xl -translate-x-[360px] shadow-2xl overflow-hidden" id="sidebar">
+            <div class="p-4 border-b border-white/5 flex items-center justify-between">
+                <span class="font-display font-semibold text-slate-200 text-sm tracking-wider uppercase">Lectures & Modules</span>
+                <button class="md:hidden text-slate-400" id="close-sidebar-btn" aria-label="Close menu">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-3 space-y-4" id="lecture-list">
+                <!-- Programmatically populated lecture items -->
+            </div>
+        </nav>
+
+        <!-- Primary Workspace -->
+        <section class="flex-1 flex flex-col relative overflow-hidden bg-obsidian">
+            
+            <!-- Canvas Overlay Header: Lecture Outcomes -->
+            <div class="absolute top-4 left-4 right-4 z-10 pointer-events-none flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <!-- Title & Learning Outcome Panel -->
+                <div class="glass-panel p-4 rounded-2xl max-w-2xl pointer-events-auto">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-2 h-2 rounded-full bg-learning mt-2"></div>
+                        <div>
+                            <span class="text-xs text-learning uppercase tracking-wider font-semibold font-mono" id="current-sec-id">LEC 1 • SEC 1</span>
+                            <h2 class="font-display font-semibold text-white text-base md:text-lg mb-1" id="current-sec-title">Loading Module...</h2>
+                            <p class="text-xs text-slate-300 leading-relaxed font-body" id="current-learning-outcome"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Sidebar Toggle -->
+                <button class="glass-panel p-3 rounded-xl pointer-events-auto self-start hover:bg-white/5 text-slate-300 transition-all active:scale-95" id="open-sidebar-btn" aria-label="Open menu">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- VisionOS Metaphorical Layer Tabs (Floating Bottom Center) -->
+            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-lg px-4 pointer-events-none">
+                <div class="glass-panel p-1.5 rounded-2xl flex justify-around pointer-events-auto shadow-2xl border border-white/10">
+                    <button class="tab-btn active px-3 py-2 rounded-xl text-xs font-medium tracking-wide flex flex-col items-center space-y-1 text-slate-300 hover:text-white" data-tab="0" aria-label="Software Layer">
+                        <i data-lucide="play-circle" class="w-4 h-4 text-learning"></i>
+                        <span>Software</span>
+                    </button>
+                    <button class="tab-btn px-3 py-2 rounded-xl text-xs font-medium tracking-wide flex flex-col items-center space-y-1 text-slate-400 hover:text-white" data-tab="1" aria-label="RAM Topology">
+                        <i data-lucide="layers" class="w-4 h-4 text-ai"></i>
+                        <span>RAM Map</span>
+                    </button>
+                    <button class="tab-btn px-3 py-2 rounded-xl text-xs font-medium tracking-wide flex flex-col items-center space-y-1 text-slate-400 hover:text-white" data-tab="2" aria-label="CPU Dynamics">
+                        <i data-lucide="cpu" class="w-4 h-4 text-success"></i>
+                        <span>CPU / RIP</span>
+                    </button>
+                    <button class="tab-btn px-3 py-2 rounded-xl text-xs font-medium tracking-wide flex flex-col items-center space-y-1 text-slate-400 hover:text-white" data-tab="3" aria-label="GPU FX">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-attention"></i>
+                        <span>GPU FX</span>
+                    </button>
+                    <button class="tab-btn px-3 py-2 rounded-xl text-xs font-medium tracking-wide flex flex-col items-center space-y-1 text-slate-400 hover:text-white" data-tab="4" aria-label="Corrector">
+                        <i data-lucide="shield-alert" class="w-4 h-4 text-error"></i>
+                        <span>Corrector</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- WebGL Canvas Container -->
+            <div class="flex-1 w-full h-full" id="canvas-container">
+                <!-- Three.js Canvas injected here -->
+            </div>
+
+            <!-- Floating Details Panel Restore Button (Hidden by default) -->
+            <button id="restore-panel-btn" aria-label="Open Details Panel" class="absolute right-4 top-24 w-10 h-10 rounded-xl glass-panel flex items-center justify-center hover:bg-white/5 text-slate-300 z-20 hidden active:scale-95 transition-all shadow-xl">
+                <i data-lucide="sliders" class="w-4 h-4 text-learning"></i>
+            </button>
+
+            <!-- Interactive Details Panel -->
+            <div class="absolute right-4 top-24 bottom-24 w-80 glass-panel rounded-3xl flex flex-col p-5 z-20 overflow-hidden transition-transform duration-300 shadow-2xl border border-white/10" id="interactive-panel">
+                <div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+                    <span class="font-display font-semibold text-sm tracking-wide text-white uppercase flex items-center space-x-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-learning"></i>
+                        <span id="panel-layer-name">Layer Details</span>
+                    </span>
+                    <!-- Collapse Panel Button -->
+                    <button id="close-panel-btn" aria-label="Close Details Panel" class="text-slate-400 hover:text-white transition-colors">
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <!-- Dynamic Content Area -->
+                <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs" id="panel-dynamic-content">
+                    <!-- Updated dynamically via JS -->
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Help Modal Overlay -->
+    <div id="info-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden px-4">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 relative">
+            <button id="close-modal-btn" aria-label="Close modal" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h3 class="font-display font-semibold text-lg text-white mb-3">Quick Navigation Guide</h3>
+            <div class="space-y-3 text-xs leading-relaxed text-slate-300">
+                <p>Welcome to the 3D C++ Object-Oriented Visual Simulator. This interactive portal maps C++ concepts into 5 visual layers:</p>
+                <ul class="list-disc pl-4 space-y-1">
+                    <li><strong class="text-learning">Software Layer:</strong> Tweak properties and control execution variables.</li>
+                    <li><strong class="text-ai">RAM Map Layer:</strong> See the exact stack/heap topology offsets.</li>
+                    <li><strong class="text-success">CPU Dynamics Layer:</strong> View active registers ($RIP$, $RAX$) and instruction pointers.</li>
+                    <li><strong class="text-attention">GPU FX Layer:</strong> Dive into shader grids and render pipelines.</li>
+                    <li><strong class="text-error">Corrector:</strong> Debunk standard developer misconceptions.</li>
+                </ul>
+                <p class="border-t border-white/5 pt-3">Use your <strong>mouse</strong> (left click drag to orbit, scroll to zoom, right click to pan) or <strong>keyboard</strong> (Tab to focus, Enter/Space to select) to explore components.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Raw Data definitions for the 38 Lectures -->
+    <script>
+        const simulationData = [
+            {
+                id: "lec1_sec1",
+                label: "Lec1 (Sec1)",
+                title: "Linear Path & Procedural Execution",
+                category: "Lec 1: Procedural Execution",
+                outcome: "A fully illuminated linear path from top to bottom.",
+                misconception: "Demonstrates that execution order is the primary organizational principle rather than data ownership.",
+                generator: "procedural_path",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Control the execution playback of a basic C++ function calculating circular area.</p>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Playback Speed</label>
+                                <input type="range" id="param-speed" min="1" max="100" value="50" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-learning" aria-label="Playback Speed">
+                            </div>
+                            <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl hover:bg-learning/30 active:scale-95 transition-all text-xs font-semibold">Pulse Execution Flow</button>
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Stack Frame Layout:</h4>
+                            <p class="font-mono bg-black/40 p-2 rounded-lg text-slate-300 mb-2">process() [size: 16 bytes]</p>
+                            <table class="w-full text-left font-mono">
+                                <thead>
+                                    <tr class="text-slate-500 border-b border-white/5"><th class="pb-1">Offset</th><th class="pb-1">Variable</th><th class="pb-1">Size</th></tr>
+                                </thead>
+                                <tbody class="text-slate-300">
+                                    <tr><td class="py-1">RBP - 8</td><td class="text-learning">double area</td><td>8 Bytes</td></tr>
+                                    <tr><td class="py-1">RBP - 16</td><td class="text-ai">double radius</td><td>8 Bytes</td></tr>
+                                </tbody>
+                            </table>
+                            <p class="mt-2 text-slate-400 leading-normal">Stack grows downwards when process() is called and shrinks upwards when it returns.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-2">Program Counter & ALU</h4>
+                            <div class="space-y-2 font-mono">
+                                <div class="p-2 bg-black/40 rounded border border-white/5">
+                                    <div class="text-slate-400 text-[10px]">$RIP$ (Instruction Pointer)</div>
+                                    <div class="text-success text-sm tracking-widest" id="cpu-rip-val">0x00401010</div>
+                                </div>
+                                <div class="p-2 bg-black/40 rounded border border-white/5">
+                                    <div class="text-slate-400 text-[10px]">Active Operation</div>
+                                    <div id="cpu-formula" class="mt-1">$$Area = \\pi \\times r^2$$</div>
+                                </div>
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Vertex Buffer Objects (VBOs)</h4>
+                            <p class="text-slate-400 mb-3">VRAM stores structural indices for the procedural path grid & glow vertices.</p>
+                            <pre class="bg-black/40 p-2 rounded-lg font-mono text-[10px] text-attention">
+// Fragment Shader Outline
+void main() {
+  vec3 emission = vec3(0.0, 1.0, 0.0);
+  gl_FragColor = vec4(emission, 1.0);
+}</pre>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">In procedural programming, there are no hardware-enforced boundaries. Variables on the stack are simple memory locations. Any instruction with the correct address offset can read or write to them, as memory safety is purely a compiler-level concept.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec1_sec2",
+                label: "Lec1 (Sec2)",
+                title: "Global Data Lack of Protection",
+                category: "Lec 1: Procedural Execution",
+                outcome: "A central data node physically connected to every logic module with no boundary barriers.",
+                misconception: "Visually proves that global data lacks protection or specific ownership.",
+                generator: "central_node",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Simulate concurrent calls to global data balance from surrounding functions.</p>
+                        <div class="space-y-3">
+                            <button id="btn-withdraw" class="w-full bg-error/20 border border-error text-error py-2 rounded-xl hover:bg-error/30 active:scale-95 transition-all text-xs font-semibold">Invoke Withdraw()</button>
+                            <button id="btn-deposit" class="w-full bg-success/20 border border-success text-success py-2 rounded-xl hover:bg-success/30 active:scale-95 transition-all text-xs font-semibold">Invoke Deposit()</button>
+                            <div class="p-2 bg-black/40 border border-white/5 rounded-xl text-center">
+                                <span class="text-slate-400">Global Balance: </span>
+                                <span class="text-attention font-bold font-mono text-sm" id="live-val-balance">$1,000</span>
+                            </div>
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Static Data Segment (.data)</h4>
+                            <p class="text-slate-400 mb-2">Global variables reside in the fixed memory segment loaded at boot time.</p>
+                            <div class="font-mono bg-black/40 p-3 rounded-lg border border-white/5">
+                                <div class="text-slate-400 text-[10px]">Memory Reference:</div>
+                                <div class="text-ai text-sm font-semibold">balance @ 0x004B2004</div>
+                                <div class="text-slate-500 text-[10px] mt-2">Shared Stack space allocation:</div>
+                                <div class="text-slate-300">Thread Stack A: 4KB</div>
+                                <div class="text-slate-300">Thread Stack B: 4KB</div>
+                            </div>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Lost Update Race Condition</h4>
+                            <p class="text-slate-400 mb-3">Two thread logical contexts load variables concurrently without mutex locks.</p>
+                            <div id="cpu-formula">$$\\text{Lost Update} = \\Delta RAX - \\Delta RBX$$</div>
+                            <pre class="bg-black/40 p-2 rounded-lg font-mono text-[10px] text-slate-300 mt-2">
+MOV RAX, [0x004B2004] ; Thread A
+MOV RBX, [0x004B2004] ; Thread B
+ADD RAX, 100
+SUB RBX, 50</pre>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">GPU Vector Streaming</h4>
+                            <p class="text-slate-400">Selecting the GPU tab animates read/write particle signals travelling from peripheral logic spheres to the central node in VRAM.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Global data resides in a fixed segment accessible by all CPU cores. Without thread-safe hardware synchronization (like lock prefixes, atomic instructions, or memory barriers), concurrent access causes race conditions and cache line thrashing.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec2_sec1",
+                label: "Lec2 (Sec1)",
+                title: "Decentralized Network of Entities",
+                category: "Lec 2: Object Basics",
+                outcome: "A decentralized network of independent communicating entities.",
+                misconception: "Shows that OOP organization is based on interacting autonomous entities rather than a single linear instruction list.",
+                generator: "decentralized_network",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Trigger message pulses between separate objects floating in virtual space.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl hover:bg-learning/30 active:scale-95 transition-all text-xs font-semibold">Pulse Message Passing</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Heap Allocation Layout</h4>
+                            <p class="text-slate-400 mb-2">Each object has a distinct, isolated block in the dynamically allocated heap.</p>
+                            <div class="font-mono text-[11px] space-y-1 bg-black/40 p-2.5 rounded-lg">
+                                <div class="text-learning">obj1 @ 0x01A0 (16 Bytes)</div>
+                                <div class="text-ai">obj2 @ 0x01B8 (16 Bytes)</div>
+                                <div class="text-success">obj3 @ 0x01D0 (16 Bytes)</div>
+                            </div>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">The "this" Pointer routing</h4>
+                            <p class="text-slate-400 mb-2">The context address of the calling object is passed implicitly to the method.</p>
+                            <div id="cpu-formula">$$RIP = \\text{Method Address}$$</div>
+                            <p class="font-mono text-slate-300 text-[11px] mt-2 bg-black/40 p-2 rounded">
+                                mov rcx, 0x01A0 ; Pass obj1 reference<br>
+                                call MethodAddress
+                            </p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Vertex Connections</h4>
+                            <p class="text-slate-400">GPU draws spatial wireframe lines between autonomous object points in the frame buffer representing method linkages.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">OOP execution is not a single linear list of instructions. It uses message passing/method invocation where execution jumps between method entry points with discrete context pointers.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec2_sec2",
+                label: "Lec2 (Sec2)",
+                title: "Binding Identity, State, & Actions",
+                category: "Lec 2: Object Basics",
+                outcome: "A single structural unit binding identity, current data values, and available actions.",
+                misconception: "Demonstrates that state and behavior are inseparable components of an object's identity.",
+                generator: "uml_card",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Manipulate actions to watch variables update in the structural unit.</p>
+                        <div class="space-y-3">
+                            <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl hover:bg-learning/30 active:scale-95 transition-all text-xs font-semibold">Tweak Value (+15%)</button>
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Cohesive Memory Blocks</h4>
+                            <p class="text-slate-400 mb-2">Member parameters are grouped directly behind object start offset.</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded-lg space-y-1">
+                                <div class="text-slate-500">Address Base: 0x01B8</div>
+                                <div>[0x01B8] id_value (4 bytes)</div>
+                                <div>[0x01BC] state_meter (4 bytes)</div>
+                                <div class="text-success">[0x00401200] Shared Action Methods</div>
+                            </div>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Base-Register Offsets</h4>
+                            <p class="text-slate-400 mb-2">ALU instructions fetch variables using offset calculations based on RCX reference.</p>
+                            <div id="cpu-formula">$$\\text{Address} = \\text{Base (RCX)} + \\text{Offset}$$</div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Dynamic Scaling Vertex Shader</h4>
+                            <p class="text-slate-400">Vertex parameters adjust mesh scale coordinates based on modified uniforms representing values change.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Methods are not duplicated in memory for each object instance. The compiler keeps one copy of the function in the text segment and passes the object instance address to it.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec2_sec3",
+                label: "Lec2 (Sec3)",
+                title: "Encapsulation barrier gateway",
+                category: "Lec 2: Object Basics",
+                outcome: "A secured data core accessible only through specific predefined gateways.",
+                misconception: "Proves internal data is unreachable by external code except through the public interface.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Test the defensive shield core by firing direct inputs vs public gateways.</p>
+                        <div class="space-y-2">
+                            <button id="btn-trigger" class="w-full bg-error/20 border border-error text-error py-2 rounded-xl text-xs font-semibold">Fire Direct Write (Fails)</button>
+                            <button id="btn-unlock" class="w-full bg-success/20 border border-success text-success py-2 rounded-xl text-xs font-semibold">Fire Public Gateway (Passes)</button>
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Encapsulation Segment boundaries</h4>
+                            <p class="text-slate-400 font-body">Class access modifiers are purely compiler directives. In physical RAM, all segments are readable if addresses are exposed.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Branch checks</h4>
+                            <p class="text-slate-400">CPU instructions branch to verify values before execution pointer is mapped to mutable memory base.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Alpha Blending Shield</h4>
+                            <p class="text-slate-400 font-body">A translucent bubble represents containment fields. Interactive rays are reflected away when direct access routes are triggered.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Class access levels (private, public) are compiler abstractions. In raw machine code, any memory address is accessible if the code has physical read/write permissions.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec3_sec1",
+                label: "Lec3 (Sec1)",
+                title: "Circle Radius & Dynamic States",
+                category: "Lec 3: State & Behavior",
+                outcome: "A data field whose value directly dictates the physical condition of the object.",
+                misconception: "Proves that state is the collection of an object's current descriptive values.",
+                generator: "state_scaling",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Adjust the radius double parameter below to resize the virtual mesh dynamically.</p>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Circle Radius</label>
+                            <input type="range" id="param-radius" min="1" max="100" value="40" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-learning" aria-label="Radius size">
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">State Variable Offsets</h4>
+                            <p class="text-slate-400 mb-2">Dynamic sliders execute double-precision values changes inside the heap cell.</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2.5 rounded border border-white/5">
+                                [Address Base] + Offset 0x0 = double radius (8 Bytes)
+                            </div>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Mutator Operations</h4>
+                            <p class="text-slate-400">Instruction pointer executes storage values registers updates:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                movsd [rcx], xmm0 ; Update radius slot
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Uniform Scaling Matrix</h4>
+                            <div id="cpu-formula">$$V_{\\text{new}} = V_{\\text{old}} \\times \\text{radius}$$</div>
+                            <p class="text-slate-400 mt-2">Vertex positions multiplier scales vectors coordinates on-screen.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">State is not an abstract concept; it is the physical bit layout of an object's variables in memory. Changing state directly modifies these bits.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec3_sec2",
+                label: "Lec3 (Sec2)",
+                title: "Methods & Execution Behaviors",
+                category: "Lec 3: State & Behavior",
+                outcome: "An entity that processes internal data to perform specific actions.",
+                misconception: "Demonstrates that behavior is the functional capability bundled within the object.",
+                generator: "decentralized_network",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Trigger class routines (getArea, setRadius) and observe internal action gear cycles.</p>
+                        <div class="space-y-2">
+                            <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Execute getArea()</button>
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Code Segment Allocation</h4>
+                            <p class="text-slate-400 font-body">Class methods instructions reside once inside the .text Segment and are shared among all instances.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-2">Execution Flow jump</h4>
+                            <div class="font-mono text-[10px] space-y-1 bg-black/40 p-2 rounded">
+                                <div>[0x00401120] ; getArea() body</div>
+                                <div>FMUL xmm0, xmm0 ; radius * radius</div>
+                                <div>FMUL xmm0, [pi_offset]</div>
+                                <div>RET</div>
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Calculating Animation Rotations</h4>
+                            <p class="text-slate-400">Interactive triggers translate to physical gears rotations utilizing vertex shader transformations matrices.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Behavior is code (text segment) while state is data (stack/heap). An object instance contains data, but its behaviors are shared instructions.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec3_sec3",
+                label: "Lec3 (Sec3)",
+                title: "Class Blueprint vs Instance Object",
+                category: "Lec 3: State & Behavior",
+                outcome: "A set of distinct entities all sharing the exact structural properties defined by a single master template.",
+                misconception: "Clearly separates the abstract definition (Class) from the concrete instances (Objects).",
+                generator: "array_loop",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Spawn new objects from class blueprints onto the conveyer layout.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Spawn Instance</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Heap Instance Layouts</h4>
+                            <p class="text-slate-400">The class description allocates no RAM. Triggering constructors spawns unique memory ranges in heap.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Constructor Invocations</h4>
+                            <p class="text-slate-400">Compilation registers offsets layout. Pointers register constructor commands sequence:</p>
+                            <pre class="bg-black/40 p-2 rounded text-[10px] font-mono text-success">
+call ConstructorAddress ; alloc slot 1
+call ConstructorAddress ; alloc slot 2</pre>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Instanced Offsets Rendering</h4>
+                            <p class="text-slate-400">Three.js instanced geometry renders multiple copies of class cubes using low-overhead GPU offset calls.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">A Class is a compile-time template describing memory layout. Only an Object occupies actual memory at runtime.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec4_sec1",
+                label: "Lec4 (Sec1)",
+                title: "UML Card Layout & Attributes Mapping",
+                category: "Lec 4: UML Notation",
+                outcome: "A complete UML class box with data and behavior separated by horizontal tiers.",
+                misconception: "Ensures students don't confuse the placement of attributes and operations.",
+                generator: "uml_card",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Organize layout classifications: Name on top, Variables in middle, Methods at bottom.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Organize Classes Layout</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Compile-Time Symbols Maps</h4>
+                            <p class="text-slate-400">UML blocks match symbol tables. Address references link directly to offsets configurations.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Memory Address Resolving</h4>
+                            <p class="text-slate-400">Hardcoded offsets map attributes. Access instructions load variable offset indices directly:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">[rcx + 0] = radius</div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">2D Texture mapping</h4>
+                            <p class="text-slate-400">GPU draws text segments via texture coords layouts dynamically mapped to cards face vertices.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">UML class boxes are design blueprints. In hardware, there are no boxes; variables and functions are split into completely different memory segments.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec4_sec2",
+                label: "Lec4 (Sec2)",
+                title: "Access Notation & Static Variables",
+                category: "Lec 4: UML Notation",
+                outcome: "A visual legend where symbols dictate access and underlining represents class-wide sharing.",
+                misconception: "Clarifies that underlines are a functional notation for static members, not just a decorative choice.",
+                generator: "central_node",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Modify gate access symbols: Plus (+) opens gateways, minus (-) raises defensive private walls.</p>
+                        <div class="space-y-2">
+                            <button id="btn-withdraw" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Toggle Static Share</button>
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Shared Static Segment</h4>
+                            <p class="text-slate-400">Static variables reside in a single, common segment (Global Segment) rather than heap blocks.</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2.5 rounded border border-white/5">
+                                static_var @ 0x004C5000
+                            </div>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Direct Address Calling</h4>
+                            <p class="text-slate-400">Static properties bypass object base pointers, querying static registers locations directly:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">mov eax, [0x004C5000]</div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Shared Base Connection</h4>
+                            <p class="text-slate-400 font-body">Selecting the GPU tab shows coordinate tracks linking all model nodes to a single central static anchor plane.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Underlining a member in UML indicates it is static, meaning it does not reside inside object instances in memory; only one copy exists globally.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec5_sec1",
+                label: "Lec5 (Sec1)",
+                title: "The Semicolon Blueprint Seal",
+                category: "Lec 5: Syntax Constraints",
+                outcome: "A complete syntactical unit that is non-functional until sealed by a semicolon.",
+                misconception: "Visually reinforces that the semicolon is a mandatory structural seal for class declarations.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Insert the missing semicolon to complete the class blueprint structure definition.</p>
+                        <button id="btn-unlock" class="w-full bg-success/20 border border-success text-success py-2 rounded-xl text-xs font-semibold">Insert Semicolon Key</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Symbol Registration</h4>
+                            <p class="text-slate-400 font-body">No RAM allocations are active. Compilation error loops prevent symbol registrations without correct semicolon bounds.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Lexical State Machine</h4>
+                            <p class="text-slate-400">Syntax state machine completes class parsing upon reading semicolon token:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                token: ";" => TransitionState(COMPLETE)
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Vertex Wireframe Transition</h4>
+                            <p class="text-slate-400">Inserting the semicolon triggers a glow filter update, rendering the blueprint solid in VRAM.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">In C++, class declarations require a terminating semicolon because they can be followed immediately by object instance definitions (e.g. ` + "`class C {} obj;`" + `).</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec5_sec2",
+                label: "Lec5 (Sec2)",
+                title: "Locked by Default (Private Access)",
+                category: "Lec 5: Syntax Constraints",
+                outcome: "A protective barrier around data fields that defaults to locked status.",
+                misconception: "Demonstrates that members are private by default in a C++ class.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Default structures vault objects. Add "public:" label to unlock external routing access.</p>
+                        <button id="btn-unlock" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Prepend "public:"</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Offset Access Permissions</h4>
+                            <p class="text-slate-400">RAM segments contain raw bytes. Access controls are compile-time flags; hardware RAM executes read operations regardless of accessibility tokens.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Verification Phase</h4>
+                            <p class="text-slate-400">Compiler checking symbols map flags. Denied scopes trigger exit compiler loops:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                Symbol.access == PRIVATE => RaiseCompilerError()
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">GPU Packets Deletion</h4>
+                            <p class="text-slate-400">VRAM transfers show signal packets hitting default private bounds and dissolving.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">In C++, ` + "`class`" + ` members default to ` + "`private`" + `, while ` + "`struct`" + ` members default to ` + "`public`" + `. This is a compile-time rule only.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec6_sec1",
+                label: "Lec6 (Sec1)",
+                title: "Public Gateways vs Private Vaults",
+                category: "Lec 6: Data Isolation",
+                outcome: "An object where external interaction is restricted to public gateways while the core data remains inaccessible.",
+                misconception: "Proves that code outside a class cannot touch private members even if they are known to exist.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Observe variables access pathways. Direct attempts fail; gateway pathways route queries successfully.</p>
+                        <button id="btn-unlock" class="w-full bg-success/20 border border-success text-success py-2 rounded-xl text-xs font-semibold">Route Public Gateway</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Offset Block Boundaries</h4>
+                            <p class="text-slate-400">Access checks prevent external scopes from reading raw offsets, ensuring safe encapsulation wrapper paths.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Interface Routines Branching</h4>
+                            <p class="text-slate-400 font-body">Execution pointer jumps to gateway codes to load variables registers:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                call GetRadiusAddress ; Returns [rcx + 8]
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Deflection mesh mapping</h4>
+                            <p class="text-slate-400">Incoming request particles bounce off vault models unless they align with interface corridors.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Code outside a class cannot access private members directly, even if the memory address of the member is known (unless cast via unsafe pointers).</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec6_sec2",
+                label: "Lec6 (Sec2)",
+                title: "Public Scope Declaration",
+                category: "Lec 6: Data Isolation",
+                outcome: "A variable that is automatically locked by the compiler until explicitly marked as public.",
+                misconception: "Reinforces that the default state of class members is private, not public.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Prepend 'public:' in the code viewer below to release lock restrictions on variables.</p>
+                        <button id="btn-unlock" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Inject 'public:' directive</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Symbol Table Registration</h4>
+                            <p class="text-slate-400 font-body">Compiler metadata updates access flag descriptors from default lock status to public visibility status.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Syntax Lexing updates</h4>
+                            <p class="text-slate-400 font-body">Semantic parser updates member definitions flags dynamically during validation checks.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Texture Coordinate key</h4>
+                            <p class="text-slate-400">Transition animation triggers a key mesh rotational lock release on card model containers.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">C++ variables declared inside class brackets are private by default. A public section must be explicitly declared to open them.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec6_sec3",
+                label: "Lec6 (Sec3)",
+                title: "State Corruption via Public Exposure",
+                category: "Lec 6: Data Isolation",
+                outcome: "A visual demonstration of how public data exposure leads to state corruption.",
+                misconception: "Shows that making data private isn't just about 'hiding', but about protecting the system's logic and stability.",
+                generator: "state_scaling",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Drag slider below zero to bypass validation gates, causing a glitch crash on visual states.</p>
+                        <div>
+                            <label class="block text-slate-400 mb-1">Exposed Radius Value</label>
+                            <input type="range" id="param-radius" min="-50" max="50" value="20" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-error" aria-label="Slider radius">
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Raw Unvalidated overwriting</h4>
+                            <p class="text-slate-400 mb-2">Bypassing setter validation writes invalid values directly to the RAM cell:</p>
+                            <div class="font-mono text-error text-[11px] bg-black/40 p-2 rounded">
+                                [0x01B8] = -15.000000
+                            </div>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">ALU Calculation Errors</h4>
+                            <p class="text-slate-400 mb-2">CPU executes math operations using garbage values register configurations:</p>
+                            <div class="font-mono text-error text-[11px] bg-black/40 p-2 rounded">
+                                FMULSD xmm0, xmm0 ; Multiplying negatives
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Shader Noise Distortion</h4>
+                            <p class="text-slate-400">Negative dimensions Uniform values inject static glitch textures parameters to geometries renderer updates.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Public data exposure bypasses validation logic, allowing external code to put the hardware state into invalid configurations.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec7_sec1",
+                label: "Lec7 (Sec1)",
+                title: "Inline Execution & Memory Efficiency",
+                category: "Lec 7: Inline & Definitions",
+                outcome: "A function physically embedded within class boundaries, marked for high-speed execution.",
+                misconception: "Clarifies that code written inside the class isn't just 'there', but is functionally optimized as inline by the compiler.",
+                generator: "procedural_path",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Run call execution. Watch call stack track complete inline without jumps.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Execute Inline call</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Stack Frame Bypassing</h4>
+                            <p class="text-slate-400 font-body">No new stack activation frames are allocated for inline executions, reducing stack overhead blocks dynamically.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Instruction Inlining</h4>
+                            <p class="text-slate-400 mb-2">Instructions body copies directly into caller thread track:</p>
+                            <pre class="bg-black/40 p-2 rounded text-[10px] font-mono text-slate-300">
+; Call jumps omitted
+MOV RAX, [RCX+8]
+MUL RAX, RAX</pre>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Dynamic Color Shifts</h4>
+                            <p class="text-slate-400">Inline triggers change color values directly along the caller mesh timeline coordinates in VRAM.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Writing functions inside the class declaration implicitly tells the compiler to inline them. This trades code size (in flash/ROM) for speed (fewer instructions).</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec7_sec2",
+                label: "Lec7 (Sec2)",
+                title: "Namespace & Scope operator (::)",
+                category: "Lec 7: Inline & Definitions",
+                outcome: "A functional link between a clean interface inside the class and detailed logic outside.",
+                misconception: "Ensures students understand that external functions are still part of the class identity through the :: operator.",
+                generator: "comparison_lanes",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Pulse execution to stream values over the scope resolution operator bridge linking class to external codes.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Pulse :: Operator</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Symbol table bindings</h4>
+                            <p class="text-slate-400">Class interface declarations and definitions body map distinct sections linked by scope symbols tags.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Absolute target addresses</h4>
+                            <p class="text-slate-400">Scope keys translate compiler references to jumps to external memory offsets locations:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                jmp ClassName::MethodName
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">3D Bridge particles</h4>
+                            <p class="text-slate-400 font-body">Glowing particle streams move across the :: bridge mesh linking card models segments in space.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">The :: operator is a compiler directive to associate an external function with a class's scope, ensuring the correct member offsets are compiled.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec7_sec3",
+                label: "Lec7 (Sec3)",
+                title: "Inline Keyword (External Definition)",
+                category: "Lec 7: Inline & Definitions",
+                outcome: "Code logic that is physically defined elsewhere but virtually 'injected' at the call site for speed.",
+                misconception: "Proves that 'outside definition' and 'inline optimization' are not mutually exclusive when the inline keyword is used.",
+                generator: "procedural_path",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Toggle inline definitions. Watch code segments copy directly to caller sites.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Pulse Inline compiler injection</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Optimized Execution Footprint</h4>
+                            <p class="text-slate-400">Body definitions copy locally, preventing call frame stack allocations during execution pointers calls.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Eliminating Jump Instructions</h4>
+                            <p class="text-slate-400 font-body">Inline hint replaces assembly instructions calls, removing RSP manipulation instructions segments.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Visual Injector Pipelines</h4>
+                            <p class="text-slate-400">Timeline streams fragment and duplicate copy meshes directly along the active rendering line pipelines.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">The ` + "`inline`" + ` keyword is a compiler hint. External definitions can still be inlined if defined in headers with the ` + "`inline`" + ` keyword.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec8_sec1",
+                label: "Lec8 (Sec1)",
+                title: "Member Function Out of Order Access",
+                category: "Lec 8: Variables Scoping",
+                outcome: "A central data point physically linked to every logic module regardless of spatial order.",
+                misconception: "Proves that member functions do not need to be declared after data fields to access them.",
+                generator: "central_node",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Rearrange members sequences variables. Access lines will query targets successfully regardless of order.</p>
+                        <button id="btn-withdraw" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Trigger Method query</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Class Symbol maps</h4>
+                            <p class="text-slate-400 font-body">Offsets list compiles completely during multi-pass compiling. Real address bindings match parameters accurately.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Multi-Pass compilation</h4>
+                            <p class="text-slate-400 font-body">Class definitions evaluate twice: first registering variables, then translating methods offsets contexts.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Dynamic connection links</h4>
+                            <p class="text-slate-400 font-body">Selecting GPU tab triggers dynamic laser coordinates rendering streams bridging out-of-order nodes.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Member functions can access variables declared later in the class because C++ compilers parse class declarations completely before compiling method bodies.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec8_sec2",
+                label: "Lec8 (Sec2)",
+                title: "Local Variables Lifetime Scopes",
+                category: "Lec 8: Variables Scoping",
+                outcome: "A variable that exists only during the 'lifetime' of its parent frame.",
+                misconception: "Shows that local variables are not persistent and cannot be reached once the function terminates.",
+                generator: "memory_scope",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Step inside function scopes. Exiting scope bounds causes variables to dissolve completely.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Run & Terminate Function</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Stack pointer Reclamation</h4>
+                            <p class="text-slate-400 font-body">Function returns increment the RSP stack pointer, mapping the variable memory segment as unallocated buffer pool.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Scope bounds instructions</h4>
+                            <pre class="bg-black/40 p-2 rounded text-[10px] font-mono text-slate-300">
+sub rsp, 4 ; allocate local variable
+; ... execution ...
+add rsp, 4 ; reclaim local stack
+ret</pre>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Scope Dissolution effects</h4>
+                            <p class="text-slate-400 font-body">Exiting boundaries triggers physics explosion shader parameters, dissolving models meshes into floating dust coordinates.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Local variables are allocated on the Stack. Once the function execution completes, their memory is reclaimed, and they can no longer be accessed.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec8_sec3",
+                label: "Lec8 (Sec3)",
+                title: "Variables Shadowing Scope Masks",
+                category: "Lec 8: Variables Scoping",
+                outcome: "A visual hierarchy where the nearest scope object masks the more distant one.",
+                misconception: "Proves that naming a local variable the same as a data field doesn't delete the data field; it just makes it invisible to simple references.",
+                generator: "memory_scope",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Observe variable highlighting. Local variables shadow members fields without deleting them.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Highlight Active Scope</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Coexisting Addresses</h4>
+                            <p class="text-slate-400 font-mono text-[11px]">
+                                Local var 'x': RSP - 8<br>
+                                Member var 'x': RCX + 8
+                            </p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Scoped lookup resolving</h4>
+                            <p class="text-slate-400 font-body">Compiler matches simple symbol references to closest local stack scopes pointers automatically.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Depth Shadowing parameters</h4>
+                            <p class="text-slate-400 font-body">Targeting lasers highlight only local mesh blocks, leaving overshadowed member blocks in low-brightness gradients.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Shadowing does not delete or overwrite the member variable; it simply shifts the compiler's lookup scope, hiding the member behind the local.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec8_sec4",
+                label: "Lec8 (Sec4)",
+                title: "Precision Scoping Keys (this->, ::)",
+                category: "Lec 8: Variables Scoping",
+                outcome: "Precise navigation through memory layers using explicit scoping keys.",
+                misconception: "Demonstrates that 'hidden' variables are always reachable if the correct address syntax is used.",
+                generator: "memory_scope",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Toggle scopes targets keys (this-> or ::) to route lasers past local limits to hidden fields.</p>
+                        <div class="space-y-2">
+                            <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Execute this->MemberAccess</button>
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Multi-Layer Segment Addresses</h4>
+                            <p class="text-slate-400 font-mono text-[11px]">
+                                Global segment: ::x @ 0x0040A0<br>
+                                Heap base: this->x @ RCX + 8<br>
+                                Stack local: x @ RBP - 8
+                            </p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Explicit Addressing commands</h4>
+                            <pre class="bg-black/40 p-2 rounded text-[10px] font-mono text-slate-300">
+mov eax, [rcx+8]   ; this->x
+mov eax, [0x0040A0] ; ::x
+mov eax, [rbp-8]   ; local x</pre>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Scoping lasers routes</h4>
+                            <p class="text-slate-400">Targeting lasers map distinct neon glow paths to the respective memory layer mesh structures in space.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Scoping operators (` + "`this->`" + `, ` + "`::`" + `) explicitly tell the compiler to look in different scopes, bypassing the default local search order.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec9_sec1",
+                label: "Lec9 (Sec1)",
+                title: "Class Naming PascalCase Standard",
+                category: "Lec 9: Naming Conventions",
+                outcome: "A clear visual transition from standard text to the formal class naming convention.",
+                misconception: "Prevents students from using camelCase (lowercase start) for class blueprints.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Convert variable names format strings. Toggle PascalCase formatting tools stamping.</p>
+                        <button id="btn-unlock" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Format to PascalCase</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Symbol Table naming</h4>
+                            <p class="text-slate-400">No runtime RAM allocations are active. Naming validation parses custom types in PascalCase tags.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Lexical token matching</h4>
+                            <p class="text-slate-400 font-body">Parser registers custom type tokens inside compile-time names map directories.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Metallic Text rendering</h4>
+                            <p class="text-slate-400">Stamping converts lowercases. Dynamic scaling applies neon metallic parameters styles to the output models.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">PascalCase is a readability convention for classes, helping developers differentiate between class types and variable instances at a glance.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec9_sec2",
+                label: "Lec9 (Sec2)",
+                title: "Library Lower_case vs Custom PascalCase",
+                category: "Lec 9: Naming Conventions",
+                outcome: "A visual distinction between the static naming of system types and the dynamic naming of user objects.",
+                misconception: "Ensures students do not capitalize standard library types like string by mistake.",
+                generator: "comparison_lanes",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Separate library types (lowercase std::string) from custom types (PascalCase Circle class).</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Pulse namespace comparison</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Namespace partitions</h4>
+                            <p class="text-slate-400 font-body">Compiler segments definitions: standard classes map to system folders, user layouts map to custom segments structures.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Token mapping routes</h4>
+                            <p class="text-slate-400 font-body">Types declarations link to precompiled library headers indexes dynamically during references resolution checks.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Mesh Color splits</h4>
+                            <p class="text-slate-400">Library elements display in dim purple wires, whereas user models display in bright blue solid grids in VRAM.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Standard library types like ` + "`string`" + ` are lowercased for historical C-compatibility. User-defined classes should follow PascalCase.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec10_sec1",
+                label: "Lec10 (Sec1)",
+                title: "Assignment Data Duplication",
+                category: "Lec 10: Assignment & Equality",
+                outcome: "A synchronized state where two distinct containers hold identical internal data.",
+                misconception: "Proves that assignment creates a data duplicate rather than merging two objects into one.",
+                generator: "comparison_lanes",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Trigger assignment (c2 = c1). Value streams copy values parameters into independent slots.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Trigger Assignment (=)</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Dual Heap allocations</h4>
+                            <p class="text-slate-400 font-mono text-[11px]">
+                                c1 @ 0x01E0 (16 Bytes)<br>
+                                c2 @ 0x01F0 (16 Bytes)
+                            </p>
+                            <p class="text-slate-400 text-xs mt-2">Values are copied from 0x01E0 to 0x01F0, leaving two distinct duplicates in RAM.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Block Copy instructions</h4>
+                            <p class="text-slate-400 font-body">CPU runs sequential registers loads and stores to move data bytes across segments addresses:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                REP MOVSQ ; Block copy memory chunks
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Parallel value streams</h4>
+                            <p class="text-slate-400 font-body">Glowing particle streams float across space dividing blocks, updating independent card values meshes in VRAM.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Object assignment (` + "`obj2 = obj1`" + `) copies values to a new memory location. The two objects remain distinct entities in RAM.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec10_sec2",
+                label: "Lec10 (Sec2)",
+                title: "Object Equality Limits (==)",
+                category: "Lec 10: Assignment & Equality",
+                outcome: "A visual block indicating that equality checking is a non-default functionality for objects.",
+                misconception: "Warns students that the success of the = operator does not mean the == operator is automatically available.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Test comparing objects using raw == operators. The compiler rejects comparisons without overloads.</p>
+                        <button id="btn-trigger" class="w-full bg-error/20 border border-error text-error py-2 rounded-xl text-xs font-semibold">Test Comparison (==)</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Symbol validation blocks</h4>
+                            <p class="text-slate-400">Compiler flags halts. No memory assignments execute since comparison routines are unregistered.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Operator check halts</h4>
+                            <p class="text-slate-400 font-body">Type checking searches overloads table records, failing binary compiling upon mapping missing signatures tags.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Glow Distortion static</h4>
+                            <p class="text-slate-400 font-body">Card models crash coordinates collision points. Distortion fragment shaders render red warning noise overlays.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">The compiler does not automatically know how to compare complex structures; developers must explicitly overload the ` + "`==`" + ` operator.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec11_sec1",
+                label: "Lec11 (Sec1)",
+                title: "Abstraction Complexity covers",
+                category: "Lec 11: OOP Abstraction",
+                outcome: "A simplified view where only high-level operations remain accessible.",
+                misconception: "Clarifies that abstraction isn't removing features, but hiding the complexity of their internal execution.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Slide abstraction screens. High-level buttons remain while inner logic boards are covered.</p>
+                        <button id="btn-unlock" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Toggle Abstraction Screen</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Inner details offsets</h4>
+                            <p class="text-slate-400">Data values and layouts exist in RAM, but client references are restricted to public headers endpoints offsets.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Encapsulated jumps</h4>
+                            <p class="text-slate-400 font-body">Details are stored in sub-routines. Calling code executes high-level calls using single jump targets.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Sliding Shield panels</h4>
+                            <p class="text-slate-400 font-body">Selecting the GPU tab shows sliding glass panels moving over complex wireframe PCB layouts in VRAM.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Abstraction is not removing implementation; it is decoupling the interface from internal hardware instructions to manage complexity.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec11_sec2",
+                label: "Lec11 (Sec2)",
+                title: "Encapsulation Gears Shell",
+                category: "Lec 11: OOP Abstraction",
+                outcome: "A secured unit where internal data is unreachable except through predefined method paths.",
+                misconception: "Proves that encapsulation is a physical-logical barrier for data protection rather than just organization.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Rotate gears locks. Inputs must route through matching gateways to alter encapsulated parameters.</p>
+                        <button id="btn-unlock" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Align Gears interface</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Cohesive Memory grouping</h4>
+                            <p class="text-slate-400">Bundling data and function pointers records locks parameters inside address segments buffers ranges.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Access control routes</h4>
+                            <p class="text-slate-400">Registers mutate only when control pathways pass validation blocks segments checks successfully.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Aligning gate keys</h4>
+                            <p class="text-slate-400 font-body">Rotating gear models components must mesh dynamically in space to clear incoming data vectors paths in VRAM.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Encapsulation enforces data integrity. It prevents external code from directly writing arbitrary values to object memory.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec12_sec1",
+                label: "Lec12 (Sec1)",
+                title: "Public Exposure Data Corruption",
+                category: "Lec 12: Architecture Fragility",
+                outcome: "Data corruption occurring due to the absence of a protective logic barrier.",
+                misconception: "Proves that public status is not just a 'shorthand' but a significant safety risk.",
+                generator: "state_scaling",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Write negative values directly to variable. Watch structural meters crash due to missing locks.</p>
+                        <input type="range" id="param-radius" min="-50" max="50" value="20" class="w-full h-1 bg-white/10 rounded appearance-none accent-error" aria-label="Slider radius border">`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Direct unverified writes</h4>
+                            <p class="text-slate-400 font-body">Bypassing intermediate stack validation registers writes corrupt values straight to memory addresses.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Checking bypass code</h4>
+                            <p class="text-slate-400 font-body">CPU runs raw store commands directly, bypassing constraint branch checks, corrupting ALU calculation states.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Physics structural collapse</h4>
+                            <p class="text-slate-400">Corrupt values values trigger a vertex deformation physics, crumbling 3D models towers into fragments.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Public variables are unsafe because they expose raw hardware registers to external mutations, risking crash conditions.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec12_sec2",
+                label: "Lec12 (Sec2)",
+                title: "Fragile Architecture Offset breaks",
+                category: "Lec 12: Architecture Fragility",
+                outcome: "A fragile architecture where internal implementation changes cause global system failures.",
+                misconception: "Demonstrates that data hiding is essential for long-term code maintainability, not just immediate security.",
+                generator: "decentralized_network",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Modify internal core variable locations. Connection cables will snap as offset targets break.</p>
+                        <button id="btn-trigger" class="w-full bg-error/20 border border-error text-error py-2 rounded-xl text-xs font-semibold">Modify Offset Location</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Interface offset breakages</h4>
+                            <p class="text-slate-400 mb-2">Changing data sequences order shifts memory locations, causing old compilations binary offsets queries to fail.</p>
+                            <div class="font-mono text-[10px] space-y-1 bg-black/40 p-2 rounded">
+                                <div>[Old Offset] +8: var_a</div>
+                                <div class="text-error">[New Offset] +16: var_a (shifted)</div>
+                            </div>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Garbage addresses loading</h4>
+                            <p class="text-slate-400 font-body">Caller registers read shifted indices, loading garbage bytes strings and triggering segmentation faults halts.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Snapping Link cables</h4>
+                            <p class="text-slate-400">Mesh adjustments snap connecting lines linking model nodes, triggering crimson flashing warning planes overlays.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Public data exposure creates tight coupling. Shifting a single member variable shifts memory offsets, breaking external binaries.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec13_sec1",
+                label: "Lec13 (Sec1)",
+                title: "Encapsulated Access Routes",
+                category: "Lec 13: Encapsulation APIs",
+                outcome: "A secure architecture where all data interaction is routed through public control points.",
+                misconception: "Demonstrates that 'hiding' data doesn't mean it's unusable, just that its access is formally managed.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Interact with data core. Signals are routed through public access point bridges.</p>
+                        <button id="btn-unlock" class="w-full bg-success/20 border border-success text-success py-2 rounded-xl text-xs font-semibold">Access via Getter/Setter</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Accessor Frame layout</h4>
+                            <p class="text-slate-400 font-body">Accessing variables executes intermediate accessor call frames stack allocation, protecting direct memory slots offsets.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-2">Gateway jump sequences</h4>
+                            <p class="text-slate-400 mb-2">Instructions execute verification checks inside setter body before mutating memory registers:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                call ClassName::SetRadius
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Bridge pathway streams</h4>
+                            <p class="text-slate-400 font-body">Signals travel exclusively along defined neon conduit bridges coordinates to query data models components.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Accessors and mutators are the interface contract, protecting the raw memory slots from invalid state configurations.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec13_sec2",
+                label: "Lec13 (Sec2)",
+                title: "Non-destructive Const Getters",
+                category: "Lec 13: Encapsulation APIs",
+                outcome: "A non-destructive operation that retrieves information without risking state mutation.",
+                misconception: "Visually reinforces that getters should never change internal data.",
+                generator: "comparison_lanes",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Read variables values. Const filters guarantee duplicates read-only emissions without state updates.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Pulse Const Getter</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Immutable Stack Frame</h4>
+                            <p class="text-slate-400 font-body">Object bytes segment is marked read-only inside access method stack limits, preventing modification operations.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Const qualifiers checks</h4>
+                            <p class="text-slate-400">Compiler treats "this" reference pointer type as read-only const pointer, blocking compile-time write allocations.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Green Lock filters</h4>
+                            <p class="text-slate-400">Read signals pass through a translucent green filter card, duplicating data parameters without altering base mesh geometries.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Marking getters ` + "`const`" + ` ensures the function cannot mutate object bits, preventing accidental side effects at the CPU level.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec13_sec3",
+                label: "Lec13 (Sec3)",
+                title: "Boundary checks validation",
+                category: "Lec 13: Encapsulation APIs",
+                outcome: "A defensive interface that rejects invalid data to maintain object stability.",
+                misconception: "Shows that setters are purposeful logic barriers, not just passive assignment functions.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Submit inputs. Values falling outside bounds limits collide with gates check filters and bounce away.</p>
+                        <button id="btn-unlock" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Submit Out-of-bounds input</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Conditional memory writes</h4>
+                            <p class="text-slate-400 font-body">Data variables heap addresses update if and only if values clear boundary checks parameters limits.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-2">Conditional Jumps Checks</h4>
+                            <pre class="bg-black/40 p-2 rounded text-[10px] font-mono text-slate-300">
+cmp [esp+4], 120 ; Compare with Limit
+jg error_handler ; Jump if Greater to abort
+mov [rcx+8], eax ; Write memory</pre>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Gate Filter collisions</h4>
+                            <p class="text-slate-400">Invalid value cubes collide with boundary filter planes grids, triggering crimson particle explosion shaders.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Setters are validation checkpoints. They ensure the hardware state remains within defined, safe parameters.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec15_sec1",
+                label: "Lec15 (Sec1)",
+                title: "Constructor Object Initialization",
+                category: "Lec 15: Object Lifecycle",
+                outcome: "An object reaching a valid state automatically upon creation.",
+                misconception: "Shows that constructors are system-triggered events, not manual functions called after creation.",
+                generator: "syntax_lock",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Initialize wireframe models by stamping them with the constructor initialization stamp.</p>
+                        <button id="btn-unlock" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Apply Constructor Stamp</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Default Initialization writes</h4>
+                            <p class="text-slate-400 font-body">Heap blocks segment allocations instantly write default variable footprints values to addresses fields.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Constructor Jumps</h4>
+                            <p class="text-slate-400 font-body">IP branches to constructor addresses upon stack pushes or malloc triggers, populating variables ranges:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                call ClassName::Constructor
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Materialization Shaders</h4>
+                            <p class="text-slate-400">Stamping wireframes shifts color uniforms, transitioning meshes structures into solid metallic textures.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Constructors are automatically executed by the system runtime at object creation; they cannot be manually invoked on existing objects.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec15_sec2",
+                label: "Lec15 (Sec2)",
+                title: "Automatic Destructors cleanup",
+                category: "Lec 15: Object Lifecycle",
+                outcome: "An object's existence ending automatically when its scope expires.",
+                misconception: "Demonstrates that the destructor is the inverse of the constructor, cleaning up memory as objects die.",
+                generator: "memory_scope",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Move blocks past active scope boundaries. Destructors reclaim buffers immediately.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Trigger Destructor scope exit</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Heap blocks deletions</h4>
+                            <p class="text-slate-400">Destructors invoke memory free/delete actions, returning heap segments and offsets ranges back to system pools.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Stack Pop sequences</h4>
+                            <p class="text-slate-400 font-body">Braces triggers load destructors addresses, deleting segments and shrinking RSP registers bounds:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                call ClassName::~Destructor
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Explosion Particle shaders</h4>
+                            <p class="text-slate-400">Exiting boundaries triggers dynamic particles fade-out animations, dissolving meshes to empty space in VRAM.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Destructors run automatically when objects go out of scope, releasing critical resources (like file handles or heap memory) back to the OS.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec15_sec3",
+                label: "Lec15 (Sec3)",
+                title: "Initializer Lists vs Body Assignments",
+                category: "Lec 15: Object Lifecycle",
+                outcome: "Data fields initialized prior to the execution of the constructor's code body.",
+                misconception: "Visualizes the efficiency difference between initializing a member and assigning it inside the constructor body.",
+                generator: "comparison_lanes",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Compare initialization routes. Lists inject variables directly; body assignments execute double writes.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Pulse Initializer list</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Direct Variable mapping</h4>
+                            <p class="text-slate-400">Initializer lists map values straight to variable cells, bypassing default variables setups allocations loops.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Assembly steps savings</h4>
+                            <p class="text-slate-400">CPU runs direct values writing, avoiding intermediate default construction instructions operations loops.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Bypassing containers flows</h4>
+                            <p class="text-slate-400">Values spheres stream straight into heap address slots, bypassing empty constructor box visuals in VRAM.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Initializer lists initialize members directly, avoiding double-initialization overhead and allowing initialization of ` + "`const`" + ` and reference members.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec15_sec4",
+                label: "Lec15 (Sec4)",
+                title: "Constructor Delegation routing",
+                category: "Lec 15: Object Lifecycle",
+                outcome: "One constructor leveraging the logic of another to avoid code duplication.",
+                misconception: "Prevents the creation of temporary objects by showing delegation as a direct logic transfer.",
+                generator: "comparison_lanes",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Stream construction tasks. Primary parameters delegate operations routes to target constructors.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Trigger Constructor Delegation</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Common Object reference</h4>
+                            <p class="text-slate-400">Execution operates directly on the same memory footprint block, preventing redundant temporary object spaces allocation.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Same Context Address Passing</h4>
+                            <p class="text-slate-400 font-body">Registers pass identical RCX "this" pointer references when branching instruction scopes pointers:</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded">
+                                mov rcx, [this_pointer]
+                            </div>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Constructor Block bridges</h4>
+                            <p class="text-slate-400">VRAM shows calling signals bridging from primary constructor mesh straight to target constructor model.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Delegating constructors reuse initialization code within the same memory footprint, preventing redundant work.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec15_sec5",
+                label: "Lec15 (Sec5)",
+                title: "Pass by Value vs Pass by Reference",
+                category: "Lec 15: Object Lifecycle",
+                outcome: "References providing a direct path to existing data without duplication overhead.",
+                misconception: "Proves that passing objects by reference is more memory-efficient than passing by value.",
+                generator: "comparison_lanes",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Compare lanes. Value duplicates the entire block; reference maps a pointer line.</p>
+                        <div class="space-y-2">
+                            <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Pulse Pass-By-Reference</button>
+                        </div>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Allocation Lanes differences</h4>
+                            <p class="text-slate-400 mb-2">Value copy lane instantiates a duplicate block; reference lane creates a single 8-byte pointer addressing the original heap/stack object.</p>
+                            <div class="font-mono text-[11px] bg-black/40 p-2 rounded border border-white/5 space-y-1">
+                                <div>Value Copy: 64 Bytes Allocated</div>
+                                <div class="text-success">Reference Pass: 8 Bytes Pointer</div>
+                            </div>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Clock cycle comparisons</h4>
+                            <p class="text-slate-400">Pass-by-value invokes copy constructors (expensive loops). Pass-by-reference simply loads pointer addresses registers in 1 instruction cycle.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Laser reference mapping</h4>
+                            <p class="text-slate-400">VRAM displays a single targeting laser mapping back to the base model instead of copy duplicating models.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">Passing objects by reference avoids expensive heap/stack allocations, drastically improving CPU cache performance and reducing instruction count.</p>
+                        </div>`
+                    }
+                }
+            },
+            {
+                id: "lec15_sec6",
+                label: "Lec15 (Sec6)",
+                title: "Array Object Constructor Loop",
+                category: "Lec 15: Object Lifecycle",
+                outcome: "A sequence of objects each individually initialized by the class constructor.",
+                misconception: "Demonstrates that an array of objects is not just memory allocation but a series of individual construction events.",
+                generator: "array_loop",
+                layers: {
+                    software: {
+                        content: `<p class="mb-3">Run construction arrays. An initialization stamp moves index by index, populating slots.</p>
+                        <button id="btn-trigger" class="w-full bg-learning/20 border border-learning text-learning py-2 rounded-xl text-xs font-semibold">Pulse Array Loop</button>`
+                    },
+                    ram: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Contiguous Grid allocation</h4>
+                            <p class="text-slate-400 font-body">Array allocations allocate a contiguous block of size [N * object_size]. Loop runs call sequence initializing each offset.</p>
+                        </div>`
+                    },
+                    cpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Assembly Counter loops</h4>
+                            <p class="text-slate-400">Instruction pointer iterates using ECX counter registers, resolving addresses offsets: offset = base + index * size.</p>
+                        </div>`
+                    },
+                    gpu: {
+                        content: `<div>
+                            <h4 class="font-semibold text-slate-200 mb-1">Instancing Grid animations</h4>
+                            <p class="text-slate-400">Array indices stamp models sequentially. Loop animations highlight cells inside VRAM buffers.</p>
+                        </div>`
+                    },
+                    corrector: {
+                        content: `<div class="bg-error/10 border border-error/20 p-3 rounded-xl">
+                            <h4 class="font-semibold text-error mb-1">Misconception Shattered:</h4>
+                            <p class="text-slate-300 leading-relaxed">An array of objects does not just allocate memory; it executes the class constructor for every individual element in the array sequentially.</p>
+                        </div>`
+                    }
+                }
+            }
+        ];
+    </script>
+
+    <!-- Core Javascript Code (Managers, Three.js scenes, App logic) -->
+    <script>
+        class ApplicationManager {
+            constructor() {
+                this.activeSection = simulationData[0];
+                this.activeTab = 0; // Default: Software
+                
+                this.sceneManager = null;
+                this.cameraManager = null;
+                this.lightingManager = null;
+                this.memoryOptimizer = null;
+
+                this.initUI();
+                this.loadSection(simulationData[0]);
+            }
+
+            initUI() {
+                // Initialize Sidebar navigation
+                const lectureList = document.getElementById('lecture-list');
+                const categories = {};
+                
+                simulationData.forEach(sec => {
+                    if (!categories[sec.category]) {
+                        categories[sec.category] = [];
+                    }
+                    categories[sec.category].push(sec);
+                });
+
+                let menuHtml = '';
+                for (const catName in categories) {
+                    menuHtml += `
+                        <div class="mb-4">
+                            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 font-display">${catName}</h4>
+                            <div class="space-y-1">
+                                ${categories[catName].map(sec => `
+                                    <button class="w-full text-left px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all font-mono font-medium flex items-center space-x-2 navigation-sec-btn" data-sec-id="${sec.id}">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-600 indicator"></span>
+                                        <span class="truncate">${sec.label}: ${sec.title}</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                lectureList.innerHTML = menuHtml;
+
+                // Event Listeners for Module Navigation
+                document.querySelectorAll('.navigation-sec-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const secId = e.currentTarget.getAttribute('data-sec-id');
+                        const targetSec = simulationData.find(s => s.id === secId);
+                        if (targetSec) {
+                            this.loadSection(targetSec);
+                            this.closeSidebar();
+                        }
+                    });
+                });
+
+                // Tab Switch listener
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'text-slate-300'));
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.add('text-slate-400'));
+                        
+                        e.currentTarget.classList.add('active', 'text-slate-300');
+                        e.currentTarget.classList.remove('text-slate-400');
+                        
+                        const tabIndex = parseInt(e.currentTarget.getAttribute('data-tab'));
+                        this.switchTab(tabIndex);
+                    });
+                });
+
+                // Help Dialog triggers
+                const infoModal = document.getElementById('info-modal');
+                document.getElementById('info-trigger').addEventListener('click', () => {
+                    infoModal.classList.remove('hidden');
+                    infoModal.setAttribute('aria-hidden', 'false');
+                });
+                document.getElementById('close-modal-btn').addEventListener('click', () => {
+                    infoModal.classList.add('hidden');
+                    infoModal.setAttribute('aria-hidden', 'true');
+                });
+
+                // Universal Sidebar Trigger
+                const sidebar = document.getElementById('sidebar');
+                const toggleSidebar = () => {
+                    if (sidebar.classList.contains('-translate-x-[360px]')) {
+                        sidebar.classList.remove('-translate-x-[360px]');
+                        sidebar.classList.add('translate-x-0');
+                    } else {
+                        sidebar.classList.remove('translate-x-0');
+                        sidebar.classList.add('-translate-x-[360px]');
+                    }
+                };
+
+                const universalMenuBtn = document.getElementById('universal-sidebar-toggle');
+                if (universalMenuBtn) {
+                    universalMenuBtn.addEventListener('click', toggleSidebar);
+                }
+
+                document.getElementById('open-sidebar-btn').addEventListener('click', () => {
+                    sidebar.classList.remove('-translate-x-[360px]');
+                    sidebar.classList.add('translate-x-0');
+                });
+                document.getElementById('close-sidebar-btn').addEventListener('click', () => {
+                    this.closeSidebar();
+                });
+
+                // Collapsible Details Panel
+                const panel = document.getElementById('interactive-panel');
+                const restoreBtn = document.getElementById('restore-panel-btn');
+                const closePanelBtn = document.getElementById('close-panel-btn');
+
+                if (closePanelBtn && restoreBtn && panel) {
+                    closePanelBtn.addEventListener('click', () => {
+                        panel.classList.add('translate-x-[360px]');
+                        setTimeout(() => {
+                            restoreBtn.classList.remove('hidden');
+                        }, 200);
+                    });
+
+                    restoreBtn.addEventListener('click', () => {
+                        restoreBtn.classList.add('hidden');
+                        panel.classList.remove('translate-x-[360px]');
+                    });
+                }
+
+                // Render symbols
+                lucide.createIcons();
+            }
+
+            closeSidebar() {
+                const sb = document.getElementById('sidebar');
+                if (sb) {
+                    sb.classList.remove('translate-x-0');
+                    sb.classList.add('-translate-x-[360px]');
+                }
+            }
+
+            loadSection(section) {
+                this.activeSection = section;
+
+                // Highlight Sidebar
+                document.querySelectorAll('.navigation-sec-btn').forEach(btn => {
+                    const indicator = btn.querySelector('.indicator');
+                    if (btn.getAttribute('data-sec-id') === section.id) {
+                        btn.classList.add('bg-white/10', 'text-white');
+                        indicator.classList.remove('bg-slate-600');
+                        indicator.classList.add('bg-learning');
+                    } else {
+                        btn.classList.remove('bg-white/10', 'text-white');
+                        indicator.classList.add('bg-slate-600');
+                        indicator.classList.remove('bg-learning');
+                    }
+                });
+
+                // Update Header Visual Outcomes
+                document.getElementById('current-sec-id').innerText = `${section.category} • ${section.label}`;
+                document.getElementById('current-sec-title').innerText = section.title;
+                document.getElementById('current-learning-outcome').innerText = `${section.outcome} Core Goal: ${section.misconception}`;
+
+                // Re-initialize 3D Viewport
+                this.init3DScene();
+                this.switchTab(this.activeTab);
+            }
+
+            switchTab(tabIndex) {
+                this.activeTab = tabIndex;
+                const tabNames = ['software', 'ram', 'cpu', 'gpu', 'corrector'];
+                const tabData = this.activeSection.layers[tabNames[tabIndex]];
+
+                // Update details panel metadata
+                const container = document.getElementById('panel-dynamic-content');
+                container.innerHTML = tabData.content || '<p class="text-slate-400">No additional details recorded for this layer.</p>';
+                document.getElementById('panel-layer-name').innerText = `${tabNames[tabIndex].toUpperCase()} DETAILS`;
+
+                // Render equations
+                renderMathInElement(container, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+
+                // Adjust WebGL Scene representation based on Tab selection
+                if (this.sceneManager) {
+                    this.sceneManager.updateLayerVisuals(this.activeSection.generator, tabIndex);
+                }
+
+                // Add dynamic listeners based on content loaded
+                this.registerDynamicControlsListeners();
+            }
+
+            init3DScene() {
+                if (!this.memoryOptimizer) {
+                    this.memoryOptimizer = new MemoryOptimizer();
+                }
+
+                // Clean WebGL buffers of existing loops
+                if (this.sceneManager) {
+                    this.sceneManager.destroy();
+                }
+
+                const canvasContainer = document.getElementById('canvas-container');
+                canvasContainer.innerHTML = ''; // Re-inject Canvas element
+                const canvas = document.createElement('canvas');
+                canvas.className = 'w-full h-full';
+                canvasContainer.appendChild(canvas);
+
+                this.sceneManager = new SceneManager(canvas, this.memoryOptimizer);
+                this.sceneManager.loadGenerator(this.activeSection.generator);
+            }
+
+            registerDynamicControlsListeners() {
+                // Interactive buttons hookup
+                const speedSlider = document.getElementById('param-speed');
+                if (speedSlider) {
+                    speedSlider.addEventListener('input', (e) => {
+                        const val = parseFloat(e.target.value) / 50;
+                        if (this.sceneManager && this.sceneManager.activeGeneratorInstance) {
+                            this.sceneManager.activeGeneratorInstance.speedMultiplier = val;
+                        }
+                    });
+                }
+
+                const radiusSlider = document.getElementById('param-radius');
+                if (radiusSlider) {
+                    radiusSlider.addEventListener('input', (e) => {
+                        const radiusVal = parseFloat(e.target.value);
+                        if (this.sceneManager && this.sceneManager.activeGeneratorInstance) {
+                            this.sceneManager.activeGeneratorInstance.updateRadius(radiusVal);
+                        }
+                    });
+                }
+
+                const triggerBtn = document.getElementById('btn-trigger');
+                if (triggerBtn) {
+                    triggerBtn.addEventListener('click', () => {
+                        if (this.sceneManager && this.sceneManager.activeGeneratorInstance) {
+                            this.sceneManager.activeGeneratorInstance.triggerPulse();
+                        }
+                    });
+                }
+
+                const withdrawBtn = document.getElementById('btn-withdraw');
+                if (withdrawBtn) {
+                    withdrawBtn.addEventListener('click', () => {
+                        if (this.sceneManager && this.sceneManager.activeGeneratorInstance) {
+                            this.sceneManager.activeGeneratorInstance.triggerPulse('withdraw');
+                        }
+                    });
+                }
+
+                const depositBtn = document.getElementById('btn-deposit');
+                if (depositBtn) {
+                    depositBtn.addEventListener('click', () => {
+                        if (this.sceneManager && this.sceneManager.activeGeneratorInstance) {
+                            this.sceneManager.activeGeneratorInstance.triggerPulse('deposit');
+                        }
+                    });
+                }
+
+                const unlockBtn = document.getElementById('btn-unlock');
+                if (unlockBtn) {
+                    unlockBtn.addEventListener('click', () => {
+                        if (this.sceneManager && this.sceneManager.activeGeneratorInstance) {
+                            this.sceneManager.activeGeneratorInstance.triggerUnlock();
+                        }
+                    });
+                }
+            }
+        }
+
+        class SceneManager {
+            constructor(canvas, memoryOptimizer) {
+                this.canvas = canvas;
+                this.memoryOptimizer = memoryOptimizer;
+                this.width = canvas.clientWidth;
+                this.height = canvas.clientHeight;
+
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color('#090A0F');
+                this.scene.fog = new THREE.FogExp2('#090A0F', 0.03);
+
+                // Camera Manager initialization
+                this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 100);
+                this.camera.position.set(0, 5, 12);
+
+                this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true, alpha: false });
+                this.renderer.setSize(this.width, this.height);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                this.renderer.toneMappingExposure = 1.1;
+
+                this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.05;
+                this.controls.maxPolarAngle = Math.PI / 2 - 0.05;
+
+                // Lighting initialization
+                this.lightingManager = new LightingManager(this.scene);
+                
+                this.activeGeneratorInstance = null;
+                this.animationFrameId = null;
+
+                window.addEventListener('resize', this.onResize.bind(this));
+                this.animate();
+            }
+
+            loadGenerator(generatorName) {
+                // Instantiates standard conceptual 3D scene blocks
+                switch (generatorName) {
+                    case 'procedural_path':
+                        this.activeGeneratorInstance = new ProceduralPathGenerator(this.scene);
+                        break;
+                    case 'central_node':
+                        this.activeGeneratorInstance = new CentralNodeGenerator(this.scene);
+                        break;
+                    case 'decentralized_network':
+                        this.activeGeneratorInstance = new DecentralizedNetworkGenerator(this.scene);
+                        break;
+                    case 'uml_card':
+                        this.activeGeneratorInstance = new UmlCardGenerator(this.scene);
+                        break;
+                    case 'state_scaling':
+                        this.activeGeneratorInstance = new StateScalingGenerator(this.scene);
+                        break;
+                    case 'syntax_lock':
+                        this.activeGeneratorInstance = new SyntaxLockGenerator(this.scene);
+                        break;
+                    case 'memory_scope':
+                        this.activeGeneratorInstance = new MemoryScopeGenerator(this.scene);
+                        break;
+                    case 'comparison_lanes':
+                        this.activeGeneratorInstance = new ComparisonLanesGenerator(this.scene);
+                        break;
+                    case 'array_loop':
+                        this.activeGeneratorInstance = new ArrayLoopGenerator(this.scene);
+                        break;
+                }
+            }
+
+            updateLayerVisuals(generatorName, tabIndex) {
+                if (this.activeGeneratorInstance) {
+                    this.activeGeneratorInstance.transitionLayer(tabIndex);
+                }
+            }
+
+            onResize() {
+                this.width = this.canvas.clientWidth;
+                this.height = this.canvas.clientHeight;
+                this.camera.aspect = this.width / this.height;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(this.width, this.height);
+            }
+
+            animate() {
+                const fpsCounter = document.getElementById('fps-counter');
+                let lastTime = performance.now();
+                let frameCount = 0;
+
+                const tick = () => {
+                    const now = performance.now();
+                    frameCount++;
+                    if (now > lastTime + 1000) {
+                        const fps = Math.round((frameCount * 1000) / (now - lastTime));
+                        if (fpsCounter) fpsCounter.innerText = `${fps} FPS`;
+                        frameCount = 0;
+                        lastTime = now;
+                    }
+
+                    if (this.controls) this.controls.update();
+                    if (this.activeGeneratorInstance) this.activeGeneratorInstance.update();
+                    
+                    this.renderer.render(this.scene, this.camera);
+                    this.animationFrameId = requestAnimationFrame(tick);
+                };
+                
+                // Block animations if reduced motion is preferred
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (!prefersReducedMotion) {
+                    tick();
+                } else {
+                    this.renderer.render(this.scene, this.camera);
+                }
+            }
+
+            destroy() {
+                cancelAnimationFrame(this.animationFrameId);
+                window.removeEventListener('resize', this.onResize);
+                this.controls.dispose();
+                this.renderer.dispose();
+                
+                // Deep memory disposal
+                this.memoryOptimizer.disposeHierarchy(this.scene);
+            }
+        }
+
+        class LightingManager {
+            constructor(scene) {
+                this.scene = scene;
+                this.initLights();
+            }
+
+            initLights() {
+                // Key Light
+                this.keyLight = new THREE.DirectionalLight('#00A8FF', 1.5);
+                this.keyLight.position.set(5, 8, 5);
+                this.scene.add(this.keyLight);
+
+                // Fill Light (Amethyst)
+                this.fillLight = new THREE.DirectionalLight('#A020F0', 0.8);
+                this.fillLight.position.set(-5, 4, -5);
+                this.scene.add(this.fillLight);
+
+                // Rim Light (Success/Warmth)
+                this.rimLight = new THREE.DirectionalLight('#00E676', 0.5);
+                this.rimLight.position.set(0, -3, 5);
+                this.scene.add(this.rimLight);
+
+                // Ambient Background
+                this.ambient = new THREE.AmbientLight('#11131C', 0.4);
+                this.scene.add(this.ambient);
+            }
+        }
+
+        class MemoryOptimizer {
+            disposeHierarchy(object) {
+                object.traverse(node => {
+                    if (node.geometry) {
+                        node.geometry.dispose();
+                    }
+                    if (node.material) {
+                        if (Array.isArray(node.material)) {
+                            node.material.forEach(mat => mat.dispose());
+                        } else {
+                            node.material.dispose();
+                        }
+                    }
+                });
+            }
+        }
+
+        /* PROCEDURAL 3D MESH GENERATORS */
+        class BaseGenerator {
+            constructor(scene) {
+                this.scene = scene;
+                this.group = new THREE.Group();
+                this.scene.add(this.group);
+                this.speedMultiplier = 1.0;
+                this.activeTab = 0;
+                
+                // Color definitions from design tokens
+                this.colors = {
+                    learning: 0x00A8FF, // Blue
+                    ai: 0xA020F0,       // Purple
+                    success: 0x00E676,  // Green
+                    attention: 0xFFD600,// Yellow
+                    error: 0xFF3D00,     // Red
+                    white: 0xffffff,
+                    dark: 0x11131C
+                };
+
+                this.materials = {
+                    glass: new THREE.MeshPhysicalMaterial({
+                        color: 0xffffff,
+                        transparent: true,
+                        opacity: 0.15,
+                        roughness: 0.2,
+                        metalness: 0.1,
+                        transmission: 0.9,
+                        thickness: 0.5,
+                        side: THREE.DoubleSide
+                    }),
+                    glowingBlue: new THREE.MeshBasicMaterial({ color: this.colors.learning, wireframe: true }),
+                    glowingSuccess: new THREE.MeshBasicMaterial({ color: this.colors.success, wireframe: false }),
+                    lineMaterial: new THREE.LineBasicMaterial({ color: this.colors.ai })
+                };
+            }
+
+            transitionLayer(tabIndex) {
+                this.activeTab = tabIndex;
+                this.applyTabVisuals();
+            }
+
+            applyTabVisuals() {}
+
+            // Helper to smoothly transition colors
+            smoothTransitionColor(material, targetHex, speed = 0.05) {
+                if (material && material.color) {
+                    material.color.lerp(new THREE.Color(targetHex), speed);
+                }
+            }
+
+            update() {}
+            triggerPulse() {}
+            triggerUnlock() {}
+            updateRadius(val) {}
+        }
+
+        // 1. Procedural Execution Path Generator
+        class ProceduralPathGenerator extends BaseGenerator {
+            constructor(scene) {
+                super(scene);
+                this.initMesh();
+            }
+
+            initMesh() {
+                // Create path tube
+                const points = [];
+                for(let i=0; i<10; i++) {
+                    points.push(new THREE.Vector3(0, 4 - i*0.8, Math.sin(i * 0.8) * 0.4));
+                }
+                const curve = new THREE.CatmullRomCurve3(points);
+                const geom = new THREE.TubeGeometry(curve, 32, 0.12, 8, false);
+                
+                // Duplicate materials so we can animate them independently
+                this.pathMat = new THREE.MeshBasicMaterial({ color: this.colors.learning, wireframe: true });
+                this.path = new THREE.Mesh(geom, this.pathMat);
+                this.group.add(this.path);
+
+                // Add instruction cards
+                this.cards = [];
+                this.cardMats = [];
+                for(let i=0; i<3; i++) {
+                    const cardGeom = new THREE.BoxGeometry(2, 0.4, 0.1);
+                    const cardMat = this.materials.glass.clone();
+                    const card = new THREE.Mesh(cardGeom, cardMat);
+                    card.position.set(1.5, 3 - i*2.5, 0);
+                    this.group.add(card);
+                    this.cards.push(card);
+                    this.cardMats.push(cardMat);
+                }
+
+                // Add dynamic pointer
+                const ptrGeom = new THREE.CylinderGeometry(0.2, 0.2, 0.3, 16);
+                this.ptrMat = new THREE.MeshBasicMaterial({ color: this.colors.success });
+                this.pointer = new THREE.Mesh(ptrGeom, this.ptrMat);
+                this.group.add(this.pointer);
+                this.pointerPos = 0;
+            }
+
+            applyTabVisuals() {
+                const t = this.activeTab;
+                this.pathMat.wireframe = (t === 1 || t === 3);
+                this.cardMats.forEach(m => {
+                    m.wireframe = (t === 1 || t === 3);
+                    m.transparent = true;
+                    m.opacity = t === 1 ? 0.3 : (t === 4 ? 0.4 : 0.15);
+                });
+            }
+
+            update() {
+                // Slide pointer cylinder down the path track
+                this.pointerPos += 0.015 * this.speedMultiplier;
+                if (this.pointerPos > 1) this.pointerPos = 0;
+                
+                const factor = this.pointerPos * 9;
+                const index = Math.floor(factor);
+                const step = factor % 1;
+                
+                const posA = new THREE.Vector3(0, 4 - index*0.8, Math.sin(index * 0.8) * 0.4);
+                const posB = new THREE.Vector3(0, 4 - (index+1)*0.8, Math.sin((index+1) * 0.8) * 0.4);
+                this.pointer.position.lerpVectors(posA, posB, step);
+
+                // Smoothly update colors based on tab selection
+                const t = this.activeTab;
+                let pathTarget = this.colors.learning;
+                let ptrTarget = this.colors.success;
+                let cardTarget = this.colors.white;
+
+                if (t === 1) { // RAM Map
+                    pathTarget = this.colors.learning;
+                    cardTarget = this.colors.ai;
+                    ptrTarget = this.colors.white;
+                } else if (t === 2) { // CPU
+                    pathTarget = this.colors.success;
+                    ptrTarget = this.colors.attention;
+                } else if (t === 3) { // GPU FX
+                    pathTarget = this.colors.attention;
+                    ptrTarget = this.colors.learning;
+                } else if (t === 4) { // Corrector
+                    pathTarget = this.colors.error;
+                    ptrTarget = this.colors.error;
+                    cardTarget = this.colors.error;
+                }
+
+                this.smoothTransitionColor(this.pathMat, pathTarget);
+                this.smoothTransitionColor(this.ptrMat, ptrTarget);
+                this.cardMats.forEach(m => this.smoothTransitionColor(m, cardTarget));
+
+                // Gently rotate group for depth feel
+                this.group.rotation.y = Math.sin(performance.now() * 0.0005) * 0.15;
+            }
+
+            triggerPulse() {
+                this.pointerPos = 0;
+            }
+        }
+
+        // 2. Central Global Data Node Generator
+        class CentralNodeGenerator extends BaseGenerator {
+            constructor(scene) {
+                super(scene);
+                this.initMesh();
+            }
+
+            initMesh() {
+                // Central Sphere representing Global Data
+                const sphereGeom = new THREE.SphereGeometry(1.2, 32, 32);
+                this.centerMat = this.materials.glass.clone();
+                this.centerNode = new THREE.Mesh(sphereGeom, this.centerMat);
+                this.group.add(this.centerNode);
+
+                // Orbiting nodes representing functions
+                this.orbitNodes = [];
+                this.orbitMats = [];
+                const numNodes = 4;
+                for (let i = 0; i < numNodes; i++) {
+                    const nodeGeom = new THREE.SphereGeometry(0.4, 16, 16);
+                    const nodeMat = new THREE.MeshBasicMaterial({ color: this.colors.learning, wireframe: true });
+                    const node = new THREE.Mesh(nodeGeom, nodeMat);
+                    const angle = (i / numNodes) * Math.PI * 2;
+                    node.position.set(Math.cos(angle) * 4, 0, Math.sin(angle) * 4);
+                    this.group.add(node);
+                    this.orbitNodes.push(node);
+                    this.orbitMats.push(nodeMat);
+                }
+
+                // Particle systems for access flow
+                this.particleCount = 100;
+                this.particles = new THREE.BufferGeometry();
+                const positions = new Float32Array(this.particleCount * 3);
+                for (let i = 0; i < this.particleCount * 3; i++) {
+                    positions[i] = 0;
+                }
+                this.particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                
+                this.pMaterial = new THREE.PointsMaterial({
+                    color: this.colors.success,
+                    size: 0.15,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                this.points = new THREE.Points(this.particles, this.pMaterial);
+                this.group.add(this.points);
+                this.pulseTime = 0;
+                
+                // Add a decorative ring
+                const ringGeom = new THREE.RingGeometry(3.9, 4.1, 32);
+                this.ringMat = new THREE.MeshBasicMaterial({ color: this.colors.ai, side: THREE.DoubleSide, transparent: true, opacity: 0.2 });
+                this.ring = new THREE.Mesh(ringGeom, this.ringMat);
+                this.ring.rotation.x = Math.PI / 2;
+                this.group.add(this.ring);
+            }
+
+            applyTabVisuals() {
+                const t = this.activeTab;
+                this.centerMat.wireframe = (t === 1 || t === 3);
+                this.orbitMats.forEach(m => m.wireframe = (t === 1 || t === 3));
+            }
+
+            update() {
+                this.group.rotation.y += 0.005 * this.speedMultiplier;
+
+                // Animate access particles flowing between rings and central node
+                this.pulseTime += 0.02 * this.speedMultiplier;
+                const pos = this.particles.attributes.position.array;
+                for (let i = 0; i < this.particleCount; i++) {
+                    const nodeIndex = i % 4;
+                    const node = this.orbitNodes[nodeIndex];
+                    
+                    const ratio = ((this.pulseTime + (i / this.particleCount)) % 1);
+                    // If Corrector tab, particles move erratically or collide
+                    let pX, pY, pZ;
+                    if (this.activeTab === 4) {
+                        // Erratic/corrupted movements
+                        pX = THREE.MathUtils.lerp(node.position.x, 0, ratio) + Math.sin(performance.now()*0.05 + i)*0.2;
+                        pY = THREE.MathUtils.lerp(node.position.y, 0, ratio) + Math.cos(performance.now()*0.05 + i)*0.2;
+                        pZ = THREE.MathUtils.lerp(node.position.z, 0, ratio);
+                    } else {
+                        pX = THREE.MathUtils.lerp(node.position.x, 0, ratio);
+                        pY = THREE.MathUtils.lerp(node.position.y, 0, ratio);
+                        pZ = THREE.MathUtils.lerp(node.position.z, 0, ratio);
+                    }
+
+                    pos[i * 3] = pX;
+                    pos[i * 3 + 1] = pY;
+                    pos[i * 3 + 2] = pZ;
+                }
+                this.particles.attributes.position.needsUpdate = true;
+
+                // Smoothly update colors based on tab selection
+                const t = this.activeTab;
+                let centerTarget = this.colors.white;
+                let orbitTarget = this.colors.learning;
+                let particleTarget = this.colors.success;
+                let ringTarget = this.colors.ai;
+
+                if (t === 1) { // RAM Map
+                    centerTarget = this.colors.ai;
+                    orbitTarget = this.colors.learning;
+                } else if (t === 2) { // CPU Race condition
+                    centerTarget = this.colors.success;
+                    orbitTarget = this.colors.attention;
+                    particleTarget = this.colors.attention;
+                } else if (t === 3) { // GPU
+                    centerTarget = this.colors.attention;
+                    orbitTarget = this.colors.learning;
+                    particleTarget = this.colors.learning;
+                } else if (t === 4) { // Corrector error state
+                    centerTarget = this.colors.error;
+                    orbitTarget = this.colors.error;
+                    particleTarget = this.colors.error;
+                    ringTarget = this.colors.error;
+                }
+
+                this.smoothTransitionColor(this.centerMat, centerTarget);
+                this.orbitMats.forEach(m => this.smoothTransitionColor(m, orbitTarget));
+                this.smoothTransitionColor(this.pMaterial, particleTarget);
+                this.smoothTransitionColor(this.ringMat, ringTarget);
+            }
+
+            triggerPulse(type) {
+                this.pulseTime = 0;
+                const balEl = document.getElementById('live-val-balance');
+                if (balEl) {
+                    let cur = parseInt(balEl.innerText.replace(/[^0-9.-]+/g,""));
+                    cur = type === 'withdraw' ? cur - 100 : cur + 150;
+                    balEl.innerText = `$${cur.toLocaleString()}`;
+                    balEl.classList.add('scale-110', 'text-success');
+                    setTimeout(() => balEl.classList.remove('scale-110', 'text-success'), 300);
+                }
+            }
+        }
+
+        // 3. Decentralized Networks Generator
+        class DecentralizedNetworkGenerator extends BaseGenerator {
+            constructor(scene) {
+                super(scene);
+                this.initMesh();
+            }
+
+            initMesh() {
+                const nodeCount = 5;
+                this.nodes = [];
+                this.nodeMats = [];
+                for(let i=0; i<nodeCount; i++) {
+                    const nodeGeom = new THREE.SphereGeometry(0.5, 16, 16);
+                    const nodeMat = this.materials.glass.clone();
+                    const mesh = new THREE.Mesh(nodeGeom, nodeMat);
+                    const angle = (i / nodeCount) * Math.PI * 2;
+                    mesh.position.set(Math.cos(angle) * 3, Math.sin(i) * 1.5, Math.sin(angle) * 3);
+                    this.group.add(mesh);
+                    this.nodes.push(mesh);
+                    this.nodeMats.push(nodeMat);
+                }
+
+                // Node connection channels lines
+                const lineGeom = new THREE.BufferGeometry();
+                this.connectionPoints = [];
+                for(let i=0; i<nodeCount; i++) {
+                    for(let j=i+1; j<nodeCount; j++) {
+                        this.connectionPoints.push(this.nodes[i].position.clone());
+                        this.connectionPoints.push(this.nodes[j].position.clone());
+                    }
+                }
+                lineGeom.setFromPoints(this.connectionPoints);
+                this.lineMat = this.materials.lineMaterial.clone();
+                this.connections = new THREE.LineSegments(lineGeom, this.lineMat);
+                this.group.add(this.connections);
+            }
+
+            applyTabVisuals() {
+                const t = this.activeTab;
+                this.nodeMats.forEach(m => {
+                    m.wireframe = (t === 1 || t === 3);
+                });
+            }
+
+            update() {
+                this.group.rotation.y += 0.003 * this.speedMultiplier;
+
+                // Animate nodes moving slightly for a floating physics look
+                this.nodes.forEach((n, idx) => {
+                    n.position.y = Math.sin(performance.now() * 0.001 + idx) * 0.4 + (idx - 2) * 0.5;
+                });
+
+                // Update connection positions
+                const points = [];
+                const nodeCount = this.nodes.length;
+                for(let i=0; i<nodeCount; i++) {
+                    for(let j=i+1; j<nodeCount; j++) {
+                        points.push(this.nodes[i].position.clone());
+                        points.push(this.nodes[j].position.clone());
+                    }
+                }
+                this.connections.geometry.setFromPoints(points);
+
+                // Smoothly update colors
+                const t = this.activeTab;
+                let nodeTarget = this.colors.white;
+                let lineTarget = this.colors.ai;
+
+                if (t === 1) { // RAM Map
+                    nodeTarget = this.colors.ai;
+                    lineTarget = this.colors.learning;
+                } else if (t === 2) { // CPU
+                    nodeTarget = this.colors.success;
+                    lineTarget = this.colors.attention;
+                } else if (t === 3) { // GPU
+                    nodeTarget = this.colors.attention;
+                    lineTarget = this.colors.learning;
+                } else if (t === 4) { // Corrector (Snapped lines visual effect)
+                    nodeTarget = this.colors.error;
+                    lineTarget = this.colors.error;
+                }
+
+                this.nodeMats.forEach(m => this.smoothTransitionColor(m, nodeTarget));
+                this.smoothTransitionColor(this.lineMat, lineTarget);
+            }
+
+            triggerPulse() {
+                // Trigger brief particle burst to simulate message passing between meshes
+                this.nodes.forEach(n => {
+                    n.scale.set(1.4, 1.4, 1.4);
+                    setTimeout(() => {
+                        if (n) n.scale.set(1, 1, 1);
+                    }, 300);
+                });
+            }
+        }
+
+        // 4. UML Class Card Generator
+        class UmlCardGenerator extends BaseGenerator {
+            constructor(scene) {
+                super(scene);
+                this.initMesh();
+            }
+
+            initMesh() {
+                // Card panel container
+                const boxGeom = new THREE.BoxGeometry(4, 5, 0.2);
+                this.cardMat = this.materials.glass.clone();
+                this.card = new THREE.Mesh(boxGeom, this.cardMat);
+                this.group.add(this.card);
+
+                // Add 3 horizontal tiers blocks
+                this.tiers = [];
+                this.tierMats = [];
+                for (let i = 0; i < 3; i++) {
+                    const tierGeom = new THREE.BoxGeometry(3.6, 1.3, 0.05);
+                    const tierMat = new THREE.MeshBasicMaterial({
+                        color: i === 0 ? this.colors.learning : (i === 1 ? this.colors.ai : this.colors.success),
+                        wireframe: true
+                    });
+                    const tier = new THREE.Mesh(tierGeom, tierMat);
+                    tier.position.set(0, 1.7 - i * 1.7, 0.15);
+                    this.group.add(tier);
+                    this.tiers.push(tier);
+                    this.tierMats.push(tierMat);
+                }
+            }
+
+            applyTabVisuals() {
+                const t = this.activeTab;
+                this.cardMat.wireframe = (t === 1 || t === 3);
+            }
+
+            update() {
+                this.group.rotation.y = Math.sin(performance.now() * 0.001) * 0.3;
+
+                const t = this.activeTab;
+                let cardTarget = this.colors.white;
+                let t0 = this.colors.learning;
+                let t1 = this.colors.ai;
+                let t2 = this.colors.success;
+
+                if (t === 1) {
+                    cardTarget = this.colors.ai;
+                } else if (t === 2) {
+                    cardTarget = this.colors.success;
+                } else if (t === 3) {
+                    cardTarget = this.colors.attention;
+                } else if (t === 4) {
+                    cardTarget = this.colors.error;
+                    t0 = this.colors.error;
+                    t1 = this.colors.error;
+                    t2 = this.colors.error;
+                }
+
+                this.smoothTransitionColor(this.cardMat, cardTarget);
+                this.smoothTransitionColor(this.tierMats[0], t0);
+                this.smoothTransitionColor(this.tierMats[1], t1);
+                this.smoothTransitionColor(this.tierMats[2], t2);
+            }
+
+            triggerPulse() {
+                this.tiers.forEach(t => {
+                    t.scale.set(1.1, 1.1, 1.1);
+                    setTimeout(() => {
+                        if (t) t.scale.set(1, 1, 1);
+                    }, 250);
+                });
+            }
+        }
+
+        // 5. State Volume Scaling Generator
+        class StateScalingGenerator extends BaseGenerator {
+            constructor(scene) {
+                super(scene);
+                this.currentRadius = 20;
+                this.initMesh();
+            }
+
+            initMesh() {
+                const geom = new THREE.CylinderGeometry(1.5, 1.5, 3, 32, 16);
+                this.cylinderMat = this.materials.glass.clone();
+                this.cylinder = new THREE.Mesh(geom, this.cylinderMat);
+                this.group.add(this.cylinder);
+
+                // Concentric scale grids
+                this.gridMat = new THREE.MeshBasicMaterial({ color: this.colors.learning, wireframe: true });
+                this.grid = new THREE.Mesh(geom, this.gridMat);
+                this.group.add(this.grid);
+            }
+
+            applyTabVisuals() {
+                const t = this.activeTab;
+                this.cylinderMat.wireframe = (t === 1 || t === 3);
+            }
+
+            update() {
+                this.group.rotation.y += 0.006 * this.speedMultiplier;
+
+                // Animate a pulsing breath effect when healthy
+                const pulse = Math.sin(performance.now() * 0.003) * 0.05;
+                const scale = (this.currentRadius / 40) + pulse;
+
+                // Color mapping
+                const t = this.activeTab;
+                let cylTarget = this.colors.white;
+                let gridTarget = this.colors.learning;
+
+                if (t === 1) {
+                    cylTarget = this.colors.ai;
+                } else if (t === 2) {
+                    cylTarget = this.colors.success;
+                } else if (t === 3) {
+                    cylTarget = this.colors.attention;
+                } else if (t === 4) {
+                    cylTarget = this.colors.error;
+                    gridTarget = this.colors.error;
+                }
+
+                // If negative radius, display glitch distortion
+                if (this.currentRadius < 0) {
+                    const glitch = (1 + Math.sin(performance.now()*0.05)*0.2);
+                    this.cylinder.scale.set(Math.abs(scale), Math.abs(scale) * glitch, Math.abs(scale));
+                    this.grid.scale.set(Math.abs(scale), Math.abs(scale) * glitch, Math.abs(scale));
+                    cylTarget = this.colors.error;
+                    gridTarget = this.colors.error;
+                } else {
+                    this.cylinder.scale.set(scale, scale, scale);
+                    this.grid.scale.set(scale, scale, scale);
+                }
+
+                this.smoothTransitionColor(this.cylinderMat, cylTarget);
+                this.smoothTransitionColor(this.gridMat, gridTarget);
+            }
+
+            updateRadius(val) {
+                this.currentRadius = val;
+            }
+        }
+
+        // 6. Syntax Lock Key Generator
+        class SyntaxLockGenerator extends BaseGenerator {
+            constructor(scene) {
+                super(scene);
+                this.isLocked = true;
+                this.initMesh();
+            }
+
+            initMesh() {
+                // Class Container Box
+                const cardGeom = new THREE.BoxGeometry(4, 4, 4);
+                this.vaultMat = this.materials.glass.clone();
+                this.vault = new THREE.Mesh(cardGeom, this.vaultMat);
+                this.group.add(this.vault);
+
+                // Front Padlock/Key lock geometry
+                const lockGeom = new THREE.TorusGeometry(0.6, 0.15, 8, 24);
+                this.lockMat = new THREE.MeshPhysicalMaterial({ color: this.colors.error, roughness: 0.1 });
+                this.lock = new THREE.Mesh(lockGeom, this.lockMat);
+                this.lock.position.set(0, 0, 2.1);
+                this.group.add(this.lock);
+            }
+
+            applyTabVisuals() {
+                const t = this.activeTab;
+                this.vaultMat.wireframe = (t === 1 || t === 3);
+            }
+
+            update() {
+                this.group.rotation.y = Math.sin(performance.now() * 0.0005) * 0.4;
+                if (!this.isLocked) {
+                    this.lock.rotation.z += 0.05 * this.speedMultiplier;
+                }
+
+                const t = this.activeTab;
+                let vaultTarget = this.colors.white;
+                let lockTarget = this.isLocked ? this.colors.error : this.colors.success;
+
+                if (t === 1) {
+                    vaultTarget = this.colors.ai;
+                } else if (t === 2) {
+                    vaultTarget = this.colors.success;
+                } else if (t === 3) {
+                    vaultTarget = this.colors.attention;
+                } else if (t === 4) {
+                    vaultTarget = this.colors.error;
+                    lockTarget = this.colors.error;
+                }
+
+                this.smoothTransitionColor(this.vaultMat, vaultTarget);
+                this.smoothTransitionColor(this.lockMat, lockTarget);
+            }
+
+            triggerUnlock() {
+                this.isLocked = !this.isLocked;
+                this.vault.scale.set(1.1, 1.1, 1.1);
+                setTimeout(() => {
+                    if (this.vault) this.vault.scale.set(1, 1, 1);
+                }, 250);
+            }
+        }
+
+        // 7. Memory Scope Hierarchy Generator
+        class MemoryScopeGenerator extends BaseGenerator {
+            constructor(scene) {
+                super(scene);
+                this.initMesh();
+            }
+
+            initMesh() {
+                // Nested boxes representing Global, Member, Local scopes
+                this.scopes = [];
+                this.scopeMats = [];
+                for(let i=0; i<3; i++) {
+                    const size = 5 - i * 1.5;
+                    const scopeGeom = new THREE.BoxGeometry(size, size, size);
+                    const scopeMat = new THREE.MeshPhysicalMaterial({
+                        color: i === 0 ? this.colors.learning : (i === 1 ? this.colors.ai : this.colors.success),
+                        transparent: true,
+                        opacity: 0.08,
+                        roughness: 0.4,
+                        transmission: 0.8
+                    });
+                    const scope = new THREE.Mesh(scopeGeom, scopeMat);
+                    this.group.add(scope);
+                    this.scopes.push(scope);
+                    this.scopeMats.push(scopeMat);
+                }
+            }
+
+            applyTabVisuals() {
+                const t = this.activeTab;
+                this.scopeMats.forEach(m => {
+                    m.wireframe = (t === 1 || t === 3);
+                });
+            }
+
+            update() {
+                this.group.rotation.y += 0.003 * this.speedMultiplier;
+                this.group.rotation.x = Math.sin(performance.now()*0.0005) * 0.2;
+
+                const t = this.activeTab;
+                let s0 = this.colors.learning;
+                let s1 = this.colors.ai;
+                let s2 = this.colors.success;
+
+                if (t === 4) {
+                    s0 = this.colors.error;
+                    s1 = this.colors.error;
+                    s2 = this.colors.error;
+                }
+
+                this.smoothTransitionColor(this.scopeMats[0], s0);
+                this.smoothTransitionColor(this.scopeMats[1], s1);
+                this.smoothTransitionColor(this.scopeMats[2], s2);
+            }
+
+            triggerPulse() {
+                // Pulse active layers sequentially
+                this.scopes.forEach((s, idx) => {
+                    setTimeout(() => {
+                        if (s) s.scale.set(1.15, 1.15, 1.15);
+                        setTimeout(() => {
+                            if (s) s.scale.set(1, 1, 1);
+                        }, 200);
+                    }, idx * 150);
+                });
+            }
+        }
+
+        // 8. Comparison Lanes Generator
+        class ComparisonLanesGenerator extends BaseGenerator {
+            constructor(scene) {
+                super(scene);
+                this.initMesh();
+            }
+
+            initMesh() {
+                // Draw 2 parallel tracks lanes
+                this.lanes = [];
+                this.laneMats = [];
+                this.items = [];
+                this.itemMats = [];
+                for(let i=0; i<2; i++) {
+                    const laneGeom = new THREE.BoxGeometry(1.5, 0.1, 8);
+                    const laneMat = this.materials.glass.clone();
+                    const lane = new THREE.Mesh(laneGeom, laneMat);
+                    lane.position.set(-2 + i*4, -1, 0);
+                    this.group.add(lane);
+                    this.lanes.push(lane);
+                    this.laneMats.push(laneMat);
+
+                    // Add items on lane
+                    const itemGeom = new THREE.BoxGeometry(0.8, 0.8, 0.8);
+                    const itemMat = new THREE.MeshPhysicalMaterial({
+                        color: i === 0 ? this.colors.error : this.colors.success,
+                        transmission: 0.5,
+                        opacity: 0.6
+                    });
+                    const item = new THREE.Mesh(itemGeom, itemMat);
+                    item.position.set(-2 + i*4, -0.4, 2);
+                    this.group.add(item);
+                    this.items.push(item);
+                    this.itemMats.push(itemMat);
+                }
+            }
+
+            applyTabVisuals() {
+                const t = this.activeTab;
+                this.laneMats.forEach(m => m.wireframe = (t === 1 || t === 3));
+                this.itemMats.forEach(m => m.wireframe = (t === 1 || t === 3));
+            }
+
+            update() {
+                this.group.rotation.y = Math.sin(performance.now() * 0.0002) * 0.3;
+
+                // Animate floating items on lane
+                this.items.forEach((item, idx) => {
+                    item.position.y = -0.4 + Math.sin(performance.now() * 0.002 + idx * Math.PI) * 0.1;
+                });
+
+                const t = this.activeTab;
+                let lane0 = this.colors.white;
+                let lane1 = this.colors.white;
+
+                if (t === 4) {
+                    lane0 = this.colors.error;
+                    lane1 = this.colors.error;
+                }
+
+                this.smoothTransitionColor(this.laneMats[0], lane0);
+                this.smoothTransitionColor(this.laneMats[1], lane1);
+            }
+
+            triggerPulse() {
+                // Animate value data copies vs laser reference paths
+                this.items.forEach((item, idx) => {
+                    item.position.z -= 0.5 * this.speedMultiplier;
+                    if (item.position.z < -4) item.position.z = 2;
+                });
+            }
+        }
+
+        // 9. Array Loop Conveyer Generator
+        class ArrayLoopGenerator extends BaseGenerator {
+            constructor(scene) {
+                super(scene);
+                this.initMesh();
+            }
+
+            initMesh() {
+                // Array grid cells
+                this.cells = [];
+                this.cellMats = [];
+                const count = 5;
+                for(let i=0; i<count; i++) {
+                    const cellGeom = new THREE.BoxGeometry(1.2, 0.2, 1.2);
+                    const cellMat = this.materials.glass.clone();
+                    const cell = new THREE.Mesh(cellGeom, cellMat);
+                    cell.position.set(-3 + i * 1.5, -1, 0);
+                    this.group.add(cell);
+                    this.cells.push(cell);
+                    this.cellMats.push(cellMat);
+                }
+
+                // Moving stamp block
+                const stampGeom = new THREE.CylinderGeometry(0.4, 0.4, 0.8, 16);
+                this.stampMat = new THREE.MeshBasicMaterial({ color: this.colors.success });
+                this.stamp = new THREE.Mesh(stampGeom, this.stampMat);
+                this.stamp.position.set(-3, 0.5, 0);
+                this.group.add(this.stamp);
+                this.activeIndex = 0;
+            }
+
+            applyTabVisuals() {
+                const t = this.activeTab;
+                this.cellMats.forEach(m => m.wireframe = (t === 1 || t === 3));
+            }
+
+            update() {
+                // Move stamp sequentially to instantiate nodes
+                const timeFactor = (performance.now() * 0.002 * this.speedMultiplier) % 5;
+                const index = Math.floor(timeFactor);
+                this.stamp.position.x = -3 + index * 1.5;
+                
+                // Add construction pulse animation
+                if (this.activeIndex !== index) {
+                    this.activeIndex = index;
+                    const cell = this.cells[index];
+                    if (cell) {
+                        cell.scale.set(1.2, 2, 1.2);
+                        setTimeout(() => {
+                            if (cell) cell.scale.set(1, 1, 1);
+                        }, 250);
+                    }
+                }
+
+                const t = this.activeTab;
+                let cellColor = this.colors.white;
+                let stampColor = this.colors.success;
+
+                if (t === 1) {
+                    cellColor = this.colors.ai;
+                } else if (t === 2) {
+                    cellColor = this.colors.success;
+                } else if (t === 3) {
+                    cellColor = this.colors.attention;
+                } else if (t === 4) {
+                    cellColor = this.colors.error;
+                    stampColor = this.colors.error;
+                }
+
+                this.cellMats.forEach(m => this.smoothTransitionColor(m, cellColor));
+                this.smoothTransitionColor(this.stampMat, stampColor);
+            }
+
+            triggerPulse() {
+                this.activeIndex = 0;
+            }
+        }
+
+        // Start Application Loader
+        window.addEventListener('DOMContentLoaded', () => {
+            window.app = new ApplicationManager();
+        });
+    </script>
+</body>
+</html>

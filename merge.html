@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Merge and QA Funding DB</title>
+</head>
+<body>
+    <h1>Merging...</h1>
+    <div id="status">Loading files...</div>
+    <textarea id="output" style="width: 100%; height: 500px;"></textarea>
+
+    <script>
+        // Normalization functions
+        function normalizeName(name) {
+            if (typeof name !== 'string') return '';
+            let n = name.trim().toLowerCase();
+            const suffixes = [
+                /\binc\.?\b/g, /\bco\.?\b/g, /\bltd\.?\b/g, /\bllc\.?\b/g,
+                /\bcorp\.?\b/g, /\bcorporation\b/g, /\bincorporated\b/g, /\bcompany\b/g
+            ];
+            for (let suffix of suffixes) {
+                n = n.replace(suffix, '');
+            }
+            n = n.replace(/[^a-z0-9]/g, '');
+            return n;
+        }
+
+        function normalizeUrl(url) {
+            if (typeof url !== 'string') return '';
+            let u = url.trim().toLowerCase();
+            u = u.replace(/^https?:\/\//, '');
+            u = u.replace(/^www\./, '');
+            if (u.endsWith('/')) {
+                u = u.slice(0, -1);
+            }
+            return u;
+        }
+
+        const EXACT_PLACEHOLDERS = new Set([
+            'tbd', 'placeholder', 'todo', 'n/a', 'na', 'none', 'null', 'nil', '-', '--', 'undefined', 'temp'
+        ]);
+        const SUBSTRING_PLACEHOLDERS = ['placeholder', 'dummy', 'fake', 'test@'];
+        const DUMMY_DOMAINS = ['example.com', 'test.com', 'email.com', 'domain.com', 'fake.com'];
+        const FAKE_PHONE_SUBSTRINGS = ['123456', '000000', '111111', '999999'];
+
+        function isPlaceholder(val, fieldName) {
+            if (typeof val !== 'string') return false;
+            let valClean = val.trim().toLowerCase();
+            if (EXACT_PLACEHOLDERS.has(valClean)) return true;
+            for (let kw of SUBSTRING_PLACEHOLDERS) {
+                if (valClean.includes(kw)) return true;
+            }
+            if (/\b(tbd|todo|n\/a)\b/i.test(valClean)) return true;
+            for (let dom of DUMMY_DOMAINS) {
+                if (valClean.includes(dom)) return true;
+            }
+            if (fieldName === 'Phone') {
+                for (let seq of FAKE_PHONE_SUBSTRINGS) {
+                    if (valClean.includes(seq)) return true;
+                }
+            }
+            return false;
+        }
+
+        function cleanPlaceholder(val, fieldName) {
+            if (typeof val === 'string') {
+                if (isPlaceholder(val, fieldName)) return '';
+            } else if (Array.isArray(val)) {
+                return val.map(item => cleanPlaceholder(item, fieldName)).filter(item => !isPlaceholder(item, fieldName));
+            }
+            return val;
+        }
+
+        function mergeEntities(ent1, ent2) {
+            let merged = {};
+            let keys = new Set([...Object.keys(ent1), ...Object.keys(ent2)]);
+            
+            for (let key of keys) {
+                let val1 = cleanPlaceholder(ent1[key], key);
+                let val2 = cleanPlaceholder(ent2[key], key);
+                
+                if (val1 !== undefined && val1 !== null && val1 !== '' && !(Array.isArray(val1) && val1.length === 0)) {
+                    if (val2 !== undefined && val2 !== null && val2 !== '' && !(Array.isArray(val2) && val2.length === 0)) {
+                        if (Array.isArray(val1) && Array.isArray(val2)) {
+                            let combined = [...val1, ...val2];
+                            let unique = [];
+                            let seen = new Set();
+                            for (let item of combined) {
+                                if (item && !seen.has(item)) {
+                                    seen.add(item);
+                                    unique.push(item);
+                                }
+                            }
+                            merged[key] = unique;
+                        } else if (typeof val1 === 'string' && typeof val2 === 'string') {
+                            if (val1.trim().toLowerCase() === val2.trim().toLowerCase()) {
+                                // Capitalization choice
+                                let up1 = (val1.match(/[A-Z]/g) || []).length;
+                                let up2 = (val2.match(/[A-Z]/g) || []).length;
+                                merged[key] = up1 >= up2 ? val1 : val2;
+                            } else {
+                                if (key === 'Description') {
+                                    merged[key] = val1.length >= val2.length ? val1 : val2;
+                                } else if (key === 'Official_Website') {
+                                    if (val1.startsWith('http')) merged[key] = val1;
+                                    else if (val2.startsWith('http')) merged[key] = val2;
+                                    else merged[key] = val1;
+                                } else {
+                                    merged[key] = val1;
+                                }
+                            }
+                        } else {
+                            merged[key] = val1;
+                        }
+                    } else {
+                        merged[key] = val1;
+                    }
+                } else {
+                    merged[key] = val2;
+                }
+            }
+            return merged;
+        }
+
+        async function start() {
+            try {
+                // Fetch reference file
+                const refRes = await fetch('Funding/ContentForFunding.json');
+                const refData = await refRes.json();
+                const refCats = refData.ContentForFunding;
+
+                // Fetch Egypt/MENA
+                const egyptRes = await fetch('Funding/egypt_mena_entities.json');
+                const egyptData = await egyptRes.json();
+                const egyptCats = egyptData.ContentForFunding;
+
+                // Fetch Global
+                const globalRes = await fetch('Funding/global_entities.json');
+                const globalData = await globalRes.json();
+
+                document.getElementById('status').innerText = 'Files loaded. Merging...';
+
+                // Setup output structure
+                let finalContent = {};
+                for (let catName in refCats) {
+                    finalContent[catName] = {
+                        Why: refCats[catName].Why,
+                        Priority: refCats[catName].Priority
+                    };
+                    if (refCats[catName].Category_For_Company) {
+                        finalContent[catName].Category_For_Company = refCats[catName].Category_For_Company;
+                    }
+                    if (refCats[catName].Structure) {
+                        finalContent[catName].Structure = refCats[catName].Structure;
+                    }
+                    finalContent[catName].Entities = [];
+                }
+
+                // Collect all raw entities
+                let rawEntities = [];
+
+                for (let catName in egyptCats) {
+                    for (let ent of egyptCats[catName]) {
+                        let entCopy = {...ent};
+                        entCopy.Category = catName;
+                        rawEntities.push({ ent: entCopy, catName, source: 'Egypt/MENA' });
+                    }
+                }
+
+                for (let ent of globalData) {
+                    let catName = ent.Category;
+                    if (!catName || !refCats[catName]) {
+                        console.warn('Invalid category in global entity:', ent);
+                        continue;
+                    }
+                    rawEntities.push({ ent: {...ent}, catName, source: 'Global' });
+                }
+
+                // Merge duplicates globally
+                let uniqueEntities = [];
+                let nameToIdx = {};
+                let urlToIdx = {};
+
+                for (let item of rawEntities) {
+                    let ent = item.ent;
+                    let catName = item.catName;
+                    let source = item.source;
+
+                    let normName = normalizeName(ent.Name);
+                    let normUrl = normalizeUrl(ent.Official_Website);
+
+                    let matchIdx = null;
+                    if (nameToIdx[normName] !== undefined) {
+                        matchIdx = nameToIdx[normName];
+                    } else if (normUrl && urlToIdx[normUrl] !== undefined) {
+                        matchIdx = urlToIdx[normUrl];
+                    }
+
+                    if (matchIdx !== null) {
+                        // Merge
+                        let merged = mergeEntities(uniqueEntities[matchIdx], ent);
+                        let cat1 = uniqueEntities[matchIdx]._Category;
+                        let cat2 = catName;
+                        if (cat1 !== cat2) {
+                            // Priority map
+                            const priorityMap = { Critical: 3, High: 2, Medium: 1 };
+                            let p1 = refCats[cat1] ? (priorityMap[refCats[cat1].Priority] || 0) : 0;
+                            let p2 = refCats[cat2] ? (priorityMap[refCats[cat2].Priority] || 0) : 0;
+                            merged._Category = p2 > p1 ? cat2 : cat1;
+                        } else {
+                            merged._Category = cat1;
+                        }
+                        uniqueEntities[matchIdx] = merged;
+
+                        // Re-normalize name/url in case they changed
+                        let newName = normalizeName(merged.Name);
+                        let newUrl = normalizeUrl(merged.Official_Website);
+                        if (newName !== normName) nameToIdx[newName] = matchIdx;
+                        if (newUrl && newUrl !== normUrl) urlToIdx[newUrl] = matchIdx;
+                    } else {
+                        let idx = uniqueEntities.length;
+                        ent._Category = catName;
+                        uniqueEntities.push(ent);
+                        nameToIdx[normName] = idx;
+                        if (normUrl) {
+                            urlToIdx[normUrl] = idx;
+                        }
+                    }
+                }
+
+                // Clean and format all entities
+                for (let ent of uniqueEntities) {
+                    let catName = ent._Category;
+                    delete ent._Category;
+                    let refMeta = refCats[catName];
+
+                    // Clean all fields
+                    for (let key in ent) {
+                        ent[key] = cleanPlaceholder(ent[key], key);
+                    }
+
+                    if (catName !== 'Government') {
+                        ent.Category = catName;
+                        ent.Priority = refMeta.Priority;
+                        ent.Category_For_Company = refMeta.Category_For_Company;
+
+                        // Ensure standard fields exist
+                        const standardFields = ['Name', 'Country', 'City', 'Official_Website', 'Official_Email', 'Description'];
+                        for (let f of standardFields) {
+                            if (ent[f] === undefined) ent[f] = '';
+                        }
+                    } else {
+                        // Clean Government-specific fields
+                        delete ent.Category;
+                        delete ent.Priority;
+                        delete ent.Category_For_Company;
+                    }
+
+                    finalContent[catName].Entities.push(ent);
+                }
+
+                const outputObj = {
+                    ContentForFunding: finalContent
+                };
+
+                const outputStr = JSON.stringify(outputObj, null, 4);
+                document.getElementById('output').value = outputStr;
+                document.getElementById('status').innerText = 'Merge complete! Total unique entities: ' + uniqueEntities.length;
+
+                // Let's run a quick local validation in JS to be safe
+                let errors = [];
+                let totalCount = 0;
+                for (let catName in finalContent) {
+                    let entities = finalContent[catName].Entities;
+                    totalCount += entities.length;
+                    for (let ent of entities) {
+                        if (!ent.Name) errors.push(`Empty name in ${catName}`);
+                        if (catName !== 'Government') {
+                            if (!ent.Official_Website) errors.push(`Empty website for ${ent.Name}`);
+                            if (!ent.Official_Email) errors.push(`Empty email for ${ent.Name}`);
+                            if (ent.Category !== catName) errors.push(`Category mismatch for ${ent.Name}`);
+                        }
+                    }
+                }
+                if (totalCount < 150) errors.push(`Total count ${totalCount} is less than 150`);
+                if (errors.length > 0) {
+                    document.getElementById('status').innerText += '\nValidation ERRORS:\n' + errors.join('\n');
+                } else {
+                    document.getElementById('status').innerText += '\nValidation PASSED successfully!';
+                }
+
+            } catch (err) {
+                document.getElementById('status').innerText = 'Error: ' + err.stack;
+            }
+        }
+
+        start();
+    </script>
+</body>
+</html>

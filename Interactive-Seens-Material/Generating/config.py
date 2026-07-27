@@ -59,14 +59,50 @@ OCR_BACKEND = os.environ.get("STUDYFLOW_OCR_BACKEND", "tesseract")
 
 # ── Chunking ───────────────────────────────────────────────────────────────────
 
-# Target chunk size in characters (well within LLM context limits)
-CHUNK_TARGET_SIZE = int(os.environ.get("STUDYFLOW_CHUNK_SIZE", "80000"))
+# Target chunk size in characters (approximate maximum)
+CHUNK_TARGET_SIZE = int(os.environ.get("STUDYFLOW_CHUNK_SIZE", "5000"))
+
+# Target minimum tokens per chunk
+CHUNK_MIN_TOKENS = int(os.environ.get("STUDYFLOW_CHUNK_MIN_TOKENS", "800"))
+
+# Target maximum tokens per chunk
+CHUNK_MAX_TOKENS = int(os.environ.get("STUDYFLOW_CHUNK_MAX_TOKENS", "1500"))
+
+# Hard upper limit tokens per chunk (never exceed this)
+CHUNK_HARD_LIMIT_TOKENS = int(os.environ.get("STUDYFLOW_CHUNK_HARD_LIMIT_TOKENS", "1800"))
 
 # Overlap between chunks in characters (to preserve context at boundaries)
-CHUNK_OVERLAP = int(os.environ.get("STUDYFLOW_CHUNK_OVERLAP", "2000"))
+CHUNK_OVERLAP = int(os.environ.get("STUDYFLOW_CHUNK_OVERLAP", "400"))
 
 # Approximate chars-per-token ratio for token estimation
 CHARS_PER_TOKEN = float(os.environ.get("STUDYFLOW_CHARS_PER_TOKEN", "4.0"))
+
+
+# ── Vectorization ──────────────────────────────────────────────
+
+# Embedding provider: gemini, sentence-transformers, openai, etc.
+EMBEDDING_PROVIDER = os.environ.get("STUDYFLOW_EMBEDDING_PROVIDER", "gemini")
+
+# Embedding model name (provider-specific)
+EMBEDDING_MODEL = os.environ.get(
+    "STUDYFLOW_EMBEDDING_MODEL", "models/gemini-embedding-2"
+)
+
+# Output dimensionality of embeddings
+EMBEDDING_DIMENSION = int(
+    os.environ.get("STUDYFLOW_EMBEDDING_DIMENSION", "768")
+)
+
+# Task type hint for the embedding model (Gemini-specific, ignored by others)
+EMBEDDING_TASK_TYPE = os.environ.get(
+    "STUDYFLOW_EMBEDDING_TASK_TYPE", "RETRIEVAL_DOCUMENT"
+)
+
+
+# ── Indexing ───────────────────────────────────────────────────
+
+# Storage backend for the knowledge index (local_json, qdrant, sqlite, etc.)
+INDEXING_BACKEND = os.environ.get("STUDYFLOW_INDEXING_BACKEND", "local_json")
 
 
 # ── Route Detection ───────────────────────────────────────────────────────────

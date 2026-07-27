@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Potential Gradient</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0f172a;
+            color: white;
+            font-family: sans-serif;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .pointer-events-auto {
+            pointer-events: auto;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #ef4444;
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .math-font {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+        }
+
+        .bold-math {
+            font-weight: bold;
+            font-style: normal;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div id="ui-layer">
+        <!-- Top Info -->
+        <div class="glass-panel max-w-2xl">
+            <h1 class="text-3xl font-bold mb-2 text-white">Potential Gradient & Charge Flow</h1>
+            <p class="text-gray-300 leading-relaxed text-sm">
+                <span class="text-red-400 font-semibold">Visual Learning Outcome:</span>
+                Voltage does <strong class="text-white uppercase tracking-wider">not</strong> flow.
+                It is a static, spatial energy differential—represented here as physical height.
+                This potential difference creates an electric field that forces charges to move down the gradient
+                through the resistive medium.
+            </p>
+        </div>
+
+        <!-- Middle Right: Voltmeter & Equation -->
+        <div class="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col items-end gap-6">
+            <!-- Equation -->
+            <div class="glass-panel text-center">
+                <div class="text-gray-400 text-xs uppercase tracking-widest mb-1">Electric Field</div>
+                <div class="text-4xl text-yellow-300 math-font tracking-wide">
+                    <span class="bold-math">E</span> = -∇V
+                </div>
+            </div>
+
+            <!-- Voltmeter -->
+            <div class="glass-panel flex flex-col items-center min-w-[200px]">
+                <div class="text-gray-400 text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                    Voltmeter Mesh
+                </div>
+                <div class="text-5xl font-mono text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">
+                    <span id="voltage-display">0.0</span><span class="text-2xl text-cyan-600 ml-1">V</span>
+                </div>
+                <div class="text-xs text-gray-500 mt-2">Δ Potential Difference</div>
+            </div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="glass-panel max-w-md pointer-events-auto">
+            <div class="flex justify-between items-end mb-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-white">Terminal Elevation (+V)</h2>
+                    <p class="text-xs text-gray-400">Adjust the spatial energy gradient</p>
+                </div>
+                <div class="text-red-400 font-mono" id="slider-value">0%</div>
+            </div>
+            <input type="range" id="voltage-slider" min="0" max="100" value="50" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500 mt-2 font-mono">
+                <span>0V (Flat)</span>
+                <span>Max ΔV</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        const CONFIG = {
+            terminalDist: 12,
+            terminalSize: 2,
+            pathWidth: 3,
+            maxHeight: 6,
+            chargeCount: 15,
+            baseSpeed: 0.5,
+            colorPlus: 0xef4444, // Red
+            colorMinus: 0x3b82f6, // Blue
+            colorCharge: 0xfde047, // Yellow
+        };
+
+        let currentVoltageLevel = 0.5; // 0 to 1
+
+        // --- UI Elements ---
+        const slider = document.getElementById('voltage-slider');
+        const voltageDisplay = document.getElementById('voltage-display');
+        const sliderValueDisplay = document.getElementById('slider-value');
+
+        // --- Three.js Setup ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0f172a, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 8, 20);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(5, 10, 5);
+        scene.add(dirLight);
+
+        // --- Helpers ---
+        function createTerminalTexture(text, bgColor) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, 256, 256);
+
+            // Border
+            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(5, 5, 246, 246);
+
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 160px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, 128, 138);
+
+            const tex = new THREE.CanvasTexture(canvas);
+            return tex;
+        }
+
+        // --- Scene Objects ---
+
+        // 1. Terminals
+        const termGeo = new THREE.BoxGeometry(CONFIG.terminalSize, 1, CONFIG.terminalSize);
+
+        // Minus Terminal (Low Potential - Fixed)
+        const matMinus = new THREE.MeshPhongMaterial({
+            color: CONFIG.colorMinus,
+            map: createTerminalTexture('-', '#1e3a8a')
+        });
+        const terminalMinus = new THREE.Mesh(termGeo, matMinus);
+        terminalMinus.position.set(CONFIG.terminalDist / 2, -0.5, 0);
+        scene.add(terminalMinus);
+
+        // Plus Terminal (High Potential - Movable)
+        const matPlus = new THREE.MeshPhongMaterial({
+            color: CONFIG.colorPlus,
+            map: createTerminalTexture('+', '#7f1d1d')
+        });
+        const terminalPlus = new THREE.Mesh(termGeo, matPlus);
+        scene.add(terminalPlus);
+
+        // Terminal Pillars (to show they are grounded/elevated relative to a base)
+        const pillarGeo = new THREE.CylinderGeometry(CONFIG.terminalSize / 2.5, CONFIG.terminalSize / 2.5, 1, 16);
+        // Plus Pillar
+        const pillarPlus = new THREE.Mesh(pillarGeo, new THREE.MeshPhongMaterial({ color: 0x334155, transparent: true, opacity: 0.8 }));
+        scene.add(pillarPlus);
+        // Minus Pillar
+        const pillarMinus = new THREE.Mesh(pillarGeo, new THREE.MeshPhongMaterial({ color: 0x334155, transparent: true, opacity: 0.8 }));
+        pillarMinus.position.copy(terminalMinus.position);
+        pillarMinus.position.y = -1;
+        pillarMinus.scale.y = 1;
+        scene.add(pillarMinus);
+
+
+        // 2. Resistive Path (Gradient Mesh)
+        // We use a BufferGeometry to easily update vertices and colors based on height
+        const segments = 20;
+        const rampGeo = new THREE.PlaneGeometry(CONFIG.terminalDist, CONFIG.pathWidth, segments, 1);
+        rampGeo.rotateX(-Math.PI / 2); // Lay flat
+
+        // Add vertex colors
+        const colors = [];
+        const colorPlusObj = new THREE.Color(CONFIG.colorPlus);
+        const colorMinusObj = new THREE.Color(CONFIG.colorMinus);
+
+        for (let i = 0; i < rampGeo.attributes.position.count; i++) {
+            // x goes from -Dist/2 to Dist/2
+            const x = rampGeo.attributes.position.getX(i);
+            const normalizedX = (x + CONFIG.terminalDist / 2) / CONFIG.terminalDist; // 0 (Plus) to 1 (Minus)
+
+            const c = new THREE.Color().lerpColors(colorPlusObj, colorMinusObj, normalizedX);
+            colors.push(c.r, c.g, c.b);
+        }
+        rampGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+        const rampMat = new THREE.MeshBasicMaterial({
+            vertexColors: true,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.9
+        });
+        const ramp = new THREE.Mesh(rampGeo, rampMat);
+        scene.add(ramp);
+
+        // Wireframe overlay for "mesh" look
+        const wireMat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.2 });
+        const wireRamp = new THREE.Mesh(rampGeo, wireMat);
+        scene.add(wireRamp);
+
+        // 3. Charges with Velocity Vectors
+        const charges = [];
+        const chargeGeo = new THREE.SphereGeometry(0.3, 16, 16);
+        const chargeMat = new THREE.MeshPhongMaterial({
+            color: CONFIG.colorCharge,
+            emissive: CONFIG.colorCharge,
+            emissiveIntensity: 0.4
+        });
+
+        for (let i = 0; i < CONFIG.chargeCount; i++) {
+            const mesh = new THREE.Mesh(chargeGeo, chargeMat);
+
+            // Arrow pointing down slope
+            const arrowDir = new THREE.Vector3(1, 0, 0); // Default pointing towards minus
+            const arrowOrigin = new THREE.Vector3(0, 0, 0);
+            const arrowLength = 1;
+            const arrowHex = 0xffffff;
+            const arrowHelper = new THREE.ArrowHelper(arrowDir, arrowOrigin, arrowLength, arrowHex, 0.4, 0.3);
+
+            scene.add(mesh);
+            scene.add(arrowHelper);
+
+            charges.push({
+                mesh: mesh,
+                arrow: arrowHelper,
+                progress: Math.random(), // 0 to 1 position along the ramp
+                lane: (Math.random() - 0.5) * (CONFIG.pathWidth - 0.8) // Z offset
+            });
+        }
+
+        // --- Logic Updates ---
+
+        function updateGeometry() {
+            const hPlus = currentVoltageLevel * CONFIG.maxHeight;
+            const hMinus = 0;
+
+            // Update Plus Terminal
+            terminalPlus.position.set(-CONFIG.terminalDist / 2, hPlus - 0.5, 0);
+
+            // Update Pillar under Plus
+            pillarPlus.position.set(-CONFIG.terminalDist / 2, (hPlus - 1) / 2 - 0.5, 0);
+            pillarPlus.scale.y = Math.max(0.1, hPlus); // Prevent 0 scale warning
+
+            // Update Ramp Vertices
+            const positions = rampGeo.attributes.position.array;
+            for (let i = 0; i < rampGeo.attributes.position.count; i++) {
+                const x = positions[i * 3];
+                // normalize x to 0 (plus terminal side) to 1 (minus terminal side)
+                const t = (x + CONFIG.terminalDist / 2) / CONFIG.terminalDist;
+
+                // Interpolate height
+                const y = hPlus * (1 - t) + hMinus * t;
+                positions[i * 3 + 1] = y;
+            }
+            rampGeo.attributes.position.needsUpdate = true;
+            rampGeo.computeVertexNormals();
+
+            // Calculate current slope (Δy / Δx)
+            const deltaY = hMinus - hPlus;
+            const deltaX = CONFIG.terminalDist;
+            const slopeVector = new THREE.Vector3(deltaX, deltaY, 0).normalize();
+
+            // Speed is proportional to voltage difference (height)
+            // If voltage is 0, charges barely move
+            const speed = 0.05 + (currentVoltageLevel * CONFIG.baseSpeed);
+            const arrowLen = 0.5 + (currentVoltageLevel * 2.5); // Visual length
+
+            // Update Charges
+            charges.forEach(charge => {
+                charge.progress += speed * 0.016; // Assuming ~60fps
+                if (charge.progress > 1) {
+                    charge.progress = 0; // Reset to top
+                    charge.lane = (Math.random() - 0.5) * (CONFIG.pathWidth - 0.8);
+                }
+
+                // Calculate 3D position based on progress
+                const x = -CONFIG.terminalDist / 2 + (charge.progress * CONFIG.terminalDist);
+                const y = hPlus * (1 - charge.progress);
+                const z = charge.lane;
+
+                charge.mesh.position.set(x, y + 0.3, z); // slight offset above ramp
+
+                // Update Arrow
+                charge.arrow.position.copy(charge.mesh.position);
+                charge.arrow.setDirection(slopeVector);
+                charge.arrow.setLength(arrowLen, arrowLen * 0.3, arrowLen * 0.2);
+
+                // Dim arrows if no voltage
+                charge.arrow.setColor(currentVoltageLevel < 0.05 ? 0x666666 : 0xffffff);
+            });
+        }
+
+        // --- Interaction ---
+
+        function handleInput() {
+            const val = slider.value;
+            currentVoltageLevel = val / 100;
+
+            // Update UI
+            sliderValueDisplay.textContent = val + '%';
+            // Simulate voltage reading (e.g., max 12V)
+            const simulatedVoltage = (currentVoltageLevel * 12).toFixed(1);
+            voltageDisplay.textContent = simulatedVoltage;
+        }
+
+        slider.addEventListener('input', handleInput);
+        // Initial call
+        handleInput();
+
+        // Window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Add subtle mouse movement to camera for depth
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX - window.innerWidth / 2) * 0.005;
+            mouseY = (e.clientY - window.innerHeight / 2) * 0.005;
+        });
+
+        // --- Animation Loop ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const dt = clock.getDelta();
+
+            // Camera subtle sway
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (8 - mouseY - camera.position.y) * 0.05;
+            camera.lookAt(0, currentVoltageLevel * 2, 0); // Look slightly up as height increases
+
+            updateGeometry();
+
+            renderer.render(scene, camera);
+        }
+
+        // Start
+        animate();
+
+    </script>
+</body>
+
+</html>

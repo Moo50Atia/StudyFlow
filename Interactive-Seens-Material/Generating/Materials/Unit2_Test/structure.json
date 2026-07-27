@@ -1,0 +1,2702 @@
+{
+  "material": "Unit2_Test",
+  "source_file": "source.pdf",
+  "route": "Computer Science",
+  "domain": "Object-Oriented Programming",
+  "total_chapters": 20,
+  "total_mini_chapters": 43,
+  "total_lessons": 99,
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "Object-Oriented Fundamentals (Continuation)",
+      "mini_chapters": [
+        {
+          "id": "mc1.1",
+          "title": "Access Control",
+          "lessons": [
+            {
+              "id": "L1",
+              "title": "Private Data Field Hiding",
+              "view_name": "PrivateField_CodeSnippet",
+              "page_start": 1,
+              "page_end": 1,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "private access specifier",
+                  "data field hiding"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch2",
+      "title": "Static Members",
+      "mini_chapters": [
+        {
+          "id": "mc2.1",
+          "title": "Introduction to Static Members",
+          "lessons": [
+            {
+              "id": "L2",
+              "title": "Static Member Variable and Function Declaration",
+              "view_name": "StaticMembers_CodeSnippet",
+              "page_start": 1,
+              "page_end": 1,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Code snippet with member declarations",
+                  "int Grade::minGrade = 60;"
+                ]
+              }
+            },
+            {
+              "id": "L3",
+              "title": "Static Member Implementation and Usage",
+              "view_name": "StaticMembers_CodeExample",
+              "page_start": 2,
+              "page_end": 2,
+              "visual_assets": [
+                "Unit2_Test/assets/page_2_fig_1.png",
+                "Unit2_Test/assets/page_2_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Members",
+                  "Grade.h",
+                  "int main()",
+                  "int Grade::minGrade = 60;"
+                ]
+              }
+            },
+            {
+              "id": "L4",
+              "title": "Static Member Behavior with Output Trace",
+              "view_name": "StaticMembers_OutputTrace",
+              "page_start": 3,
+              "page_end": 3,
+              "visual_assets": [
+                "Unit2_Test/assets/page_3_fig_1.png",
+                "Unit2_Test/assets/page_3_fig_2.png",
+                "Unit2_Test/assets/page_3_fig_3.png",
+                "Unit2_Test/assets/page_3_fig_4.png",
+                "Unit2_Test/assets/page_3_fig_5.png",
+                "Unit2_Test/assets/page_3_fig_6.png",
+                "Unit2_Test/assets/page_3_fig_7.png",
+                "Unit2_Test/assets/page_3_fig_8.png",
+                "Unit2_Test/assets/page_3_fig_9.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Members",
+                  "Grade.h",
+                  "int main()",
+                  "Output trace (1: F ... 91: P)"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc2.2",
+          "title": "Instance vs. Static Member Functions",
+          "lessons": [
+            {
+              "id": "L5",
+              "title": "Decision Criteria for Instance vs. Static Members",
+              "view_name": "InstanceStatic_DecisionDiagram",
+              "page_start": 4,
+              "page_end": 4,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Instance or Static Member Function?",
+                  "How to decide?",
+                  "class Grade (labeled members)"
+                ]
+              }
+            },
+            {
+              "id": "L6",
+              "title": "Static Const Member Variables and Functions",
+              "view_name": "StaticConst_ClassDiagram",
+              "page_start": 5,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Instance or Static Member Function?",
+                  "How to decide?",
+                  "Can have static const member variable",
+                  "Can not have static const member function"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc2.3",
+          "title": "Practical Application of Static Members",
+          "lessons": [
+            {
+              "id": "L7",
+              "title": "Static Members in Application Configuration",
+              "view_name": "AppConfig_StaticExample",
+              "page_start": 6,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Members",
+                  "class AppConfig",
+                  "int main() (static member initialization and access)"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch3",
+      "title": "Constructors in C++",
+      "mini_chapters": [
+        {
+          "id": "mc3.1",
+          "title": "Fundamentals of Constructors",
+          "lessons": [
+            {
+              "id": "L8",
+              "title": "Constructor Definition and Properties",
+              "view_name": "Constructor_DefinitionCode",
+              "page_start": 1,
+              "page_end": 1,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constructors: Definition and Purpose",
+                  "Constructor Characteristics (Naming, Return Type)",
+                  "Constructor Overloading Example"
+                ]
+              }
+            },
+            {
+              "id": "L9",
+              "title": "Implicit Default Constructors and Best Practices",
+              "view_name": "Constructor_ImplicitCode",
+              "page_start": 2,
+              "page_end": 2,
+              "visual_assets": [
+                "Unit2_Test/assets/page_2_fig_1.png",
+                "Unit2_Test/assets/page_2_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Implicit Default Constructor Declaration",
+                  "Recommendation for Providing Constructors"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc3.2",
+          "title": "Constructor Overloading and Default Arguments",
+          "lessons": [
+            {
+              "id": "L10",
+              "title": "Identifying Missing Default Constructor Issues",
+              "view_name": "Constructor_ErrorAnalysisCode",
+              "page_start": 3,
+              "page_end": 3,
+              "visual_assets": [
+                "Unit2_Test/assets/page_3_fig_1.png",
+                "Unit2_Test/assets/page_3_fig_2.png",
+                "Unit2_Test/assets/page_3_fig_3.png",
+                "Unit2_Test/assets/page_3_fig_4.png",
+                "Unit2_Test/assets/page_3_fig_5.png",
+                "Unit2_Test/assets/page_3_fig_6.png",
+                "Unit2_Test/assets/page_3_fig_7.png",
+                "Unit2_Test/assets/page_3_fig_8.png",
+                "Unit2_Test/assets/page_3_fig_9.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Code Analysis: Missing Default Constructor Error",
+                  "Consequences of No Default Constructor"
+                ]
+              }
+            },
+            {
+              "id": "L11",
+              "title": "Resolving Missing Default Constructor with Default Arguments",
+              "view_name": "Constructor_DefaultArgSolutionCode",
+              "page_start": 4,
+              "page_end": 4,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Code Solution: Constructor with Default Argument",
+                  "Default Argument as a Default Constructor"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc3.3",
+          "title": "Constructors and Static Members",
+          "lessons": [
+            {
+              "id": "L12",
+              "title": "Declaring and Implementing Static Members with Constructors",
+              "view_name": "StaticMember_DeclarationCode",
+              "page_start": 5,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Member Declaration in Header",
+                  "Static Member Initialization and Constructor Interaction",
+                  "Static Member Function Implementation"
+                ]
+              }
+            },
+            {
+              "id": "L13",
+              "title": "Demonstrating Static Member Usage with Constructors",
+              "view_name": "StaticMember_UsageCode",
+              "page_start": 6,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Main Function: Tracking Object Count with Static Members",
+                  "Accessing Static Members via Class and Object"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch4",
+      "title": "Constructors and Static Members",
+      "mini_chapters": [
+        {
+          "id": "mc4.1",
+          "title": "Constructors & Static Members in Practice",
+          "lessons": [
+            {
+              "id": "L14",
+              "title": "Static Member Access and Object Count Example",
+              "view_name": "StaticMembers_CodeExample",
+              "page_start": 1,
+              "page_end": 2,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png",
+                "Unit2_Test/assets/page_2_fig_1.png",
+                "Unit2_Test/assets/page_2_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constructors & Static Members",
+                  "Circle.cpp example"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch5",
+      "title": "Class Design and Implementation",
+      "mini_chapters": [
+        {
+          "id": "mc5.1",
+          "title": "Accessor and Mutator Methods",
+          "lessons": [
+            {
+              "id": "L15",
+              "title": "TV Class Getter and Setter Example",
+              "view_name": "TVClass_CodeExample",
+              "page_start": 1,
+              "page_end": 2,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png",
+                "Unit2_Test/assets/page_2_fig_1.png",
+                "Unit2_Test/assets/page_2_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch6",
+      "title": "Object-Oriented Programming Examples",
+      "mini_chapters": [
+        {
+          "id": "mc6.1",
+          "title": "TV Class: Getter and Setter Implementation",
+          "lessons": [
+            {
+              "id": "L16",
+              "title": "TV Class Public Interface Overview",
+              "view_name": "TVMethods_List",
+              "page_start": 1,
+              "page_end": 1,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": []
+              }
+            },
+            {
+              "id": "L17",
+              "title": "TV Class Definition and Member Descriptions",
+              "view_name": "TVClass_StructureDiagram",
+              "page_start": 2,
+              "page_end": 2,
+              "visual_assets": [
+                "Unit2_Test/assets/page_2_fig_1.png",
+                "Unit2_Test/assets/page_2_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)"
+                ]
+              }
+            },
+            {
+              "id": "L18",
+              "title": "Implementing TV Power Control Methods",
+              "view_name": "TVPower_CodeImplementation",
+              "page_start": 3,
+              "page_end": 3,
+              "visual_assets": [
+                "Unit2_Test/assets/page_3_fig_1.png",
+                "Unit2_Test/assets/page_3_fig_2.png",
+                "Unit2_Test/assets/page_3_fig_3.png",
+                "Unit2_Test/assets/page_3_fig_4.png",
+                "Unit2_Test/assets/page_3_fig_5.png",
+                "Unit2_Test/assets/page_3_fig_6.png",
+                "Unit2_Test/assets/page_3_fig_7.png",
+                "Unit2_Test/assets/page_3_fig_8.png",
+                "Unit2_Test/assets/page_3_fig_9.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)"
+                ]
+              }
+            },
+            {
+              "id": "L19",
+              "title": "Implementing TV Channel and Volume Setter Methods",
+              "view_name": "TVSetters_CodeImplementation",
+              "page_start": 4,
+              "page_end": 4,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)"
+                ]
+              }
+            },
+            {
+              "id": "L20",
+              "title": "Implementing TV Channel Navigation Methods",
+              "view_name": "TVChannelNav_CodeImplementation",
+              "page_start": 5,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)"
+                ]
+              }
+            },
+            {
+              "id": "L21",
+              "title": "Implementing TV Volume Adjustment Methods",
+              "view_name": "TVVolumeAdjust_CodeImplementation",
+              "page_start": 6,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc6.2",
+          "title": "Advanced Constructor Usage",
+          "lessons": [
+            {
+              "id": "L22",
+              "title": "Constructor Chaining and Overloading Example (Inventory Class)",
+              "view_name": "InventoryConstructor_CodeSnippet",
+              "page_start": 1,
+              "page_end": 1,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Inventory Class Constructor Code Snippets",
+                  "Constructor Delegation/Chaining Demonstration"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc6.3",
+          "title": "Designing and Implementing a Book Class",
+          "lessons": [
+            {
+              "id": "L23",
+              "title": "Book Class Requirements and Initial UML Design",
+              "view_name": "BookClass_UMLDesign",
+              "page_start": 2,
+              "page_end": 2,
+              "visual_assets": [
+                "Unit2_Test/assets/page_2_fig_1.png",
+                "Unit2_Test/assets/page_2_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Design a 'Book' class for a library system",
+                  "Book Class UML Diagram"
+                ]
+              }
+            },
+            {
+              "id": "L24",
+              "title": "Book Class C++ Header and Basic Implementation",
+              "view_name": "BookClass_CodeImplementation",
+              "page_start": 3,
+              "page_end": 3,
+              "visual_assets": [
+                "Unit2_Test/assets/page_3_fig_1.png",
+                "Unit2_Test/assets/page_3_fig_2.png",
+                "Unit2_Test/assets/page_3_fig_3.png",
+                "Unit2_Test/assets/page_3_fig_4.png",
+                "Unit2_Test/assets/page_3_fig_5.png",
+                "Unit2_Test/assets/page_3_fig_6.png",
+                "Unit2_Test/assets/page_3_fig_7.png",
+                "Unit2_Test/assets/page_3_fig_8.png",
+                "Unit2_Test/assets/page_3_fig_9.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Book.h Header File",
+                  "Book.cpp Implementation File (Constructor, Getters, Setters, displayDetails)"
+                ]
+              }
+            },
+            {
+              "id": "L25",
+              "title": "Book Class C++ Implementation with Inline Function Highlight",
+              "view_name": "BookClass_InlineFunction",
+              "page_start": 4,
+              "page_end": 4,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Book.h Header File",
+                  "Book.cpp Implementation File (Inline Function Emphasis)"
+                ]
+              }
+            },
+            {
+              "id": "L26",
+              "title": "Book Class C++ Implementation with Main Function for Testing",
+              "view_name": "BookClass_MainFunction",
+              "page_start": 5,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Book.h Header File",
+                  "Book.cpp Implementation File (Main Function)"
+                ]
+              }
+            },
+            {
+              "id": "L27",
+              "title": "Book Class C++ Implementation and Program Output",
+              "view_name": "BookClass_Output",
+              "page_start": 6,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Book.h Header File",
+                  "Book.cpp Implementation File (Main Function and Output)"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch7",
+      "title": "Advanced Class Features Review",
+      "mini_chapters": [
+        {
+          "id": "mc7.1",
+          "title": "Class Member Functions and Usage",
+          "lessons": [
+            {
+              "id": "L28",
+              "title": "Getters, Setters, Const and Static Member Functions Example",
+              "view_name": "ClassMembers_CodeExample",
+              "page_start": 1,
+              "page_end": 1,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Getters",
+                  "Setters",
+                  "main() function",
+                  "displayDetails()",
+                  "getTotalBookCount()"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch8",
+      "title": "Objects and Classes",
+      "mini_chapters": [
+        {
+          "id": "mc8.1",
+          "title": "Introduction to Object-Oriented Programming",
+          "lessons": [
+            {
+              "id": "L29",
+              "title": "Moving to Object-Oriented Programming",
+              "view_name": "OOP_TransitionOverview",
+              "page_start": 4,
+              "page_end": 4,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Moving to Object Oriented Programing"
+                ]
+              }
+            },
+            {
+              "id": "L30",
+              "title": "Understanding Procedural Programming",
+              "view_name": "Procedural_CodeDiagram",
+              "page_start": 5,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_5_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Procedural Programing"
+                ]
+              }
+            },
+            {
+              "id": "L31",
+              "title": "Understanding Object-Oriented Programming",
+              "view_name": "OOP_CodeDiagram",
+              "page_start": 7,
+              "page_end": 8,
+              "visual_assets": [
+                "Unit2_Test/assets/page_7_fig_1.png",
+                "Unit2_Test/assets/page_7_fig_2.png",
+                "Unit2_Test/assets/page_7_fig_3.png",
+                "Unit2_Test/assets/page_7_fig_4.png",
+                "Unit2_Test/assets/page_7_fig_5.png",
+                "Unit2_Test/assets/page_7_fig_6.png",
+                "Unit2_Test/assets/page_7_fig_7.png",
+                "Unit2_Test/assets/page_7_fig_8.png",
+                "Unit2_Test/assets/page_7_fig_9.png",
+                "Unit2_Test/assets/page_7_fig_10.png",
+                "Unit2_Test/assets/page_7_fig_11.png",
+                "Unit2_Test/assets/page_7_fig_12.png",
+                "Unit2_Test/assets/page_7_fig_13.png",
+                "Unit2_Test/assets/page_7_fig_14.png",
+                "Unit2_Test/assets/page_7_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_1.png",
+                "Unit2_Test/assets/page_8_fig_2.png",
+                "Unit2_Test/assets/page_8_fig_3.png",
+                "Unit2_Test/assets/page_8_fig_4.png",
+                "Unit2_Test/assets/page_8_fig_5.png",
+                "Unit2_Test/assets/page_8_fig_6.png",
+                "Unit2_Test/assets/page_8_fig_7.png",
+                "Unit2_Test/assets/page_8_fig_8.png",
+                "Unit2_Test/assets/page_8_fig_9.png",
+                "Unit2_Test/assets/page_8_fig_10.png",
+                "Unit2_Test/assets/page_8_fig_11.png",
+                "Unit2_Test/assets/page_8_fig_12.png",
+                "Unit2_Test/assets/page_8_fig_13.png",
+                "Unit2_Test/assets/page_8_fig_14.png",
+                "Unit2_Test/assets/page_8_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_16.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Object Oriented Programing"
+                ]
+              }
+            },
+            {
+              "id": "L32",
+              "title": "Comparing Procedural and Object-Oriented Programming",
+              "view_name": "OOP_ComparisonTable",
+              "page_start": 9,
+              "page_end": 9,
+              "visual_assets": [
+                "Unit2_Test/assets/page_9_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Procedural Programing and Object-Oriented Programing"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc8.2",
+          "title": "Fundamental OOP Concepts",
+          "lessons": [
+            {
+              "id": "L33",
+              "title": "Core Characteristics of Object-Oriented Programming",
+              "view_name": "OOP_CharacteristicsList",
+              "page_start": 10,
+              "page_end": 10,
+              "visual_assets": [
+                "Unit2_Test/assets/page_10_fig_1.png",
+                "Unit2_Test/assets/page_10_fig_2.png",
+                "Unit2_Test/assets/page_10_fig_3.png",
+                "Unit2_Test/assets/page_10_fig_4.png",
+                "Unit2_Test/assets/page_10_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Object-Oriented Programming"
+                ]
+              }
+            },
+            {
+              "id": "L34",
+              "title": "Data Hiding and Public Interface in OOP",
+              "view_name": "OOP_DataHidingDiagram",
+              "page_start": 11,
+              "page_end": 11,
+              "visual_assets": [
+                "Unit2_Test/assets/page_11_fig_1.png",
+                "Unit2_Test/assets/page_11_fig_2.png",
+                "Unit2_Test/assets/page_11_fig_3.png",
+                "Unit2_Test/assets/page_11_fig_4.png",
+                "Unit2_Test/assets/page_11_fig_5.png",
+                "Unit2_Test/assets/page_11_fig_6.png",
+                "Unit2_Test/assets/page_11_fig_7.png",
+                "Unit2_Test/assets/page_11_fig_8.png",
+                "Unit2_Test/assets/page_11_fig_9.png",
+                "Unit2_Test/assets/page_11_fig_10.png",
+                "Unit2_Test/assets/page_11_fig_11.png",
+                "Unit2_Test/assets/page_11_fig_12.png",
+                "Unit2_Test/assets/page_11_fig_13.png",
+                "Unit2_Test/assets/page_11_fig_14.png",
+                "Unit2_Test/assets/page_11_fig_15.png",
+                "Unit2_Test/assets/page_11_fig_16.png",
+                "Unit2_Test/assets/page_11_fig_17.png",
+                "Unit2_Test/assets/page_11_fig_18.png",
+                "Unit2_Test/assets/page_11_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Object-Oriented Programming"
+                ]
+              }
+            },
+            {
+              "id": "L35",
+              "title": "Object-Oriented Programming Terminology",
+              "view_name": "OOP_TerminologyList",
+              "page_start": 12,
+              "page_end": 12,
+              "visual_assets": [
+                "Unit2_Test/assets/page_12_fig_1.png",
+                "Unit2_Test/assets/page_12_fig_2.png",
+                "Unit2_Test/assets/page_12_fig_3.png",
+                "Unit2_Test/assets/page_12_fig_4.png",
+                "Unit2_Test/assets/page_12_fig_5.png",
+                "Unit2_Test/assets/page_12_fig_6.png",
+                "Unit2_Test/assets/page_12_fig_7.png",
+                "Unit2_Test/assets/page_12_fig_8.png",
+                "Unit2_Test/assets/page_12_fig_9.png",
+                "Unit2_Test/assets/page_12_fig_10.png",
+                "Unit2_Test/assets/page_12_fig_11.png",
+                "Unit2_Test/assets/page_12_fig_12.png",
+                "Unit2_Test/assets/page_12_fig_13.png",
+                "Unit2_Test/assets/page_12_fig_14.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Object-Oriented Programming Terminology"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc8.3",
+          "title": "Visualizing Classes with UML",
+          "lessons": [
+            {
+              "id": "L36",
+              "title": "Introduction to UML Class Diagrams",
+              "view_name": "UML_ClassDiagramExample",
+              "page_start": 13,
+              "page_end": 13,
+              "visual_assets": [
+                "Unit2_Test/assets/page_13_fig_1.png",
+                "Unit2_Test/assets/page_13_fig_2.png",
+                "Unit2_Test/assets/page_13_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "UML – Class Diagram"
+                ]
+              }
+            },
+            {
+              "id": "L37",
+              "title": "Classes as Blueprints and Object Instances",
+              "view_name": "UML_ClassInstanceDiagram",
+              "page_start": 14,
+              "page_end": 14,
+              "visual_assets": [
+                "Unit2_Test/assets/page_14_fig_1.png",
+                "Unit2_Test/assets/page_14_fig_2.png",
+                "Unit2_Test/assets/page_14_fig_3.png",
+                "Unit2_Test/assets/page_14_fig_4.png",
+                "Unit2_Test/assets/page_14_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "UML – Class Diagram"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc8.4",
+          "title": "Declaring Classes in C++",
+          "lessons": [
+            {
+              "id": "L38",
+              "title": "Overview of Class Declaration",
+              "view_name": "Class_DeclarationOverview",
+              "page_start": 15,
+              "page_end": 15,
+              "visual_assets": [
+                "Unit2_Test/assets/page_15_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "How to Declare a Class?"
+                ]
+              }
+            },
+            {
+              "id": "L39",
+              "title": "Class Structure and Access Specifiers",
+              "view_name": "Class_StructureCode",
+              "page_start": 16,
+              "page_end": 16,
+              "visual_assets": [
+                "Unit2_Test/assets/page_16_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Example"
+                ]
+              }
+            },
+            {
+              "id": "L40",
+              "title": "Implementing Class Members and Object Usage",
+              "view_name": "Class_ImplementationCode",
+              "page_start": 17,
+              "page_end": 17,
+              "visual_assets": [
+                "Unit2_Test/assets/page_17_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Example"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch9",
+      "title": "Class Definition and Object Interaction",
+      "mini_chapters": [
+        {
+          "id": "mc9.1",
+          "title": "Class Method Definition and Usage",
+          "lessons": [
+            {
+              "id": "L41",
+              "title": "Defining and Implementing Class Methods",
+              "view_name": "MethodDefinition_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "Unit2_Test/assets/page_25_fig_1.png",
+                "Unit2_Test/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Example (in-class method definition)",
+                  "Class Example (out-of-class method definition)",
+                  "main() function demonstrating method call"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc9.2",
+          "title": "Object Instantiation and Member Access",
+          "lessons": [
+            {
+              "id": "L42",
+              "title": "Creating Multiple Objects and Accessing Members",
+              "view_name": "MultipleObjects_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "Unit2_Test/assets/page_25_fig_1.png",
+                "Unit2_Test/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Example (multiple object instantiation, member access, and modification)"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch10",
+      "title": "Variable Scope in Classes",
+      "mini_chapters": [
+        {
+          "id": "mc10.1",
+          "title": "Scope of Data Fields",
+          "lessons": [
+            {
+              "id": "L43",
+              "title": "Data Field and Function Declaration Order",
+              "view_name": "DeclarationOrder_Explanation",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "Unit2_Test/assets/page_25_fig_1.png",
+                "Unit2_Test/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Data fields (demonstrating declaration order flexibility)"
+                ]
+              }
+            },
+            {
+              "id": "L44",
+              "title": "Data Field Accessibility and Encapsulation",
+              "view_name": "Encapsulation_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "Unit2_Test/assets/page_25_fig_1.png",
+                "Unit2_Test/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Data fields (data field accessibility, getters, setters, encapsulation)"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc10.2",
+          "title": "Scope of Local Variables",
+          "lessons": [
+            {
+              "id": "L45",
+              "title": "Local Variable Definition within Functions",
+              "view_name": "LocalVariable_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "Unit2_Test/assets/page_25_fig_1.png",
+                "Unit2_Test/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Local Variables (local variable 'a' in getArea())"
+                ]
+              }
+            },
+            {
+              "id": "L46",
+              "title": "Local Variable Precedence Over Data Fields",
+              "view_name": "LocalVariableHiding_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "Unit2_Test/assets/page_25_fig_1.png",
+                "Unit2_Test/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Local Variables (local variable 'r' hiding data field 'radius')"
+                ]
+              }
+            },
+            {
+              "id": "L47",
+              "title": "Interaction of Global, Data Field, and Local Variables",
+              "view_name": "VariableScopeInteraction_CodeExample",
+              "page_start": 25,
+              "page_end": 25,
+              "visual_assets": [
+                "Unit2_Test/assets/page_25_fig_1.png",
+                "Unit2_Test/assets/page_25_fig_2.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Local Variables (global 'x', data field 'y', and local scope interaction)"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch11",
+      "title": "Variable Scope and Object Management",
+      "mini_chapters": [
+        {
+          "id": "mc11.1",
+          "title": "Variable Scope in C++",
+          "lessons": [
+            {
+              "id": "L48",
+              "title": "Global and Member Variable Access",
+              "view_name": "VariableScope_CodeExample",
+              "page_start": 2,
+              "page_end": 2,
+              "visual_assets": [
+                "Unit2_Test/assets/page_2_fig_1.png",
+                "Unit2_Test/assets/page_2_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Local Variables",
+                  "Accessing global and member variables"
+                ]
+              }
+            },
+            {
+              "id": "L49",
+              "title": "Member Variable Shadowing Global",
+              "view_name": "VariableShadowing_CodeExample",
+              "page_start": 3,
+              "page_end": 3,
+              "visual_assets": [
+                "Unit2_Test/assets/page_3_fig_1.png",
+                "Unit2_Test/assets/page_3_fig_2.png",
+                "Unit2_Test/assets/page_3_fig_3.png",
+                "Unit2_Test/assets/page_3_fig_4.png",
+                "Unit2_Test/assets/page_3_fig_5.png",
+                "Unit2_Test/assets/page_3_fig_6.png",
+                "Unit2_Test/assets/page_3_fig_7.png",
+                "Unit2_Test/assets/page_3_fig_8.png",
+                "Unit2_Test/assets/page_3_fig_9.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Local Variables",
+                  "Member variable shadowing global"
+                ]
+              }
+            },
+            {
+              "id": "L50",
+              "title": "Local Variable Shadowing All Scopes",
+              "view_name": "LocalShadowing_CodeExample",
+              "page_start": 4,
+              "page_end": 4,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Local Variables",
+                  "Local variable shadowing"
+                ]
+              }
+            },
+            {
+              "id": "L51",
+              "title": "Explicitly Accessing Shadowed Variables",
+              "view_name": "ScopeResolution_CodeExample",
+              "page_start": 5,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Local Variables",
+                  "Accessing global and member variables using scope resolution operator"
+                ]
+              }
+            },
+            {
+              "id": "L52",
+              "title": "Accessing Member Variables with 'this'",
+              "view_name": "ThisPointer_CodeExample",
+              "page_start": 6,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "The Scope of Local Variables",
+                  "Accessing member variables using 'this' pointer"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc11.2",
+          "title": "Naming Conventions",
+          "lessons": [
+            {
+              "id": "L53",
+              "title": "Class and Object Naming Guidelines",
+              "view_name": "NamingConventions_Textual",
+              "page_start": 7,
+              "page_end": 7,
+              "visual_assets": [
+                "Unit2_Test/assets/page_7_fig_1.png",
+                "Unit2_Test/assets/page_7_fig_2.png",
+                "Unit2_Test/assets/page_7_fig_3.png",
+                "Unit2_Test/assets/page_7_fig_4.png",
+                "Unit2_Test/assets/page_7_fig_5.png",
+                "Unit2_Test/assets/page_7_fig_6.png",
+                "Unit2_Test/assets/page_7_fig_7.png",
+                "Unit2_Test/assets/page_7_fig_8.png",
+                "Unit2_Test/assets/page_7_fig_9.png",
+                "Unit2_Test/assets/page_7_fig_10.png",
+                "Unit2_Test/assets/page_7_fig_11.png",
+                "Unit2_Test/assets/page_7_fig_12.png",
+                "Unit2_Test/assets/page_7_fig_13.png",
+                "Unit2_Test/assets/page_7_fig_14.png",
+                "Unit2_Test/assets/page_7_fig_15.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Naming Objects and Classes"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc11.3",
+          "title": "Object Assignment",
+          "lessons": [
+            {
+              "id": "L54",
+              "title": "Memberwise Copy Operation",
+              "view_name": "MemberwiseCopy_CodeDiagram",
+              "page_start": 8,
+              "page_end": 8,
+              "visual_assets": [
+                "Unit2_Test/assets/page_8_fig_1.png",
+                "Unit2_Test/assets/page_8_fig_2.png",
+                "Unit2_Test/assets/page_8_fig_3.png",
+                "Unit2_Test/assets/page_8_fig_4.png",
+                "Unit2_Test/assets/page_8_fig_5.png",
+                "Unit2_Test/assets/page_8_fig_6.png",
+                "Unit2_Test/assets/page_8_fig_7.png",
+                "Unit2_Test/assets/page_8_fig_8.png",
+                "Unit2_Test/assets/page_8_fig_9.png",
+                "Unit2_Test/assets/page_8_fig_10.png",
+                "Unit2_Test/assets/page_8_fig_11.png",
+                "Unit2_Test/assets/page_8_fig_12.png",
+                "Unit2_Test/assets/page_8_fig_13.png",
+                "Unit2_Test/assets/page_8_fig_14.png",
+                "Unit2_Test/assets/page_8_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_16.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Memberwise Copy"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch12",
+      "title": "Abstraction and Encapsulation Principles",
+      "mini_chapters": [
+        {
+          "id": "mc12.1",
+          "title": "Core Concepts",
+          "lessons": [
+            {
+              "id": "L55",
+              "title": "Introduction to Abstraction and Encapsulation",
+              "view_name": "OOPConcepts_Overview",
+              "page_start": 9,
+              "page_end": 9,
+              "visual_assets": [
+                "Unit2_Test/assets/page_9_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Abstraction and Encapsulation"
+                ]
+              }
+            },
+            {
+              "id": "L56",
+              "title": "Defining Class Abstraction and Encapsulation",
+              "view_name": "ClassConcepts_Definitions",
+              "page_start": 10,
+              "page_end": 10,
+              "visual_assets": [
+                "Unit2_Test/assets/page_10_fig_1.png",
+                "Unit2_Test/assets/page_10_fig_2.png",
+                "Unit2_Test/assets/page_10_fig_3.png",
+                "Unit2_Test/assets/page_10_fig_4.png",
+                "Unit2_Test/assets/page_10_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Abstraction and Encapsulation"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc12.2",
+          "title": "Implementing Encapsulation",
+          "lessons": [
+            {
+              "id": "L57",
+              "title": "Issues with Public Data and Solution Overview",
+              "view_name": "DataEncapsulation_ProblemSolution",
+              "page_start": 11,
+              "page_end": 11,
+              "visual_assets": [
+                "Unit2_Test/assets/page_11_fig_1.png",
+                "Unit2_Test/assets/page_11_fig_2.png",
+                "Unit2_Test/assets/page_11_fig_3.png",
+                "Unit2_Test/assets/page_11_fig_4.png",
+                "Unit2_Test/assets/page_11_fig_5.png",
+                "Unit2_Test/assets/page_11_fig_6.png",
+                "Unit2_Test/assets/page_11_fig_7.png",
+                "Unit2_Test/assets/page_11_fig_8.png",
+                "Unit2_Test/assets/page_11_fig_9.png",
+                "Unit2_Test/assets/page_11_fig_10.png",
+                "Unit2_Test/assets/page_11_fig_11.png",
+                "Unit2_Test/assets/page_11_fig_12.png",
+                "Unit2_Test/assets/page_11_fig_13.png",
+                "Unit2_Test/assets/page_11_fig_14.png",
+                "Unit2_Test/assets/page_11_fig_15.png",
+                "Unit2_Test/assets/page_11_fig_16.png",
+                "Unit2_Test/assets/page_11_fig_17.png",
+                "Unit2_Test/assets/page_11_fig_18.png",
+                "Unit2_Test/assets/page_11_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Data Field Encapsulation",
+                  "Problems with public data fields",
+                  "Introduction to Getter / Setter"
+                ]
+              }
+            },
+            {
+              "id": "L58",
+              "title": "Getter and Setter Methods (Code Example)",
+              "view_name": "GetterSetter_CodeImplementation",
+              "page_start": 12,
+              "page_end": 12,
+              "visual_assets": [
+                "Unit2_Test/assets/page_12_fig_1.png",
+                "Unit2_Test/assets/page_12_fig_2.png",
+                "Unit2_Test/assets/page_12_fig_3.png",
+                "Unit2_Test/assets/page_12_fig_4.png",
+                "Unit2_Test/assets/page_12_fig_5.png",
+                "Unit2_Test/assets/page_12_fig_6.png",
+                "Unit2_Test/assets/page_12_fig_7.png",
+                "Unit2_Test/assets/page_12_fig_8.png",
+                "Unit2_Test/assets/page_12_fig_9.png",
+                "Unit2_Test/assets/page_12_fig_10.png",
+                "Unit2_Test/assets/page_12_fig_11.png",
+                "Unit2_Test/assets/page_12_fig_12.png",
+                "Unit2_Test/assets/page_12_fig_13.png",
+                "Unit2_Test/assets/page_12_fig_14.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)",
+                  "TV class code implementation"
+                ]
+              }
+            },
+            {
+              "id": "L59",
+              "title": "Getter and Setter Methods (UML Diagram)",
+              "view_name": "GetterSetter_UMLDiagram",
+              "page_start": 13,
+              "page_end": 13,
+              "visual_assets": [
+                "Unit2_Test/assets/page_13_fig_1.png",
+                "Unit2_Test/assets/page_13_fig_2.png",
+                "Unit2_Test/assets/page_13_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Example – Getter (Accessor) and Setter (Mutator)",
+                  "TV class UML diagram"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch13",
+      "title": "Constant and Static Members",
+      "mini_chapters": [
+        {
+          "id": "mc13.1",
+          "title": "Constant Members",
+          "lessons": [
+            {
+              "id": "L60",
+              "title": "Defining Constant Members and Functions",
+              "view_name": "ConstMember_ConceptExplanation",
+              "page_start": 4,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png",
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constant Members"
+                ]
+              }
+            },
+            {
+              "id": "L61",
+              "title": "Const Objects and Member Function Invocation Rules",
+              "view_name": "ConstObject_RuleCodeExample",
+              "page_start": 6,
+              "page_end": 8,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png",
+                "Unit2_Test/assets/page_7_fig_1.png",
+                "Unit2_Test/assets/page_7_fig_2.png",
+                "Unit2_Test/assets/page_7_fig_3.png",
+                "Unit2_Test/assets/page_7_fig_4.png",
+                "Unit2_Test/assets/page_7_fig_5.png",
+                "Unit2_Test/assets/page_7_fig_6.png",
+                "Unit2_Test/assets/page_7_fig_7.png",
+                "Unit2_Test/assets/page_7_fig_8.png",
+                "Unit2_Test/assets/page_7_fig_9.png",
+                "Unit2_Test/assets/page_7_fig_10.png",
+                "Unit2_Test/assets/page_7_fig_11.png",
+                "Unit2_Test/assets/page_7_fig_12.png",
+                "Unit2_Test/assets/page_7_fig_13.png",
+                "Unit2_Test/assets/page_7_fig_14.png",
+                "Unit2_Test/assets/page_7_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_1.png",
+                "Unit2_Test/assets/page_8_fig_2.png",
+                "Unit2_Test/assets/page_8_fig_3.png",
+                "Unit2_Test/assets/page_8_fig_4.png",
+                "Unit2_Test/assets/page_8_fig_5.png",
+                "Unit2_Test/assets/page_8_fig_6.png",
+                "Unit2_Test/assets/page_8_fig_7.png",
+                "Unit2_Test/assets/page_8_fig_8.png",
+                "Unit2_Test/assets/page_8_fig_9.png",
+                "Unit2_Test/assets/page_8_fig_10.png",
+                "Unit2_Test/assets/page_8_fig_11.png",
+                "Unit2_Test/assets/page_8_fig_12.png",
+                "Unit2_Test/assets/page_8_fig_13.png",
+                "Unit2_Test/assets/page_8_fig_14.png",
+                "Unit2_Test/assets/page_8_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_16.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constant Members"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc13.2",
+          "title": "Static Member Variables",
+          "lessons": [
+            {
+              "id": "L62",
+              "title": "Static Member Variable Declaration and Initialization",
+              "view_name": "StaticVar_CodeExample",
+              "page_start": 9,
+              "page_end": 9,
+              "visual_assets": [
+                "Unit2_Test/assets/page_9_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Member Variables"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc13.3",
+          "title": "Static Member Functions",
+          "lessons": [
+            {
+              "id": "L63",
+              "title": "Static Member Function Access Rules and Usage",
+              "view_name": "StaticFunc_CodeExample",
+              "page_start": 10,
+              "page_end": 10,
+              "visual_assets": [
+                "Unit2_Test/assets/page_10_fig_1.png",
+                "Unit2_Test/assets/page_10_fig_2.png",
+                "Unit2_Test/assets/page_10_fig_3.png",
+                "Unit2_Test/assets/page_10_fig_4.png",
+                "Unit2_Test/assets/page_10_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Member Functions"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc13.4",
+          "title": "Comprehensive Static Members Example",
+          "lessons": [
+            {
+              "id": "L64",
+              "title": "Static Members in Multi-File Projects",
+              "view_name": "StaticMembers_MultiFileCode",
+              "page_start": 11,
+              "page_end": 11,
+              "visual_assets": [
+                "Unit2_Test/assets/page_11_fig_1.png",
+                "Unit2_Test/assets/page_11_fig_2.png",
+                "Unit2_Test/assets/page_11_fig_3.png",
+                "Unit2_Test/assets/page_11_fig_4.png",
+                "Unit2_Test/assets/page_11_fig_5.png",
+                "Unit2_Test/assets/page_11_fig_6.png",
+                "Unit2_Test/assets/page_11_fig_7.png",
+                "Unit2_Test/assets/page_11_fig_8.png",
+                "Unit2_Test/assets/page_11_fig_9.png",
+                "Unit2_Test/assets/page_11_fig_10.png",
+                "Unit2_Test/assets/page_11_fig_11.png",
+                "Unit2_Test/assets/page_11_fig_12.png",
+                "Unit2_Test/assets/page_11_fig_13.png",
+                "Unit2_Test/assets/page_11_fig_14.png",
+                "Unit2_Test/assets/page_11_fig_15.png",
+                "Unit2_Test/assets/page_11_fig_16.png",
+                "Unit2_Test/assets/page_11_fig_17.png",
+                "Unit2_Test/assets/page_11_fig_18.png",
+                "Unit2_Test/assets/page_11_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Static Members"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch14",
+      "title": "Constructors and Destructors",
+      "mini_chapters": [
+        {
+          "id": "mc14.1",
+          "title": "Introduction to Constructors",
+          "lessons": [
+            {
+              "id": "L65",
+              "title": "Constructors and Destructors Overview",
+              "view_name": "ConstructorsDestructors_Overview",
+              "page_start": 7,
+              "page_end": 7,
+              "visual_assets": [
+                "Unit2_Test/assets/page_7_fig_1.png",
+                "Unit2_Test/assets/page_7_fig_2.png",
+                "Unit2_Test/assets/page_7_fig_3.png",
+                "Unit2_Test/assets/page_7_fig_4.png",
+                "Unit2_Test/assets/page_7_fig_5.png",
+                "Unit2_Test/assets/page_7_fig_6.png",
+                "Unit2_Test/assets/page_7_fig_7.png",
+                "Unit2_Test/assets/page_7_fig_8.png",
+                "Unit2_Test/assets/page_7_fig_9.png",
+                "Unit2_Test/assets/page_7_fig_10.png",
+                "Unit2_Test/assets/page_7_fig_11.png",
+                "Unit2_Test/assets/page_7_fig_12.png",
+                "Unit2_Test/assets/page_7_fig_13.png",
+                "Unit2_Test/assets/page_7_fig_14.png",
+                "Unit2_Test/assets/page_7_fig_15.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constructors and Destructors"
+                ]
+              }
+            },
+            {
+              "id": "L66",
+              "title": "Basic Constructor Definition and Usage",
+              "view_name": "DefaultConstructor_CodeExample",
+              "page_start": 8,
+              "page_end": 8,
+              "visual_assets": [
+                "Unit2_Test/assets/page_8_fig_1.png",
+                "Unit2_Test/assets/page_8_fig_2.png",
+                "Unit2_Test/assets/page_8_fig_3.png",
+                "Unit2_Test/assets/page_8_fig_4.png",
+                "Unit2_Test/assets/page_8_fig_5.png",
+                "Unit2_Test/assets/page_8_fig_6.png",
+                "Unit2_Test/assets/page_8_fig_7.png",
+                "Unit2_Test/assets/page_8_fig_8.png",
+                "Unit2_Test/assets/page_8_fig_9.png",
+                "Unit2_Test/assets/page_8_fig_10.png",
+                "Unit2_Test/assets/page_8_fig_11.png",
+                "Unit2_Test/assets/page_8_fig_12.png",
+                "Unit2_Test/assets/page_8_fig_13.png",
+                "Unit2_Test/assets/page_8_fig_14.png",
+                "Unit2_Test/assets/page_8_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_16.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constructors",
+                  "Definition of Constructors",
+                  "class Circle (default constructor)",
+                  "int main() (object creation)"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc14.2",
+          "title": "Overloading Constructors",
+          "lessons": [
+            {
+              "id": "L67",
+              "title": "Overloaded Constructors and Implicit Default Constructor",
+              "view_name": "OverloadedConstructor_CodeExample",
+              "page_start": 9,
+              "page_end": 9,
+              "visual_assets": [
+                "Unit2_Test/assets/page_9_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Constructors",
+                  "Overloading Constructors",
+                  "Implicit Default Constructor",
+                  "class Circle (overloaded constructor)",
+                  "int main() (object creation with different constructors)"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch15",
+      "title": "Destructors",
+      "mini_chapters": [
+        {
+          "id": "mc15.1",
+          "title": "Understanding Destructors",
+          "lessons": [
+            {
+              "id": "L68",
+              "title": "Destructor Definition and Syntax",
+              "view_name": "Destructors_Definition",
+              "page_start": 3,
+              "page_end": 3,
+              "visual_assets": [
+                "Unit2_Test/assets/page_3_fig_1.png",
+                "Unit2_Test/assets/page_3_fig_2.png",
+                "Unit2_Test/assets/page_3_fig_3.png",
+                "Unit2_Test/assets/page_3_fig_4.png",
+                "Unit2_Test/assets/page_3_fig_5.png",
+                "Unit2_Test/assets/page_3_fig_6.png",
+                "Unit2_Test/assets/page_3_fig_7.png",
+                "Unit2_Test/assets/page_3_fig_8.png",
+                "Unit2_Test/assets/page_3_fig_9.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Destructors (definition)"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc15.2",
+          "title": "Destructor Code Examples",
+          "lessons": [
+            {
+              "id": "L69",
+              "title": "Implementing Destructors in Circle Class",
+              "view_name": "Destructors_CodeExample",
+              "page_start": 4,
+              "page_end": 4,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Destructors (Circle.h, Circle.cpp)"
+                ]
+              }
+            },
+            {
+              "id": "L70",
+              "title": "Destructor Lifecycle in Main Function",
+              "view_name": "Destructors_MainFlow",
+              "page_start": 5,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Destructors (Demo class main)"
+                ]
+              }
+            },
+            {
+              "id": "L71",
+              "title": "Destructor Lifecycle in Global Functions",
+              "view_name": "Destructors_FunctionFlow",
+              "page_start": 6,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Destructors (Demo class global function)"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch16",
+      "title": "Anonymous Objects",
+      "mini_chapters": [
+        {
+          "id": "mc16.1",
+          "title": "Anonymous Objects",
+          "lessons": [
+            {
+              "id": "L72",
+              "title": "Creating and Using Anonymous Objects",
+              "view_name": "AnonymousObject_CodeExample",
+              "page_start": 7,
+              "page_end": 7,
+              "visual_assets": [
+                "Unit2_Test/assets/page_7_fig_1.png",
+                "Unit2_Test/assets/page_7_fig_2.png",
+                "Unit2_Test/assets/page_7_fig_3.png",
+                "Unit2_Test/assets/page_7_fig_4.png",
+                "Unit2_Test/assets/page_7_fig_5.png",
+                "Unit2_Test/assets/page_7_fig_6.png",
+                "Unit2_Test/assets/page_7_fig_7.png",
+                "Unit2_Test/assets/page_7_fig_8.png",
+                "Unit2_Test/assets/page_7_fig_9.png",
+                "Unit2_Test/assets/page_7_fig_10.png",
+                "Unit2_Test/assets/page_7_fig_11.png",
+                "Unit2_Test/assets/page_7_fig_12.png",
+                "Unit2_Test/assets/page_7_fig_13.png",
+                "Unit2_Test/assets/page_7_fig_14.png",
+                "Unit2_Test/assets/page_7_fig_15.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Anonymous Object"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch17",
+      "title": "Initializing Member Data Fields",
+      "mini_chapters": [
+        {
+          "id": "mc17.1",
+          "title": "Constructor Initialization Methods",
+          "lessons": [
+            {
+              "id": "L73",
+              "title": "Initializer Lists",
+              "view_name": "Constructor_InitializerList_Code",
+              "page_start": 1,
+              "page_end": 1,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields",
+                  "Initializer list is where you can initialize constant and reference member variables"
+                ]
+              }
+            },
+            {
+              "id": "L74",
+              "title": "Avoiding Direct Constructor Calls",
+              "view_name": "Constructor_IncorrectCall_Warning",
+              "page_start": 2,
+              "page_end": 2,
+              "visual_assets": [
+                "Unit2_Test/assets/page_2_fig_1.png",
+                "Unit2_Test/assets/page_2_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields",
+                  "A constructor is not called like a normal member function"
+                ]
+              }
+            },
+            {
+              "id": "L75",
+              "title": "Constructor Delegation",
+              "view_name": "Constructor_Delegation_Code",
+              "page_start": 3,
+              "page_end": 4,
+              "visual_assets": [
+                "Unit2_Test/assets/page_3_fig_1.png",
+                "Unit2_Test/assets/page_3_fig_2.png",
+                "Unit2_Test/assets/page_3_fig_3.png",
+                "Unit2_Test/assets/page_3_fig_4.png",
+                "Unit2_Test/assets/page_3_fig_5.png",
+                "Unit2_Test/assets/page_3_fig_6.png",
+                "Unit2_Test/assets/page_3_fig_7.png",
+                "Unit2_Test/assets/page_3_fig_8.png",
+                "Unit2_Test/assets/page_3_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields",
+                  "Constructor Delegation"
+                ]
+              }
+            },
+            {
+              "id": "L76",
+              "title": "Initialization via Setter Methods",
+              "view_name": "Constructor_SetterInit_Code",
+              "page_start": 5,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields"
+                ]
+              }
+            },
+            {
+              "id": "L77",
+              "title": "Initialization via Private Helper Methods",
+              "view_name": "Constructor_HelperMethodInit_Code",
+              "page_start": 6,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields"
+                ]
+              }
+            },
+            {
+              "id": "L78",
+              "title": "Initialization with Default Parameters",
+              "view_name": "Constructor_DefaultParams_Code",
+              "page_start": 7,
+              "page_end": 7,
+              "visual_assets": [
+                "Unit2_Test/assets/page_7_fig_1.png",
+                "Unit2_Test/assets/page_7_fig_2.png",
+                "Unit2_Test/assets/page_7_fig_3.png",
+                "Unit2_Test/assets/page_7_fig_4.png",
+                "Unit2_Test/assets/page_7_fig_5.png",
+                "Unit2_Test/assets/page_7_fig_6.png",
+                "Unit2_Test/assets/page_7_fig_7.png",
+                "Unit2_Test/assets/page_7_fig_8.png",
+                "Unit2_Test/assets/page_7_fig_9.png",
+                "Unit2_Test/assets/page_7_fig_10.png",
+                "Unit2_Test/assets/page_7_fig_11.png",
+                "Unit2_Test/assets/page_7_fig_12.png",
+                "Unit2_Test/assets/page_7_fig_13.png",
+                "Unit2_Test/assets/page_7_fig_14.png",
+                "Unit2_Test/assets/page_7_fig_15.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields",
+                  "Use default parameters"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc17.2",
+          "title": "Methods for Member Initialization",
+          "lessons": [
+            {
+              "id": "L79",
+              "title": "Overview of Member Data Field Initialization",
+              "view_name": "MemberInit_Overview",
+              "page_start": 8,
+              "page_end": 8,
+              "visual_assets": [
+                "Unit2_Test/assets/page_8_fig_1.png",
+                "Unit2_Test/assets/page_8_fig_2.png",
+                "Unit2_Test/assets/page_8_fig_3.png",
+                "Unit2_Test/assets/page_8_fig_4.png",
+                "Unit2_Test/assets/page_8_fig_5.png",
+                "Unit2_Test/assets/page_8_fig_6.png",
+                "Unit2_Test/assets/page_8_fig_7.png",
+                "Unit2_Test/assets/page_8_fig_8.png",
+                "Unit2_Test/assets/page_8_fig_9.png",
+                "Unit2_Test/assets/page_8_fig_10.png",
+                "Unit2_Test/assets/page_8_fig_11.png",
+                "Unit2_Test/assets/page_8_fig_12.png",
+                "Unit2_Test/assets/page_8_fig_13.png",
+                "Unit2_Test/assets/page_8_fig_14.png",
+                "Unit2_Test/assets/page_8_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_16.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields (title slide)"
+                ]
+              }
+            },
+            {
+              "id": "L80",
+              "title": "Default Member Initializers",
+              "view_name": "MemberInit_Default",
+              "page_start": 9,
+              "page_end": 9,
+              "visual_assets": [
+                "Unit2_Test/assets/page_9_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields (default initializers)"
+                ]
+              }
+            },
+            {
+              "id": "L81",
+              "title": "Constructor Body Initialization",
+              "view_name": "MemberInit_ConstructorBody",
+              "page_start": 10,
+              "page_end": 11,
+              "visual_assets": [
+                "Unit2_Test/assets/page_10_fig_1.png",
+                "Unit2_Test/assets/page_10_fig_2.png",
+                "Unit2_Test/assets/page_10_fig_3.png",
+                "Unit2_Test/assets/page_10_fig_4.png",
+                "Unit2_Test/assets/page_10_fig_5.png",
+                "Unit2_Test/assets/page_11_fig_1.png",
+                "Unit2_Test/assets/page_11_fig_2.png",
+                "Unit2_Test/assets/page_11_fig_3.png",
+                "Unit2_Test/assets/page_11_fig_4.png",
+                "Unit2_Test/assets/page_11_fig_5.png",
+                "Unit2_Test/assets/page_11_fig_6.png",
+                "Unit2_Test/assets/page_11_fig_7.png",
+                "Unit2_Test/assets/page_11_fig_8.png",
+                "Unit2_Test/assets/page_11_fig_9.png",
+                "Unit2_Test/assets/page_11_fig_10.png",
+                "Unit2_Test/assets/page_11_fig_11.png",
+                "Unit2_Test/assets/page_11_fig_12.png",
+                "Unit2_Test/assets/page_11_fig_13.png",
+                "Unit2_Test/assets/page_11_fig_14.png",
+                "Unit2_Test/assets/page_11_fig_15.png",
+                "Unit2_Test/assets/page_11_fig_16.png",
+                "Unit2_Test/assets/page_11_fig_17.png",
+                "Unit2_Test/assets/page_11_fig_18.png",
+                "Unit2_Test/assets/page_11_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields (constructor initialization)"
+                ]
+              }
+            },
+            {
+              "id": "L82",
+              "title": "Initialization Lists",
+              "view_name": "MemberInit_InitializerList",
+              "page_start": 12,
+              "page_end": 12,
+              "visual_assets": [
+                "Unit2_Test/assets/page_12_fig_1.png",
+                "Unit2_Test/assets/page_12_fig_2.png",
+                "Unit2_Test/assets/page_12_fig_3.png",
+                "Unit2_Test/assets/page_12_fig_4.png",
+                "Unit2_Test/assets/page_12_fig_5.png",
+                "Unit2_Test/assets/page_12_fig_6.png",
+                "Unit2_Test/assets/page_12_fig_7.png",
+                "Unit2_Test/assets/page_12_fig_8.png",
+                "Unit2_Test/assets/page_12_fig_9.png",
+                "Unit2_Test/assets/page_12_fig_10.png",
+                "Unit2_Test/assets/page_12_fig_11.png",
+                "Unit2_Test/assets/page_12_fig_12.png",
+                "Unit2_Test/assets/page_12_fig_13.png",
+                "Unit2_Test/assets/page_12_fig_14.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields (initialization lists)"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc17.3",
+          "title": "Initializing Reference and Constant Members",
+          "lessons": [
+            {
+              "id": "L83",
+              "title": "Reference Member Initialization",
+              "view_name": "ReferenceMember_Initialization_Code",
+              "page_start": 8,
+              "page_end": 9,
+              "visual_assets": [
+                "Unit2_Test/assets/page_8_fig_1.png",
+                "Unit2_Test/assets/page_8_fig_2.png",
+                "Unit2_Test/assets/page_8_fig_3.png",
+                "Unit2_Test/assets/page_8_fig_4.png",
+                "Unit2_Test/assets/page_8_fig_5.png",
+                "Unit2_Test/assets/page_8_fig_6.png",
+                "Unit2_Test/assets/page_8_fig_7.png",
+                "Unit2_Test/assets/page_8_fig_8.png",
+                "Unit2_Test/assets/page_8_fig_9.png",
+                "Unit2_Test/assets/page_8_fig_10.png",
+                "Unit2_Test/assets/page_8_fig_11.png",
+                "Unit2_Test/assets/page_8_fig_12.png",
+                "Unit2_Test/assets/page_8_fig_13.png",
+                "Unit2_Test/assets/page_8_fig_14.png",
+                "Unit2_Test/assets/page_8_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_16.png",
+                "Unit2_Test/assets/page_9_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields",
+                  "How to initialize reference variables?",
+                  "Read-only version of hidden length"
+                ]
+              }
+            },
+            {
+              "id": "L84",
+              "title": "Initializer List Order Quiz",
+              "view_name": "InitializerList_OrderQuiz_Code",
+              "page_start": 10,
+              "page_end": 10,
+              "visual_assets": [
+                "Unit2_Test/assets/page_10_fig_1.png",
+                "Unit2_Test/assets/page_10_fig_2.png",
+                "Unit2_Test/assets/page_10_fig_3.png",
+                "Unit2_Test/assets/page_10_fig_4.png",
+                "Unit2_Test/assets/page_10_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Initializing Member Data Fields",
+                  "What is the output of each of these alternative?"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch18",
+      "title": "Object Interactions and Collections",
+      "mini_chapters": [
+        {
+          "id": "mc18.1",
+          "title": "Passing Objects to Functions",
+          "lessons": [
+            {
+              "id": "L85",
+              "title": "Passing Objects by Reference Example",
+              "view_name": "ObjectPassing_CodeExample",
+              "page_start": 1,
+              "page_end": 2,
+              "visual_assets": [
+                "Unit2_Test/assets/page_1_fig_1.png",
+                "Unit2_Test/assets/page_1_fig_3.png",
+                "Unit2_Test/assets/page_1_fig_4.png",
+                "Unit2_Test/assets/page_1_fig_5.png",
+                "Unit2_Test/assets/page_1_fig_6.png",
+                "Unit2_Test/assets/page_2_fig_1.png",
+                "Unit2_Test/assets/page_2_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Passing Objects to Functions"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc18.2",
+          "title": "Arrays of Objects",
+          "lessons": [
+            {
+              "id": "L86",
+              "title": "Basic Array of Objects with Default Constructor",
+              "view_name": "ObjectArray_CircleExample",
+              "page_start": 3,
+              "page_end": 3,
+              "visual_assets": [
+                "Unit2_Test/assets/page_3_fig_1.png",
+                "Unit2_Test/assets/page_3_fig_2.png",
+                "Unit2_Test/assets/page_3_fig_3.png",
+                "Unit2_Test/assets/page_3_fig_4.png",
+                "Unit2_Test/assets/page_3_fig_5.png",
+                "Unit2_Test/assets/page_3_fig_6.png",
+                "Unit2_Test/assets/page_3_fig_7.png",
+                "Unit2_Test/assets/page_3_fig_8.png",
+                "Unit2_Test/assets/page_3_fig_9.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Array of Objects"
+                ]
+              }
+            },
+            {
+              "id": "L87",
+              "title": "Array of Objects Default Initialization with Constructor Delegation",
+              "view_name": "ObjectArray_DefaultConstructorCall",
+              "page_start": 4,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png",
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Array of Objects"
+                ]
+              }
+            },
+            {
+              "id": "L88",
+              "title": "Array of Objects Initialization with Double Initializer List",
+              "view_name": "ObjectArray_InitializerListDouble",
+              "page_start": 6,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Array of Objects"
+                ]
+              }
+            },
+            {
+              "id": "L89",
+              "title": "Array of Objects Initialization with String Initializer List",
+              "view_name": "ObjectArray_InitializerListString",
+              "page_start": 7,
+              "page_end": 7,
+              "visual_assets": [
+                "Unit2_Test/assets/page_7_fig_1.png",
+                "Unit2_Test/assets/page_7_fig_2.png",
+                "Unit2_Test/assets/page_7_fig_3.png",
+                "Unit2_Test/assets/page_7_fig_4.png",
+                "Unit2_Test/assets/page_7_fig_5.png",
+                "Unit2_Test/assets/page_7_fig_6.png",
+                "Unit2_Test/assets/page_7_fig_7.png",
+                "Unit2_Test/assets/page_7_fig_8.png",
+                "Unit2_Test/assets/page_7_fig_9.png",
+                "Unit2_Test/assets/page_7_fig_10.png",
+                "Unit2_Test/assets/page_7_fig_11.png",
+                "Unit2_Test/assets/page_7_fig_12.png",
+                "Unit2_Test/assets/page_7_fig_13.png",
+                "Unit2_Test/assets/page_7_fig_14.png",
+                "Unit2_Test/assets/page_7_fig_15.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Array of Objects"
+                ]
+              }
+            },
+            {
+              "id": "L90",
+              "title": "Array of Objects Initialization with Mixed Initializer List",
+              "view_name": "ObjectArray_InitializerListMixed",
+              "page_start": 8,
+              "page_end": 8,
+              "visual_assets": [
+                "Unit2_Test/assets/page_8_fig_1.png",
+                "Unit2_Test/assets/page_8_fig_2.png",
+                "Unit2_Test/assets/page_8_fig_3.png",
+                "Unit2_Test/assets/page_8_fig_4.png",
+                "Unit2_Test/assets/page_8_fig_5.png",
+                "Unit2_Test/assets/page_8_fig_6.png",
+                "Unit2_Test/assets/page_8_fig_7.png",
+                "Unit2_Test/assets/page_8_fig_8.png",
+                "Unit2_Test/assets/page_8_fig_9.png",
+                "Unit2_Test/assets/page_8_fig_10.png",
+                "Unit2_Test/assets/page_8_fig_11.png",
+                "Unit2_Test/assets/page_8_fig_12.png",
+                "Unit2_Test/assets/page_8_fig_13.png",
+                "Unit2_Test/assets/page_8_fig_14.png",
+                "Unit2_Test/assets/page_8_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_16.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Array of Objects"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch19",
+      "title": "Objects with Functions and Arrays",
+      "mini_chapters": [
+        {
+          "id": "mc19.1",
+          "title": "Passing Objects to Functions",
+          "lessons": [
+            {
+              "id": "L91",
+              "title": "Object Passing by Reference and Const Reference",
+              "view_name": "ObjectPassing_Reference_Code",
+              "page_start": 12,
+              "page_end": 13,
+              "visual_assets": [
+                "Unit2_Test/assets/page_12_fig_1.png",
+                "Unit2_Test/assets/page_12_fig_2.png",
+                "Unit2_Test/assets/page_12_fig_3.png",
+                "Unit2_Test/assets/page_12_fig_4.png",
+                "Unit2_Test/assets/page_12_fig_5.png",
+                "Unit2_Test/assets/page_12_fig_6.png",
+                "Unit2_Test/assets/page_12_fig_7.png",
+                "Unit2_Test/assets/page_12_fig_8.png",
+                "Unit2_Test/assets/page_12_fig_9.png",
+                "Unit2_Test/assets/page_12_fig_10.png",
+                "Unit2_Test/assets/page_12_fig_11.png",
+                "Unit2_Test/assets/page_12_fig_12.png",
+                "Unit2_Test/assets/page_12_fig_13.png",
+                "Unit2_Test/assets/page_12_fig_14.png",
+                "Unit2_Test/assets/page_13_fig_1.png",
+                "Unit2_Test/assets/page_13_fig_2.png",
+                "Unit2_Test/assets/page_13_fig_3.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Passing Objects to Functions",
+                  "You can pass objects by value or by reference, but it is more efficient to pass objects by reference or constant reference"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch20",
+      "title": "Designing an Object-Oriented Solution",
+      "mini_chapters": [
+        {
+          "id": "mc20.1",
+          "title": "Designing a Good Class",
+          "lessons": [
+            {
+              "id": "L92",
+              "title": "Principles of Good Class Design",
+              "view_name": "ClassDesign_PrinciplesList",
+              "page_start": 3,
+              "page_end": 3,
+              "visual_assets": [
+                "Unit2_Test/assets/page_3_fig_1.png",
+                "Unit2_Test/assets/page_3_fig_2.png",
+                "Unit2_Test/assets/page_3_fig_3.png",
+                "Unit2_Test/assets/page_3_fig_4.png",
+                "Unit2_Test/assets/page_3_fig_5.png",
+                "Unit2_Test/assets/page_3_fig_6.png",
+                "Unit2_Test/assets/page_3_fig_7.png",
+                "Unit2_Test/assets/page_3_fig_8.png",
+                "Unit2_Test/assets/page_3_fig_9.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Designing a Good Class"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mc20.2",
+          "title": "Class Relationships",
+          "lessons": [
+            {
+              "id": "L93",
+              "title": "Overview of Class Relationships",
+              "view_name": "ClassRelationships_DiagramExplanation",
+              "page_start": 4,
+              "page_end": 5,
+              "visual_assets": [
+                "Unit2_Test/assets/page_4_fig_1.png",
+                "Unit2_Test/assets/page_4_fig_2.png",
+                "Unit2_Test/assets/page_4_fig_3.png",
+                "Unit2_Test/assets/page_4_fig_4.png",
+                "Unit2_Test/assets/page_4_fig_5.png",
+                "Unit2_Test/assets/page_4_fig_6.png",
+                "Unit2_Test/assets/page_4_fig_7.png",
+                "Unit2_Test/assets/page_4_fig_8.png",
+                "Unit2_Test/assets/page_4_fig_9.png",
+                "Unit2_Test/assets/page_4_fig_10.png",
+                "Unit2_Test/assets/page_4_fig_11.png",
+                "Unit2_Test/assets/page_4_fig_12.png",
+                "Unit2_Test/assets/page_4_fig_13.png",
+                "Unit2_Test/assets/page_4_fig_14.png",
+                "Unit2_Test/assets/page_4_fig_15.png",
+                "Unit2_Test/assets/page_4_fig_17.png",
+                "Unit2_Test/assets/page_4_fig_19.png",
+                "Unit2_Test/assets/page_5_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships"
+                ]
+              }
+            },
+            {
+              "id": "L94",
+              "title": "Aggregation and Composition Concepts",
+              "view_name": "AggregationComposition_Diagram",
+              "page_start": 6,
+              "page_end": 6,
+              "visual_assets": [
+                "Unit2_Test/assets/page_6_fig_1.png",
+                "Unit2_Test/assets/page_6_fig_2.png",
+                "Unit2_Test/assets/page_6_fig_3.png",
+                "Unit2_Test/assets/page_6_fig_4.png",
+                "Unit2_Test/assets/page_6_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Aggregation / Composition"
+                ]
+              }
+            },
+            {
+              "id": "L95",
+              "title": "Association Concept",
+              "view_name": "Association_Diagram",
+              "page_start": 7,
+              "page_end": 7,
+              "visual_assets": [
+                "Unit2_Test/assets/page_7_fig_1.png",
+                "Unit2_Test/assets/page_7_fig_2.png",
+                "Unit2_Test/assets/page_7_fig_3.png",
+                "Unit2_Test/assets/page_7_fig_4.png",
+                "Unit2_Test/assets/page_7_fig_5.png",
+                "Unit2_Test/assets/page_7_fig_6.png",
+                "Unit2_Test/assets/page_7_fig_7.png",
+                "Unit2_Test/assets/page_7_fig_8.png",
+                "Unit2_Test/assets/page_7_fig_9.png",
+                "Unit2_Test/assets/page_7_fig_10.png",
+                "Unit2_Test/assets/page_7_fig_11.png",
+                "Unit2_Test/assets/page_7_fig_12.png",
+                "Unit2_Test/assets/page_7_fig_13.png",
+                "Unit2_Test/assets/page_7_fig_14.png",
+                "Unit2_Test/assets/page_7_fig_15.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Association"
+                ]
+              }
+            },
+            {
+              "id": "L96",
+              "title": "Aggregation and Composition C++ Implementation",
+              "view_name": "AggregationComposition_CodeExample",
+              "page_start": 8,
+              "page_end": 8,
+              "visual_assets": [
+                "Unit2_Test/assets/page_8_fig_1.png",
+                "Unit2_Test/assets/page_8_fig_2.png",
+                "Unit2_Test/assets/page_8_fig_3.png",
+                "Unit2_Test/assets/page_8_fig_4.png",
+                "Unit2_Test/assets/page_8_fig_5.png",
+                "Unit2_Test/assets/page_8_fig_6.png",
+                "Unit2_Test/assets/page_8_fig_7.png",
+                "Unit2_Test/assets/page_8_fig_8.png",
+                "Unit2_Test/assets/page_8_fig_9.png",
+                "Unit2_Test/assets/page_8_fig_10.png",
+                "Unit2_Test/assets/page_8_fig_11.png",
+                "Unit2_Test/assets/page_8_fig_12.png",
+                "Unit2_Test/assets/page_8_fig_13.png",
+                "Unit2_Test/assets/page_8_fig_14.png",
+                "Unit2_Test/assets/page_8_fig_15.png",
+                "Unit2_Test/assets/page_8_fig_16.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Aggregation / Composition"
+                ]
+              }
+            },
+            {
+              "id": "L97",
+              "title": "Inheritance and Generalization Concepts",
+              "view_name": "InheritanceGeneralization_Diagram",
+              "page_start": 9,
+              "page_end": 9,
+              "visual_assets": [
+                "Unit2_Test/assets/page_9_fig_1.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Inheritance / Generalization"
+                ]
+              }
+            },
+            {
+              "id": "L98",
+              "title": "Inheritance and Generalization C++ Implementation (Basic)",
+              "view_name": "InheritanceGeneralization_CodeExampleBasic",
+              "page_start": 10,
+              "page_end": 10,
+              "visual_assets": [
+                "Unit2_Test/assets/page_10_fig_1.png",
+                "Unit2_Test/assets/page_10_fig_2.png",
+                "Unit2_Test/assets/page_10_fig_3.png",
+                "Unit2_Test/assets/page_10_fig_4.png",
+                "Unit2_Test/assets/page_10_fig_5.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Inheritance / Generalization"
+                ]
+              }
+            },
+            {
+              "id": "L99",
+              "title": "Inheritance and Generalization C++ Implementation (Polymorphism)",
+              "view_name": "InheritanceGeneralization_CodeExamplePolymorphism",
+              "page_start": 11,
+              "page_end": 11,
+              "visual_assets": [
+                "Unit2_Test/assets/page_11_fig_1.png",
+                "Unit2_Test/assets/page_11_fig_2.png",
+                "Unit2_Test/assets/page_11_fig_3.png",
+                "Unit2_Test/assets/page_11_fig_4.png",
+                "Unit2_Test/assets/page_11_fig_5.png",
+                "Unit2_Test/assets/page_11_fig_6.png",
+                "Unit2_Test/assets/page_11_fig_7.png",
+                "Unit2_Test/assets/page_11_fig_8.png",
+                "Unit2_Test/assets/page_11_fig_9.png",
+                "Unit2_Test/assets/page_11_fig_10.png",
+                "Unit2_Test/assets/page_11_fig_11.png",
+                "Unit2_Test/assets/page_11_fig_12.png",
+                "Unit2_Test/assets/page_11_fig_13.png",
+                "Unit2_Test/assets/page_11_fig_14.png",
+                "Unit2_Test/assets/page_11_fig_15.png",
+                "Unit2_Test/assets/page_11_fig_16.png",
+                "Unit2_Test/assets/page_11_fig_17.png",
+                "Unit2_Test/assets/page_11_fig_18.png",
+                "Unit2_Test/assets/page_11_fig_19.png"
+              ],
+              "content_ref": {
+                "sections_in_source": [
+                  "Class Relationships: Inheritance / Generalization"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

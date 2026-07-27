@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lec 15 · Sec 3 — Initializer List Pipeline</title>
+  
+  <!-- CDNs: Three.js, OrbitControls, KaTeX, Inter Font -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS Design Tokens & Glassmorphism Styles -->
+  <style>
+    :root {
+      /* Typography */
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-size-body: 16px;
+      --font-size-caption: 14px;
+      --font-size-heading: 24px;
+      --font-size-title: 32px;
+      --line-height-body: 1.6;
+      --line-height-heading: 1.2;
+
+      /* Spacing Scale */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+
+      /* Border Radius */
+      --radius-button: 14px;
+      --radius-card: 20px;
+      --radius-dialog: 24px;
+      --radius-badge: 999px;
+
+      /* Glassmorphism Design System (VisionOS Style) */
+      --glass-bg: rgba(15, 18, 30, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-blur: 24px;
+      --glass-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+
+      /* Semantic Colors */
+      --color-learning: #3b82f6;     /* Blue */
+      --color-success: #22c55e;      /* Green */
+      --color-attention: #f59e0b;    /* Orange */
+      --color-creative: #a855f7;     /* Purple */
+      --color-danger: #ef4444;       /* Red */
+      --color-focus: #eab308;        /* Yellow */
+      --color-programming: #06b6d4;  /* Cyan */
+
+      /* Layer Specific Fallbacks */
+      --layer-software: var(--color-learning);
+      --layer-ram: var(--color-creative);
+      --layer-cpu: var(--color-programming);
+      --layer-gpu: var(--color-success);
+      --layer-corrector: var(--color-danger);
+
+      /* Z-Index Layers */
+      --z-canvas: 0;
+      --z-interactive: 5;
+      --z-panel: 10;
+      --z-dialog: 20;
+      --z-alert: 30;
+      --z-tooltip: 40;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-body);
+      color: #f1f5f9;
+      background-color: #020617;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* WebGL Canvas */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: var(--z-canvas);
+    }
+
+    /* Glass Panels Layout */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--glass-shadow);
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Header Panel */
+    header.glass-panel {
+      position: fixed;
+      top: var(--space-md);
+      left: var(--space-md);
+      right: var(--space-md);
+      height: 70px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-lg);
+    }
+
+    .header-title-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-breadcrumb {
+      font-size: var(--font-size-caption);
+      color: #94a3b8;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 180ms ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
+
+    /* Tabs Navigation (Bottom Center) */
+    .tab-bar.glass-panel {
+      position: fixed;
+      bottom: var(--space-md);
+      left: 50%;
+      transform: translateX(-50%);
+      height: 60px;
+      z-index: var(--z-panel);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-xs);
+      border-radius: var(--radius-button);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: calc(var(--radius-button) - 4px);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 250ms ease;
+    }
+
+    .tab-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+      border-bottom: 2px solid var(--layer-color, var(--color-learning));
+    }
+
+    /* Details Panel (Right Side) */
+    .details-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      right: var(--space-md);
+      bottom: 90px;
+      width: 380px;
+      z-index: var(--z-panel);
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-lg);
+      overflow-y: auto;
+      max-width: calc(100vw - var(--space-lg) * 2);
+    }
+
+    .details-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .details-content {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .details-content p {
+      margin-bottom: var(--space-md);
+    }
+
+    /* Controls Panel (Left Side) */
+    .controls-panel.glass-panel {
+      position: fixed;
+      top: 100px;
+      left: var(--space-md);
+      width: 320px;
+      z-index: var(--z-panel);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .controls-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: var(--space-xs);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .control-label {
+      font-size: 14px;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: var(--radius-badge);
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .control-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-programming);
+      border: 2px solid #ffffff;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .control-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .btn-action {
+      background: var(--color-learning);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-button);
+      padding: var(--space-sm) var(--space-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 180ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-action:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-action:active {
+      transform: translateY(1px);
+    }
+
+    /* Drawer Panel (Index / Navigation Hub Overlay) */
+    #nav-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: var(--z-dialog);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 300ms ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #nav-drawer.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer-content.glass-panel {
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: var(--space-xl);
+      position: relative;
+    }
+
+    .drawer-close {
+      position: absolute;
+      top: var(--space-lg);
+      right: var(--space-lg);
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .drawer-close:hover {
+      color: #ffffff;
+    }
+
+    .drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .scene-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-button);
+      padding: var(--space-md);
+      text-decoration: none;
+      color: #cbd5e1;
+      transition: all 200ms ease;
+    }
+
+    .scene-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--color-programming);
+      transform: translateY(-2px);
+    }
+
+    /* Accessibility visible focus */
+    button:focus-visible, input:focus-visible, a:focus-visible {
+      outline: 2px solid var(--color-programming) !important;
+      outline-offset: 2px;
+    }
+
+    /* Responsiveness */
+    @media (max-width: 1024px) {
+      .details-panel.glass-panel {
+        width: 320px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      .details-panel.glass-panel, .controls-panel.glass-panel {
+        position: static;
+        width: 100%;
+        margin-top: var(--space-md);
+        bottom: auto;
+        height: auto;
+      }
+      .tab-bar.glass-panel {
+        position: static;
+        transform: none;
+        width: 100%;
+        margin-top: var(--space-md);
+        display: flex;
+        justify-content: space-around;
+        height: auto;
+        padding: var(--space-xs);
+      }
+      header.glass-panel {
+        position: static;
+        height: auto;
+        padding: var(--space-md);
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+      #mobile-layout-wrap {
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-md);
+        margin-top: 80px;
+        position: relative;
+        z-index: var(--z-panel);
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- WebGL Render Target -->
+  <div id="canvas-container"></div>
+  
+  <!-- Mobile Content Wrapper -->
+  <div id="mobile-layout-wrap">
+    
+    <!-- Floating Header -->
+    <header class="glass-panel">
+      <div class="header-title-section">
+        <span class="header-breadcrumb">Lecture 15 · Section 3</span>
+        <h1 class="header-title" id="scene-title">Initializer List Pipeline</h1>
+      </div>
+      <div class="header-nav">
+        <a class="nav-btn" href="#" id="prev-btn">← Prev</a>
+        <button class="nav-btn" id="menu-btn" aria-label="Open Navigation Hub">☰ Index</button>
+        <a class="nav-btn" href="#" id="next-btn">Next →</a>
+      </div>
+    </header>
+
+    <!-- Controls Panel -->
+    <section class="controls-panel glass-panel" aria-label="Scene Controls">
+      <h2 class="controls-title">Interactive Panel</h2>
+      
+      <button class="btn-action" id="action-init" style="background: var(--color-success);">
+        <span>Initializer List (Direct)</span>
+      </button>
+
+      <button class="btn-action" id="action-body" style="background: var(--color-attention);">
+        <span>Body Assignment (Double)</span>
+      </button>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span>Simulation Speed</span>
+          <span id="speed-val">1.0x</span>
+        </div>
+        <input type="range" class="control-slider" id="speed-slider" min="0.1" max="2.0" step="0.1" value="1.0" aria-label="Adjust speed multiplier">
+      </div>
+    </section>
+
+    <!-- Details Panel -->
+    <main class="details-panel glass-panel" aria-label="Explanation Panel">
+      <h2 class="details-title" id="panel-layer-name">THE SOFTWARE LAYER</h2>
+      <div class="details-content" id="panel-dynamic-content">
+        <!-- Render content here dynamically -->
+      </div>
+    </main>
+
+    <!-- Tab Bar -->
+    <nav class="tab-bar glass-panel" aria-label="Visual Layers Selection">
+      <button class="tab-btn active" data-tab="0" style="--layer-color: var(--layer-software)">Software</button>
+      <button class="tab-btn" data-tab="1" style="--layer-color: var(--layer-ram)">RAM Map</button>
+      <button class="tab-btn" data-tab="2" style="--layer-color: var(--layer-cpu)">CPU / RIP</button>
+      <button class="tab-btn" data-tab="3" style="--layer-color: var(--layer-gpu)">GPU FX</button>
+      <button class="tab-btn" data-tab="4" style="--layer-color: var(--layer-corrector)">Corrector</button>
+    </nav>
+    
+  </div>
+
+  <!-- Interactive Index Navigation Hub Drawer Overlay -->
+  <div id="nav-drawer" role="dialog" aria-modal="true" aria-label="Interactive Navigation Grid">
+    <div class="drawer-content glass-panel">
+      <button class="drawer-close" id="drawer-close-btn" aria-label="Close index hub">×</button>
+      <h2 class="header-title" style="margin-bottom: var(--space-md);">All Visual Scenes</h2>
+      <div class="drawer-grid" id="drawer-scenes-grid">
+        <!-- Grid dynamically loaded -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Manager Infrastructure -->
+  <script>
+    // ----------------------------------------------------
+    // BASE 3D CONTENT GENERATOR (ABSTRACT)
+    // ----------------------------------------------------
+    class BaseGenerator {
+      constructor(scene) {
+        this.scene = scene;
+        this.meshes = [];
+        this.materials = [];
+        this.geometries = [];
+        this.activeLayer = 0;
+      }
+
+      create() {
+        // Build scene-specific geometries here (Abstract)
+      }
+
+      update(delta, speed) {
+        // Frame animation logic (Abstract)
+      }
+
+      transitionLayer(tabIndex) {
+        this.activeLayer = tabIndex;
+      }
+
+      handleInteraction(controlId, value) {
+        // Interaction logic (Abstract)
+      }
+
+      dispose() {
+        this.meshes.forEach(mesh => {
+          this.scene.remove(mesh);
+          if (mesh.geometry) mesh.geometry.dispose();
+          if (mesh.material) {
+            if (Array.isArray(mesh.material)) {
+              mesh.material.forEach(m => m.dispose());
+            } else {
+              mesh.material.dispose();
+            }
+          }
+        });
+        this.geometries.forEach(geo => geo.dispose());
+        this.materials.forEach(mat => mat.dispose());
+        this.meshes = [];
+        this.geometries = [];
+        this.materials = [];
+      }
+
+      smoothTransitionColor(material, targetHex, duration = 600) {
+        if (!material.color) return;
+        const startColor = material.color.clone();
+        const targetColor = new THREE.Color(targetHex);
+        const startTime = performance.now();
+
+        const animate = () => {
+          const elapsed = performance.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = progress < 0.5 
+            ? 2 * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+          material.color.lerpColors(startColor, targetColor, ease);
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+        requestAnimationFrame(animate);
+      }
+    }
+
+    // ----------------------------------------------------
+    // CUSTOM GENERATOR FOR THIS SECTION
+    // ----------------------------------------------------
+    class SectionGenerator extends BaseGenerator {
+      create() {
+        // Grid floor
+        const gridHelper = new THREE.GridHelper(10, 10, 0x06b6d4, 0x1e293b);
+        gridHelper.position.y = -1;
+        this.scene.add(gridHelper);
+        this.meshes.push(gridHelper);
+
+        // Pathways visualization tubes (curves representing routes)
+        // Pathway 1: Direct Initializer List (Left side, X = -2)
+        const initPath = new THREE.CatmullRomCurve3([
+          new THREE.Vector3(-2.0, 3.5, 0),
+          new THREE.Vector3(-2.0, 2.0, 0),
+          new THREE.Vector3(-2.0, -0.5, 0)
+        ]);
+        const tubeGeo1 = new THREE.TubeGeometry(initPath, 20, 0.1, 8, false);
+        this.path1Mat = new THREE.MeshBasicMaterial({ color: 0x22c55e, transparent: true, opacity: 0.2 });
+        const tube1 = new THREE.Mesh(tubeGeo1, this.path1Mat);
+        this.scene.add(tube1);
+        this.meshes.push(tube1);
+        this.geometries.push(tubeGeo1);
+        this.materials.push(this.path1Mat);
+
+        // Pathway 2: Body Assignment (Right side, X = 2)
+        // Goes into a temporary logic gate (Y = 1.8), then goes to cell
+        const bodyPath = new THREE.CatmullRomCurve3([
+          new THREE.Vector3(2.0, 3.5, 0),
+          new THREE.Vector3(2.0, 1.8, 0), // Default Constructor entry
+          new THREE.Vector3(2.0, -0.5, 0)  // Overwrite
+        ]);
+        const tubeGeo2 = new THREE.TubeGeometry(bodyPath, 20, 0.1, 8, false);
+        this.path2Mat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.2 });
+        const tube2 = new THREE.Mesh(tubeGeo2, this.path2Mat);
+        this.scene.add(tube2);
+        this.meshes.push(tube2);
+        this.geometries.push(tubeGeo2);
+        this.materials.push(this.path2Mat);
+
+        // Object containers at the bottom
+        const containerGeo = new THREE.BoxGeometry(1.5, 0.8, 1.5);
+        this.boxMat1 = new THREE.MeshPhysicalMaterial({ color: 0x22c55e, transparent: true, opacity: 0.6, roughness: 0.2 });
+        this.boxMat2 = new THREE.MeshPhysicalMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.6, roughness: 0.2 });
+        
+        const container1 = new THREE.Mesh(containerGeo, this.boxMat1);
+        container1.position.set(-2, -0.5, 0);
+        this.scene.add(container1);
+        this.meshes.push(container1);
+
+        const container2 = new THREE.Mesh(containerGeo, this.boxMat2);
+        container2.position.set(2, -0.5, 0);
+        this.scene.add(container2);
+        this.meshes.push(container2);
+        this.geometries.push(containerGeo);
+        this.materials.push(this.boxMat1);
+        this.materials.push(this.boxMat2);
+
+        // Text indicators or badges above paths
+        // Left pathway text: "Initializer List"
+        // Right pathway text: "Constructor Body"
+        
+        // Active data particles / values
+        const particleGeo = new THREE.SphereGeometry(0.2, 16, 16);
+        this.particle1 = new THREE.Mesh(particleGeo, new THREE.MeshBasicMaterial({ color: 0x22c55e })); // Green for Direct
+        this.particle2 = new THREE.Mesh(particleGeo, new THREE.MeshBasicMaterial({ color: 0x3b82f6 })); // Blue for Default
+        this.particle3 = new THREE.Mesh(particleGeo, new THREE.MeshBasicMaterial({ color: 0xef4444 })); // Red for Overwrite
+        
+        this.scene.add(this.particle1);
+        this.scene.add(this.particle2);
+        this.scene.add(this.particle3);
+        
+        this.meshes.push(this.particle1);
+        this.meshes.push(this.particle2);
+        this.meshes.push(this.particle3);
+        
+        this.geometries.push(particleGeo);
+
+        // Hide all initially
+        this.resetParticles();
+
+        // Animation States
+        this.activePipeline = null; // 'init', 'body'
+        this.pipelineTime = 0;
+      }
+
+      resetParticles() {
+        this.particle1.visible = false;
+        this.particle2.visible = false;
+        this.particle3.visible = false;
+        
+        this.particle1.position.set(-2, 3.5, 0);
+        this.particle2.position.set(2, 3.5, 0);
+        this.particle3.position.set(2, 3.5, 0);
+      }
+
+      update(delta, speed) {
+        const simSpeed = speed * 0.8;
+        
+        if (this.activePipeline === 'init') {
+          this.pipelineTime += delta * simSpeed;
+          this.particle1.visible = true;
+          
+          // Animate particle down path 1
+          const t = Math.min(this.pipelineTime / 1.5, 1.0);
+          this.particle1.position.y = THREE.MathUtils.lerp(3.5, -0.5, t);
+
+          if (t >= 1.0) {
+            // Flash color on target
+            this.boxMat1.emissive.setHex(0x00ff00);
+            setTimeout(() => {
+              this.boxMat1.emissive.setHex(0x000000);
+            }, 200);
+            this.activePipeline = null;
+            this.enableButtons();
+          }
+        } 
+        else if (this.activePipeline === 'body') {
+          this.pipelineTime += delta * simSpeed;
+          
+          // We have a 2-stage write animation:
+          // Phase 1 (t < 0.5): Default value particle (blue) descends into memory container.
+          // Phase 2 (t >= 0.5): Overwrite value particle (red) descends from top, processes through gate, and hits container.
+          
+          if (this.pipelineTime < 1.0) {
+            this.particle2.visible = true;
+            const t1 = this.pipelineTime / 1.0;
+            this.particle2.position.y = THREE.MathUtils.lerp(3.5, -0.5, t1);
+          } 
+          else if (this.pipelineTime >= 1.0 && this.pipelineTime < 2.2) {
+            // Trigger overwrite particle
+            this.particle2.visible = false;
+            this.particle3.visible = true;
+            const t2 = (this.pipelineTime - 1.0) / 1.2;
+            this.particle3.position.y = THREE.MathUtils.lerp(3.5, -0.5, t2);
+
+            // Double write impact!
+            if (t2 >= 1.0) {
+              this.boxMat2.emissive.setHex(0xff0000);
+              setTimeout(() => {
+                this.boxMat2.emissive.setHex(0x000000);
+              }, 200);
+              this.activePipeline = null;
+              this.enableButtons();
+            }
+          }
+        }
+      }
+
+      enableButtons() {
+        const btnInit = document.getElementById('action-init');
+        const btnBody = document.getElementById('action-body');
+        if (btnInit) btnInit.disabled = false;
+        if (btnBody) btnBody.disabled = false;
+      }
+
+      transitionLayer(tabIndex) {
+        super.transitionLayer(tabIndex);
+        switch (tabIndex) {
+          case 0: // Software
+            this.path1Mat.color.setHex(0x22c55e);
+            this.path2Mat.color.setHex(0xf59e0b);
+            break;
+          case 1: // RAM Map (Purple wireframes)
+            this.path1Mat.color.setHex(0xa855f7);
+            this.path2Mat.color.setHex(0xa855f7);
+            break;
+          case 2: // CPU (Cyan Highlights)
+            this.path1Mat.color.setHex(0x06b6d4);
+            this.path2Mat.color.setHex(0x06b6d4);
+            break;
+          case 3: // GPU FX
+            this.path1Mat.color.setHex(0x22c55e);
+            this.path2Mat.color.setHex(0x22c55e);
+            break;
+          case 4: // Corrector (Danger Red alert)
+            this.path1Mat.color.setHex(0xef4444);
+            this.path2Mat.color.setHex(0xef4444);
+            break;
+        }
+      }
+
+      handleInteraction(controlId, value) {
+        this.resetParticles();
+        this.pipelineTime = 0;
+        this.activePipeline = controlId;
+
+        // Disable buttons
+        const btnInit = document.getElementById('action-init');
+        const btnBody = document.getElementById('action-body');
+        if (btnInit) btnInit.disabled = true;
+        if (btnBody) btnBody.disabled = true;
+      }
+    }
+
+    // ----------------------------------------------------
+    // LIGHTING CONFIGURATION MANAGER
+    // ----------------------------------------------------
+    class LightingManager {
+      constructor(scene) {
+        this.scene = scene;
+        this.lights = [];
+      }
+
+      createStandardRig() {
+        const ambient = new THREE.AmbientLight(0xffffff, 0.25);
+        this.scene.add(ambient);
+        this.lights.push(ambient);
+
+        const key = new THREE.DirectionalLight(0xffffff, 0.8);
+        key.position.set(5, 8, 5);
+        this.scene.add(key);
+        this.lights.push(key);
+
+        const fill = new THREE.DirectionalLight(0x06b6d4, 0.4);
+        fill.position.set(-5, 4, -5);
+        this.scene.add(fill);
+        this.lights.push(fill);
+      }
+
+      dispose() {
+        this.lights.forEach(light => this.scene.remove(light));
+        this.lights = [];
+      }
+    }
+
+    // ----------------------------------------------------
+    // THREE.JS SCENE MANAGEMENT LAYER
+    // ----------------------------------------------------
+    class SceneManager {
+      constructor(container) {
+        this.container = container;
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x020617);
+        this.scene.fog = new THREE.FogExp2(0x020617, 0.015);
+
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.shadowMap.enabled = true;
+        this.container.appendChild(this.renderer.domElement);
+
+        this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 100);
+        this.camera.position.set(0, 3, 7.5);
+
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+        this.controls.maxPolarAngle = Math.PI / 2 + 0.1;
+        this.controls.minDistance = 3;
+        this.controls.maxDistance = 25;
+
+        this.lights = new LightingManager(this.scene);
+        this.generator = new SectionGenerator(this.scene);
+
+        this.clock = new THREE.Clock();
+        this.animationFrameId = null;
+
+        this.onResize = this.onResize.bind(this);
+        window.addEventListener('resize', this.onResize);
+      }
+
+      init() {
+        this.lights.createStandardRig();
+        this.generator.create();
+        this.animate();
+      }
+
+      onResize() {
+        this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+      }
+
+      animate() {
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+        const delta = this.clock.getDelta();
+        
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reducedMotion) {
+          this.generator.update(delta, window.app.speedMultiplier);
+        }
+        
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+      }
+
+      dispose() {
+        cancelAnimationFrame(this.animationFrameId);
+        window.removeEventListener('resize', this.onResize);
+        this.generator.dispose();
+        this.lights.dispose();
+        this.controls.dispose();
+        this.renderer.dispose();
+        this.renderer.domElement.remove();
+      }
+    }
+
+    // ----------------------------------------------------
+    // APPLICATION & INTERACTION CONTROLLER
+    // ----------------------------------------------------
+    class ApplicationManager {
+      constructor() {
+        this.speedMultiplier = 1.0;
+        
+        this.scenesList = [
+          { id: "lec15-sec1", title: "Constructor Solid Stamping", url: "lec15-sec1.html" },
+          { id: "lec15-sec2", title: "Scope Bounds Deallocation", url: "lec15-sec2.html" },
+          { id: "lec15-sec3", title: "Initializer List Pipeline", url: "lec15-sec3.html" },
+          { id: "lec15-sec4", title: "Constructor Delegation Routing", url: "lec15-sec4.html" },
+          { id: "lec15-sec5", title: "Value Duplicates vs Pointer Refs", url: "lec15-sec5.html" },
+          { id: "lec15-sec6", title: "Constructor Arrays", url: "lec15-sec6.html" }
+        ];
+
+        this.sceneConfig = {
+          id: "lec15-sec3",
+          title: "Initializer List Pipeline",
+          layers: [
+            {
+              name: "THE SOFTWARE LAYER",
+              content: `
+                <p>C++ Member Initializer Lists initialize class attributes directly before the execution of the constructor body. Under normal constructor assignment, members are first default-constructed, then overwritten inside the body (double write).</p>
+                <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; font-family: monospace; border: 1px dashed rgba(255,255,255,0.2); font-size: 13px;">
+                  <span style="color:#64748b;">// Initializer List (Efficient)</span><br>
+                  Circle(double r) : radius(r) {}<br><br>
+                  <span style="color:#64748b;">// Constructor Body (Inefficient)</span><br>
+                  Circle(double r) { radius = r; }
+                </div>
+              `
+            },
+            {
+              name: "THE MEMORY TOPOLOGY (RAM) LAYER",
+              content: `
+                <p>Initializer lists write values directly to target member offset variables. In contrast, constructor body assignments generate a default value in RAM, allocate variable frames, then execute a copy write operation to that offset.</p>
+                <ul>
+                  <li><strong>Initializer List:</strong> 1 write cycle directly to <code>[base_address + offset]</code>.</li>
+                  <li><strong>Body Assignment:</strong> 2 write cycles. Stage 1 default-initializes cell (e.g. to <code>0.0</code>). Stage 2 copies parameter over cell.</li>
+                </ul>
+              `
+            },
+            {
+              name: "THE CPU & REGISTERS LAYER",
+              content: `
+                <p>Member initializer lists map directly to base-register offset writes, bypassing temporary default values. The instruction pointer executes this logic before entering constructor braces:</p>
+                <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; font-family: monospace; font-size: 13px;">
+                  mov rax, [this_ptr] &nbsp;; Load instance address<br>
+                  movsd [rax + 8], xmm0 ; Direct write value to offset 8
+                </div>
+                <p>The body assignment path runs additional instruction branches to default-initialize, then runs load-store sequences to copy values.</p>
+              `
+            },
+            {
+              name: "THE GPU / VRAM LAYER",
+              content: `
+                <p>The flow pipelines are visualized as WebGL tube paths. Toggling the pipeline triggers particles moving along spline paths derived from quadratic Bezier curves, updating coordinates in real time:</p>
+                <p>$$B(t) = (1-t)^2 P_0 + 2(1-t)t P_1 + t^2 P_2$$</p>
+                <p>Color gradients fade based on speed multipliers.</p>
+              `
+            },
+            {
+              name: "UNDER-THE-HOOD CORRECTOR",
+              content: `
+                <p><strong>Misconception Shattered:</strong> Many believe initializer lists are merely a shortcut syntax. This is false. They are structurally required in C++ for:</p>
+                <ol>
+                  <li>Initializing <code>const</code> members.</li>
+                  <li>Initializing reference variables (e.g. <code>int&amp; ref</code>).</li>
+                  <li>Calling non-default constructors of base classes.</li>
+                </ol>
+                <p>These entities cannot be default-initialized, so they fail to compile if assignment is delayed to the constructor body.</p>
+              `
+            }
+          ]
+        };
+      }
+
+      init() {
+        const canvasContainer = document.getElementById('canvas-container');
+        this.sceneManager = new SceneManager(canvasContainer);
+        this.sceneManager.init();
+
+        this.initEventListeners();
+        this.switchTab(0);
+        
+        window.addEventListener('beforeunload', () => {
+          this.sceneManager.dispose();
+        });
+      }
+
+      initEventListeners() {
+        // Tabs
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tabIdx = parseInt(btn.dataset.tab);
+            this.switchTab(tabIdx);
+          });
+        });
+
+        // Action Buttons
+        const btnInit = document.getElementById('action-init');
+        const btnBody = document.getElementById('action-body');
+        
+        if (btnInit) {
+          btnInit.addEventListener('click', () => {
+            this.sceneManager.generator.handleInteraction('init', null);
+          });
+        }
+        if (btnBody) {
+          btnBody.addEventListener('click', () => {
+            this.sceneManager.generator.handleInteraction('body', null);
+          });
+        }
+
+        // Speed Slider
+        const slider = document.getElementById('speed-slider');
+        const speedVal = document.getElementById('speed-val');
+        if (slider) {
+          slider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            this.speedMultiplier = val;
+            speedVal.innerText = val.toFixed(1) + 'x';
+          });
+        }
+
+        // Drawer Menu Toggles
+        const menuBtn = document.getElementById('menu-btn');
+        const drawer = document.getElementById('nav-drawer');
+        const drawerClose = document.getElementById('drawer-close-btn');
+
+        if (menuBtn && drawer) {
+          menuBtn.addEventListener('click', () => drawer.classList.add('open'));
+        }
+        if (drawerClose && drawer) {
+          drawerClose.addEventListener('click', () => drawer.classList.remove('open'));
+        }
+
+        // Populate Index Grid
+        const drawerGrid = document.getElementById('drawer-scenes-grid');
+        if (drawerGrid) {
+          this.scenesList.forEach(scene => {
+            const card = document.createElement('a');
+            card.className = 'scene-card';
+            card.href = scene.url;
+            card.innerHTML = `
+              <div style="font-size: 11px; color: var(--color-programming); font-weight: 600;">${scene.id.toUpperCase().replace('-', ' · ')}</div>
+              <div style="font-size: 14px; font-weight: 600; color: #ffffff; margin-top: 4px;">${scene.title}</div>
+            `;
+            drawerGrid.appendChild(card);
+          });
+        }
+
+        // Set Prev/Next links
+        const currentIdx = this.scenesList.findIndex(s => s.id === this.sceneConfig.id);
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        
+        if (currentIdx > 0) {
+          prevBtn.href = this.scenesList[currentIdx - 1].url;
+        } else {
+          prevBtn.style.opacity = '0.5';
+          prevBtn.style.pointerEvents = 'none';
+        }
+        
+        if (currentIdx < this.scenesList.length - 1) {
+          nextBtn.href = this.scenesList[currentIdx + 1].url;
+        } else {
+          nextBtn.style.opacity = '0.5';
+          nextBtn.style.pointerEvents = 'none';
+        }
+
+        // Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+          if (e.key >= '1' && e.key <= '5') {
+            const tabIdx = parseInt(e.key) - 1;
+            const btn = document.querySelector(`.tab-btn[data-tab="${tabIdx}"]`);
+            if (btn) btn.click();
+          }
+          if (e.key === 'r' || e.key === 'R') {
+            if (slider) {
+              slider.value = 1.0;
+              slider.dispatchEvent(new Event('input'));
+            }
+          }
+        });
+      }
+
+      switchTab(tabIdx) {
+        const layer = this.sceneConfig.layers[tabIdx];
+        document.getElementById('panel-layer-name').innerText = layer.name;
+        
+        const contentContainer = document.getElementById('panel-dynamic-content');
+        contentContainer.innerHTML = layer.content;
+
+        if (window.renderMathInElement) {
+          renderMathInElement(contentContainer, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false }
+            ]
+          });
+        }
+
+        this.sceneManager.generator.transitionLayer(tabIdx);
+      }
+    }
+
+    // Launch App
+    window.addEventListener('DOMContentLoaded', () => {
+      window.app = new ApplicationManager();
+      window.app.init();
+    });
+  </script>
+</body>
+</html>

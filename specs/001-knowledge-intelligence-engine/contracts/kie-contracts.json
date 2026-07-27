@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KIEInterfaceContracts",
+  "description": "JSON Schemas and Interface Contracts for the Knowledge Intelligence Engine (KIE)",
+  "definitions": {
+    "KnowledgeAssetV2": {
+      "type": "object",
+      "required": [
+        "asset_id",
+        "material_id",
+        "asset_type",
+        "title",
+        "content_primary",
+        "relationships",
+        "quality_score",
+        "version_history",
+        "provenance",
+        "lifecycle_state"
+      ],
+      "properties": {
+        "asset_id": { "type": "string", "format": "uuid" },
+        "material_id": { "type": "string" },
+        "asset_type": { "type": "string" },
+        "title": { "type": "string" },
+        "content_primary": { "type": "string" },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["target_asset_id", "relationship_type"],
+            "properties": {
+              "target_asset_id": { "type": "string", "format": "uuid" },
+              "relationship_type": { 
+                "type": "string",
+                "enum": ["DependsOn", "Explains", "References", "UsesFormula", "Generalizes", "Specializes", "AlternativeExplanation", "SameConcept", "Prerequisite", "Successor", "RelatedTo"]
+              },
+              "weight": { "type": "number", "default": 1.0 }
+            }
+          }
+        },
+        "lifecycle_state": {
+          "type": "string",
+          "enum": ["RAW", "EXTRACTED", "REVISED", "REJECTED", "VALIDATED", "APPROVED", "PUBLISHED", "ARCHIVED", "DEPRECATED", "ROLLED_BACK"]
+        }
+      }
+    },
+    "EvidencePackage": {
+      "type": "object",
+      "required": [
+        "package_id",
+        "query_text",
+        "response_text",
+        "confidence_band",
+        "confidence_score",
+        "planner_decision_log_id",
+        "retrieved_asset_ids",
+        "citation_map",
+        "execution_latency_ms"
+      ],
+      "properties": {
+        "package_id": { "type": "string", "format": "uuid" },
+        "query_text": { "type": "string" },
+        "response_text": { "type": "string" },
+        "confidence_band": { 
+          "type": "string", 
+          "enum": ["VERY_HIGH", "HIGH", "MEDIUM", "LOW", "UNSUPPORTED"] 
+        },
+        "confidence_score": { "type": "number" },
+        "execution_latency_ms": { "type": "integer" }
+      }
+    }
+  }
+}
